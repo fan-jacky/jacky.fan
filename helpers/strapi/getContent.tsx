@@ -9,12 +9,22 @@ import { ContactForm, Letter3D } from "@/components/home";
 import { AboutMeSection, HeroSection } from "@/components/home/sections";
 import type { PageContentType } from "@/interfaces/ContentBlockProps";
 
+const richText = (value: any) => {
+    if (!value) return [];
+    if (Array.isArray(value)) return value;
+    if (value.root?.children) return value.root.children;
+    return [];
+};
+
 function getContents(data: PageContentType[] | null | undefined) {
     if (!data || !Array.isArray(data)) return null;
 
-    return data.map((block: PageContentType, i: number) => {
-        switch (block.__component) {
-            case "page.page-rich-text": {
+    return data.map((block: any, i: number) => {
+        const type = block?.__component ?? block?.blockType;
+
+        switch (type) {
+            case "page.page-rich-text":
+            case "pageRichText": {
                 const classes = [
                     "prose max-w-none",
                     "prose-p:text-md prose-p:md:text-xl prose-p:md:8 prose-p:!leading-8 prose-p:text-base-content",
@@ -29,7 +39,7 @@ function getContents(data: PageContentType[] | null | undefined) {
                     <SectionContainer key={i}>
                         <FadeInBottom>
                             <div className={classes}>
-                                {block.content.map((c: any, idx: number) => getRichTextBlocks(c, {}, idx))}
+                                {richText(block.content).map((c: any, idx: number) => getRichTextBlocks(c, {}, idx))}
                             </div>
                         </FadeInBottom>
                     </SectionContainer>
@@ -37,6 +47,7 @@ function getContents(data: PageContentType[] | null | undefined) {
             }
 
             case "page.page-heading":
+            case "pageHeading":
                 return (
                     <SectionContainer bottomSpacing={false} key={i}>
                         <FadeInBottom>
@@ -50,7 +61,8 @@ function getContents(data: PageContentType[] | null | undefined) {
                     </SectionContainer>
                 );
 
-            case "page.button": {
+            case "page.button":
+            case "pageButton": {
                 const buttonContent = (
                     <>
                         {block.name}
@@ -81,9 +93,11 @@ function getContents(data: PageContentType[] | null | undefined) {
             }
 
             case "page.project-grid":
+            case "pageProjectGrid":
                 return <ProjectGrid key={i} />;
 
             case "page.contact-form":
+            case "pageContactForm":
                 return (
                     <SectionContainer key={i}>
                         <FadeInBottom>
@@ -100,9 +114,11 @@ function getContents(data: PageContentType[] | null | undefined) {
                 );
 
             case "page.3-d-letter":
+            case "pageThreeDLetter":
                 return block.enable ? <Letter3D key={i} /> : null;
 
             case "page.hero-section":
+            case "pageHeroSection":
                 return (
                     <HeroSection 
                         title={block.title} 
@@ -114,12 +130,13 @@ function getContents(data: PageContentType[] | null | undefined) {
                 );
 
             case "page.about-me-section":
+            case "pageAboutMeSection":
                 return (
                     <AboutMeSection
                         topTitle={block.topTitle}
                         leftTitle={block.leftTitle}
                         rightTitle={block.rightTitle}
-                        contents={block.contents.map((c: any, idx: number) => getRichTextBlocks(c, {}, idx))}
+                        contents={richText(block.contents).map((c: any, idx: number) => getRichTextBlocks(c, {}, idx))}
                         techs={block.techs}
                         btnLinks={block.btnLinks}
                         btnText={block.btnText}

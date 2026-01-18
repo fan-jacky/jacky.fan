@@ -40,15 +40,19 @@ export default function AboutMeSection(props: AboutMeSectionProps) {
 
             <FadeInBottom>
                 <div className="rounded-md glass w-fit flex flex-row flex-wrap justify-center md:justify-start gap-4 mb-4 md:mb-8 pb-2 px-4">
-                    {props.techs.map((tech, index) => (
-                        <div key={index} className="my-2 w-16 md:w-24 relative">
-                            <Image src={`${process.env.STRAPI_URL}${tech.icon.data.attributes.url}`} alt={tech.title} className="w-full aspect-square" width={64} height={64} />
-                            {/* <img src={`${process.env.STRAPI_URL}${tech.icon.data.attributes.url}`} alt={`${tech.title}`} className="w-full aspect-square" width={64} height={64} /> */}
-                            <p className="text-center drop-shadow-sm">
-                                {tech.title}
-                            </p>
-                        </div>
-                    ))}
+                    {props.techs.map((tech, index) => {
+                        const iconUrl = typeof tech.icon === "string" ? tech.icon : tech.icon?.url;
+                        return (
+                            <div key={index} className="my-2 w-16 md:w-24 relative">
+                                {iconUrl && (
+                                    <Image src={iconUrl} alt={tech.title} className="w-full aspect-square" width={64} height={64} />
+                                )}
+                                <p className="text-center drop-shadow-sm">
+                                    {tech.title}
+                                </p>
+                            </div>
+                        );
+                    })}
 
                 </div>
             </FadeInBottom>

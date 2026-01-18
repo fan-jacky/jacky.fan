@@ -1,12 +1,17 @@
+import React from "react";
 import { Navbar, Footer } from "@/components";
 import LocomotiveScrollWrappper from '@/components/animation/LocomotiveScrollWrapper'
 import PageEnterAnimation from "../animation/PageEnterAnimation";
 
-async function getData(url: string) {
-    const res = await fetch(`${process.env.STRAPI_URL}/api/site-setting?populate[menuItem][populate][0]=page&populate=quickLinks`);
+const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;
+
+async function getData() {
+    if (!PAYLOAD_CMS_URL) return null;
+
+    const res = await fetch(`${PAYLOAD_CMS_URL}/api/globals/site_settings?depth=2`, { next: { revalidate: 3600 } });
 
     if (!res.ok) {
-        throw new Error("Failed to fetch data");
+        throw new Error("Failed to fetch site settings");
     }
 
     return res.json();
@@ -14,17 +19,17 @@ async function getData(url: string) {
 
 export default async function Page({ children, reserveNavbarHeight = true }: { children?: React.ReactNode, reserveNavbarHeight?: boolean }) {
 
-    const { data } = await getData("site-setting");
+    const siteSetting = await getData();
 
     return (
         <main className="relative">
-            <Navbar siteSetting={data} />
-            <PageEnterAnimation/>
+            <Navbar siteSetting={siteSetting} />
+            <PageEnterAnimation />
             <LocomotiveScrollWrappper>
-                <div className={`min-h-screen text-md md:text-xl ${reserveNavbarHeight? "page" : ""}`}>
+                <div className={`min-h-screen text-md md:text-xl ${reserveNavbarHeight ? "page" : ""}`}>
                     {children}
                 </div>
-                <Footer siteSetting={data} />
+                <Footer siteSetting={siteSetting} />
             </LocomotiveScrollWrappper>
         </main>
     );

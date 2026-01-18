@@ -7,18 +7,29 @@ import Link from "next/link";
 import { ActiveLink } from "./basic";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 
+const extractPageUrl = (page: any): string | undefined => {
+    if (!page) return undefined;
+    if (typeof page === "string") return undefined;
+    if (page?.url) return page.url;
+    if (page?.slug) return `/${page.slug}`;
+    return undefined;
+};
+
 export default function Navbar({ siteSetting }: { siteSetting: any }) {
     const [prevScrollPos, setPrevScrollPos] = useState(0);
     const [visible, setVisible] = useState(true);
     const [isTop, setIsTop] = useState(true);
 
-    const { scrollPos, setScrollPos } = useContext(LocomotiveScrollPositionContext);
+    const { scrollPos } = useContext(LocomotiveScrollPositionContext);
 
     const navbarRef = useRef<HTMLDivElement | null>(null);
 
-    if (!siteSetting || !siteSetting.attributes) {
+    if (!siteSetting) {
         return null;
     }
+
+    const menuItems = siteSetting.menuItem ?? [];
+    const quickLinks = siteSetting.quickLinks ?? [];
 
     useEffect(() => {
         const navbarHeight = navbarRef.current?.offsetHeight ?? 0;
@@ -35,28 +46,28 @@ export default function Navbar({ siteSetting }: { siteSetting: any }) {
     }, [scrollPos])
 
     return (
-        <div className={`navbar bg-base-300 fixed z-50 transition-all w-screen ${visible ? "translate-y-0" : `-translate-y-[110%]`} ${isTop ? "shadow-none" : "shadow-md"}`} ref={navbarRef}>
+        <div className={`navbar bg-base-300 fixed z-50 transition-all w-screen ${visible ? "translate-y-0" : "-translate-y-[110%]"} ${isTop ? "shadow-none" : "shadow-md"}`} ref={navbarRef}>
             <div className="flex-1">
                 <ActiveLink href="/" className="btn btn-ghost normal-case text-xl">
-                    <span className="text-primary font-dosis font-semibold">{siteSetting.attributes.siteLogoText}</span>
+                    <span className="text-primary font-dosis font-semibold">{siteSetting.siteLogoText}</span>
                 </ActiveLink>
             </div>
             <div className="flex-none hidden md:flex md:mx-5">
                 <ul className="menu menu-horizontal px-1">
-                    {siteSetting.attributes.showNightModeToggle && <li className="hidden md:flex"><ToggleDayNight /></li>}
-                    {siteSetting.attributes.menuItem?.filter((item: any) => item.page?.data?.attributes?.url).map((item: any, index: number) => (
+                    {siteSetting.showNightModeToggle && <li className="hidden md:flex"><ToggleDayNight /></li>}
+                    {menuItems?.filter((item: any) => extractPageUrl(item.page)).map((item: any, index: number) => (
                         <li key={index} className="hidden md:flex">
-                            <ActiveLink href={item.page.data.attributes.url}>{item.name}</ActiveLink>
+                            <ActiveLink href={extractPageUrl(item.page) ?? "#"}>{item.name}</ActiveLink>
                         </li>
                     ))}
-                    {siteSetting.attributes.showMenuQuickLinksMenu &&
+                    {siteSetting.showMenuQuickLinksMenu &&
                         <li className="hidden md:flex">
                             <details>
                                 <summary>
                                     Quick Links
                                 </summary>
                                 <ul className="p-2 bg-base-100">
-                                    {siteSetting.attributes.quickLinks?.map((link: any, index: number) => (
+                                    {quickLinks?.map((link: any, index: number) => (
                                         <li key={index}>
                                             <Link href={link.url} target="_blank">{link.name}</Link>
                                         </li>
@@ -79,27 +90,24 @@ export default function Navbar({ siteSetting }: { siteSetting: any }) {
                         <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
                         <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content ml-0">
 
-                            {/* Mobile Page Menu */}
                             <p className="ml-4 my-4 font-bold">Pages</p>
-                            {siteSetting.attributes.menuItem?.filter((item: any) => item.page?.data?.attributes?.url).map((item: any, index: number) => (
+                            {menuItems?.filter((item: any) => extractPageUrl(item.page)).map((item: any, index: number) => (
                                 <li key={index}>
-                                    <ActiveLink href={item.page.data.attributes.url}>{item.name}</ActiveLink>
+                                    <ActiveLink href={extractPageUrl(item.page) ?? "#"}>{item.name}</ActiveLink>
                                 </li>
                             ))}
 
-                            {/* Mobile Quick Links */}
-                            {siteSetting.attributes.showMenuQuickLinksMenu && <>
+                            {siteSetting.showMenuQuickLinksMenu && <>
                                 <hr className="border-base-content my-4 ml-4 mr-8" />
                                 <p className="ml-4 my-4 font-bold">Quick Links</p>
                             </>}
-                            {siteSetting.attributes.showMenuQuickLinksMenu && siteSetting.attributes.quickLinks?.map((link: any, index: number) => (
+                            {siteSetting.showMenuQuickLinksMenu && quickLinks?.map((link: any, index: number) => (
                                 <li key={index}>
                                     <Link href={link.url} target="_blank">{link.name}</Link>
                                 </li>
                             ))}
 
-                            {/* Mobile Night Mode Toggle */}
-                            {siteSetting.attributes.showNightModeToggle && <>
+                            {siteSetting.showNightModeToggle && <>
                                 <hr className="border-base-content my-4 ml-4 mr-8" />
                                 <li><ToggleDayNight /></li>
                             </>}

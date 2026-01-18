@@ -1,18 +1,17 @@
 import { Page } from '@/components/basic'
 import { getContents } from '@/helpers/strapi/getContent'
-import { revalidatePath } from 'next/cache'
-import { redirect, notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata, ResolvingMetadata } from 'next'
 
 export const dynamic = 'force-dynamic';
-const STRAPI_URL = process.env.STRAPI_URL;
+const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;
 
 type Props = {
   params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
-  if (!STRAPI_URL) {
+  if (!PAYLOAD_CMS_URL) {
     return {
       title: "Jacky FAN - Frontend Developer in Hong Kong",
       description: "I build websites and eat computer bugs 😉",
@@ -20,14 +19,11 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
   }
 
   try {
-    const endpoint = `${STRAPI_URL}/api/pages?populate=*&filters[url][$eqi]=/`;
-    const response = await fetch(endpoint, { next: { revalidate: 3600 } });
-    
-    if (!response.ok) throw new Error("Failed to fetch metadata");
-    
-    const { data } = await response.json();
+    const endpoint = `${PAYLOAD_CMS_URL}/api/pages?where[url][equals]=/&depth=3`;
+    const { docs } = await fetch(endpoint, { next: { revalidate: 3600 } }).then((res) => res.json());
+    const page = docs?.[0];
 
-    if (!data?.[0]?.attributes?.pageTitle || !data[0].attributes?.metaDesc) {
+    if (!page?.pageTitle || !page?.metaDesc) {
       return {
         title: "Jacky FAN - Frontend Developer in Hong Kong",
         description: "I build websites and eat computer bugs 😉",
@@ -36,7 +32,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
     return {
       title: `Jacky FAN - Frontend Developer in Hong Kong`,
-      description: data[0].attributes.metaDesc,
+      description: page.metaDesc,
     }
   } catch (error) {
     console.error("Error generating metadata:", error);
@@ -48,11 +44,12 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 }
 
 async function getData() {
-  if (!STRAPI_URL) {
-    return { data: [] } as any;
+  if (!PAYLOAD_CMS_URL) {
+    return { docs: [] } as any;
   }
+
   const res = await fetch(
-    `${STRAPI_URL}/api/pages?populate[0]=Contents&populate[1]=Contents.techs&populate[2]=Contents.techs.icon&filters[url][$eqi]=/`,
+    `${PAYLOAD_CMS_URL}/api/pages?where[url][equals]=/&depth=3`,
     { next: { revalidate: 3600 } }
   );
 
@@ -64,26 +61,27 @@ async function getData() {
 }
 
 export default async function Home() {
-  if (!STRAPI_URL) {
+  if (!PAYLOAD_CMS_URL) {
     return (
       <Page reserveNavbarHeight={false}>
         <div className="py-16 text-center">
-          <p className="text-lg md:text-xl">Content API not configured. Set STRAPI_URL to load dynamic content.</p>
+          <p className="text-lg md:text-xl">Content API not configured. Set PAYLOAD_CMS_URL to load dynamic content.</p>
         </div>
       </Page>
     );
   }
 
   try {
-    const { data } = await getData();
+    const { docs } = await getData();
+    const page = docs?.[0];
 
-    if (!data || data.length === 0) {
+    if (!page) {
       notFound();
     }
 
     return (
       <Page reserveNavbarHeight={false}>
-        {getContents(data[0].attributes.Contents)}
+        {getContents(page?.contents)}
       </Page>
     )
   } catch (error) {

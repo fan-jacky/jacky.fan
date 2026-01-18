@@ -2,19 +2,26 @@ import FadeInBottom from "@/components/animation/FadeInBottom";
 import { ActiveLink, Page, SectionContainer } from "@/components/basic";
 import { Heading } from "@/components/visual";
 import Image from "next/image";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, LinkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Tabs from "@/components/Tabs";
-import { LinkIcon } from "@heroicons/react/24/outline";
 import BgHeading from "@/components/visual/bgHeading";
+import { getRichTextBlocks } from "@/helpers/strapi/getRichTextBlocks";
 import type { Metadata, ResolvingMetadata } from 'next'
+
+const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;
+
+const richText = (value: any) => {
+    if (!value) return [];
+    if (Array.isArray(value)) return value;
+    if (value.root?.children) return value.root.children;
+    return [];
+};
 
 type Props = {
   params: Promise<{ slug: string }>
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
-
-const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;
 
 export async function generateMetadata( { params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
   const { slug } = await params;
@@ -34,10 +41,11 @@ export async function generateMetadata( { params, searchParams }: Props, parent:
         };
     }
   
-    const endpoint = `${PAYLOAD_CMS_URL}/api/projects?where[alias][equals]=${alias}`;
-  const { docs } = await fetch(endpoint).then((res) => res.json())
+    const endpoint = `${PAYLOAD_CMS_URL}/api/projects?where[alias][equals]=${alias}&depth=2`;
+    const { docs } = await fetch(endpoint).then((res) => res.json());
+    const project = docs?.[0];
 
-  if (!docs || !docs[0] || !docs[0].title) return {
+  if (!project || !project.title) return {
     title: "Jacky FAN",
     description: "I build websites and eat computer bugs 😉",
     openGraph: {
@@ -50,11 +58,11 @@ export async function generateMetadata( { params, searchParams }: Props, parent:
   };
 
   return {
-    title: `${docs[0].title} - Jacky FAN`,
-    description: docs[0].desc ?? "",
+    title: `${project.title} - Jacky FAN`,
+    description: project.desc ?? "",
     openGraph: {
-        title: `${docs[0].title} - Jacky FAN`,
-        description: docs[0].desc ?? "",
+        title: `${project.title} - Jacky FAN`,
+        description: project.desc ?? "",
         siteName: 'Jacky FAN',
         locale: 'en_US',
         type: 'website',
@@ -67,7 +75,7 @@ async function getData(alias: string) {
         return { docs: [] } as any;
     }
 
-    const res = await fetch(`${PAYLOAD_CMS_URL}/api/projects?where[alias][equals]=${alias}`);
+    const res = await fetch(`${PAYLOAD_CMS_URL}/api/projects?where[alias][equals]=${alias}&depth=2`);
 
     if (!res.ok) {
         throw new Error("Failed to fetch data");
@@ -80,26 +88,68 @@ export default async function ProjectDescPage({ params }: { params: Promise<{ sl
     const { slug } = await params;
     const alias = slug;
 
-    if (!STRAPI_URL) {
+    if (!PAYLOAD_CMS_URL) {
         return (
             <Page>
                 <SectionContainer>
-                    <p className="text-lg md:text-xl">Content API not configured. Set STRAPI_URL to load this project.</p>
+                    <p className="text-lg md:text-xl">Content API not configured. Set PAYLOAD_CMS_URL to load this project.</p>
                 </SectionContainer>
             </Page>
         );
     }
 
-    const { data } = await getData(alias);
+    const { docs } = await getData(alias);
+    const project = docs?.[0];
 
-    if (!data || data.length == 0) {
+    if (!project) {
         return <div className="min-h-screen w-screen flex flex-col gap-4 items-center justify-center">
         <p className="text-xl md:text-2xl w-fit">😵 Project Not Found 😵</p>
         <Link href="/" className="btn">Back to Home Page</Link>
     </div>;
     }
 
-    const { title, date, desc, tags, img, links, Contents } = data[0].attributes;
+    const { title, desc, tags = [], img, links = [], contents = [] } = project;
+    const imageUrl = typeof img === 'string' ? img : img?.url;
+
+    const tabData = (contents || []).map((block: any, index: number) => {
+        const blockType = block?.blockType;
+
+        if (blockType === 'projectContents') {
+            return {
+                name: block.name ?? `Section ${index + 1}`,
+                content: (
+                    <article className="prose text-md md:text-xl leading-6 md:leading-8 text-base-content">
+                        {richText(block.contents).map((c: any, idx: number) => getRichTextBlocks(c, {}, idx))}
+                    </article>
+                )
+            };
+        }
+
+        if (blockType === 'projectsCarousel') {
+            return {
+                name: block.name ?? `Gallery ${index + 1}`,
+                content: (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {block.items?.map((item: any, i: number) => {
+                            const mediaUrl = typeof item.media === 'string' ? item.media : item.media?.url;
+                            return (
+                                <div key={i} className="card bg-base-200 shadow-sm">
+                                    {mediaUrl && (
+                                        <div className="relative w-full aspect-video">
+                                            <Image src={mediaUrl} alt={item?.desc ?? 'project media'} fill className="object-cover rounded-t-lg" />
+                                        </div>
+                                    )}
+                                    {item?.desc && <div className="p-4 text-sm">{item.desc}</div>}
+                                </div>
+                            );
+                        })}
+                    </div>
+                )
+            }
+        }
+
+        return null;
+    }).filter(Boolean);
 
     return (
         <>
@@ -132,22 +182,26 @@ export default async function ProjectDescPage({ params }: { params: Promise<{ sl
                             </div>
                             <div className="w-full xl:w-3/5">
                                 <figure className="block aspect-video border-red-400 border-1 rounded-2xl bg-base-content relative">
-                                    <Image
-                                        src={`${process.env.STRAPI_URL}${img.data.attributes.url}`}
-                                        fill={true}
-                                        alt={title}
-                                        className="object-contain p-2"
-                                    />
+                                    {imageUrl ? (
+                                        <Image
+                                            src={imageUrl}
+                                            fill={true}
+                                            alt={title ?? "Project image"}
+                                            className="object-contain p-2"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-base-100">No image</div>
+                                    )}
                                 </figure>
                             </div>
                         </div>
                     </FadeInBottom>
                 </SectionContainer>
 
-                <Tabs data={Contents} />
+                {tabData.length > 0 && <Tabs data={tabData} />}
 
             </Page>
-            <BgHeading title={title} />
+            {title && <BgHeading title={title} />}
         </>
     );
 }

@@ -1,9 +1,16 @@
 import { getRichTextBlocks } from "@/helpers/strapi/getRichTextBlocks";
 import Link from "next/link";
 
+const richText = (value: any) => {
+    if (!value) return [];
+    if (Array.isArray(value)) return value;
+    if (value.root?.children) return value.root.children;
+    return [];
+};
+
 export default function Footer({ siteSetting }: { siteSetting: any }) {
     
-    if (!siteSetting || !siteSetting.attributes) {
+    if (!siteSetting) {
         return null;
     }
 
@@ -22,7 +29,7 @@ export default function Footer({ siteSetting }: { siteSetting: any }) {
         <footer className="footer footer-center p-10 bg-base-300 text-base-content rounded">
             <div>
                 <ul className="menu menu-horizontal">
-                    {siteSetting.attributes.quickLinks?.map((link: any, index: number) => (
+                    {siteSetting.quickLinks?.map((link: any, index: number) => (
                         <li key={index}>
                             <Link href={link.url} className="link link-primary no-underline" target="_blank">{link.name}</Link>
                         </li>
@@ -30,7 +37,7 @@ export default function Footer({ siteSetting }: { siteSetting: any }) {
                 </ul>
             </div>
             <div className={footerDescClasses}>
-                { siteSetting.attributes.footerText?.map((t: any, i: number) => getRichTextBlocks(t, {}, i)) }
+                { richText(siteSetting.footerText).map((t: any, i: number) => getRichTextBlocks(t, {}, i)) }
             </div>
         </footer>
     );
