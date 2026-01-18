@@ -13,7 +13,7 @@ You can access this website via https://jacky.fan
 -   Responsive Design
 -   Contact Form
 -   Site Map
--   Integration with Strapi CMS
+-   Integration with Payload CMS
 -   Project Listing / Details Page
 
 ## Screenshots

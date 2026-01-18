@@ -10,13 +10,13 @@ type Props = {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-const STRAPI_URL = process.env.STRAPI_URL;
+const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;
 
 export async function generateMetadata({ params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     const { slug } = await params;
     const url = slug;
 
-    if (!STRAPI_URL) {
+    if (!PAYLOAD_CMS_URL) {
         return {
             title: "Jacky FAN",
             description: "I build websites and eat computer bugs 😉",
@@ -30,10 +30,10 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
         };
     }
 
-    const endpoint = `${STRAPI_URL}/api/pages?populate=*&filters[url][$eqi]=/${url}`;
-    const { data } = await fetch(endpoint).then((res) => res.json())
+    const endpoint = `${PAYLOAD_CMS_URL}/api/pages?where[url][equals]=/${url}`;
+    const { docs } = await fetch(endpoint).then((res) => res.json())
 
-    if (!data || !data[0] || !data[0].attributes?.pageTitle || !data[0].attributes?.metaDesc) return {
+    if (!docs || !docs[0] || !docs[0].pageTitle || !docs[0].metaDesc) return {
         title: "Jacky FAN",
         description: "I build websites and eat computer bugs 😉",
         openGraph: {
@@ -46,11 +46,11 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
     };
 
     return {
-        title: `${data[0].attributes.pageTitle} - Jacky FAN`,
-        description: data[0].attributes.metaDesc,
+        title: `${docs[0].pageTitle} - Jacky FAN`,
+        description: docs[0].metaDesc,
         openGraph: {
-            title: `${data[0].attributes.pageTitle} - Jacky FAN`,
-            description: data[0].attributes.metaDesc,
+            title: `${docs[0].pageTitle} - Jacky FAN`,
+            description: docs[0].metaDesc,
             siteName: 'Jacky FAN',
             locale: 'en_US',
             type: 'website',
@@ -59,11 +59,11 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
 }
 
 async function getData(url: string) {
-    if (!STRAPI_URL) {
-        return { data: [] } as any;
+    if (!PAYLOAD_CMS_URL) {
+        return { docs: [] } as any;
     }
 
-    const res = await fetch(`${STRAPI_URL}/api/pages?populate=*&filters[url][$eqi]=/${url}`);
+    const res = await fetch(`${PAYLOAD_CMS_URL}/api/pages?where[url][equals]=/${url}`);
 
     if (!res.ok) {
         throw new Error("Failed to fetch data");
@@ -79,9 +79,9 @@ async function checkPageExist(params: { slug: string }) {
         redirect("/404");
     }
 
-    const { data } = await getData(params.slug);
+    const { docs } = await getData(params.slug);
 
-    if (data.length == 0) {
+    if (docs.length == 0) {
         revalidatePath(`/${params.slug}`);
         redirect("/404?from=" + params.slug);
     }
@@ -90,11 +90,11 @@ async function checkPageExist(params: { slug: string }) {
 export default async function NormalPage ({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
 
-    if (!STRAPI_URL) {
+    if (!PAYLOAD_CMS_URL) {
         return (
             <Page>
                 <SectionContainer>
-                    <p className="text-lg md:text-xl">Content API not configured. Set STRAPI_URL to load this page.</p>
+                    <p className="text-lg md:text-xl">Content API not configured. Set PAYLOAD_CMS_URL to load this page.</p>
                 </SectionContainer>
             </Page>
         );

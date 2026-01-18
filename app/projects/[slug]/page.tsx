@@ -14,13 +14,13 @@ type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-const STRAPI_URL = process.env.STRAPI_URL;
+const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;
 
 export async function generateMetadata( { params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
   const { slug } = await params;
   const alias = slug;
 
-    if (!STRAPI_URL) {
+    if (!PAYLOAD_CMS_URL) {
         return {
             title: "Jacky FAN",
             description: "I build websites and eat computer bugs 😉",
@@ -34,10 +34,10 @@ export async function generateMetadata( { params, searchParams }: Props, parent:
         };
     }
   
-    const endpoint = `${STRAPI_URL}/api/projects?populate=*&filters[alias][$eqi]=${alias}`;
-  const { data } = await fetch(endpoint).then((res) => res.json())
+    const endpoint = `${PAYLOAD_CMS_URL}/api/projects?where[alias][equals]=${alias}`;
+  const { docs } = await fetch(endpoint).then((res) => res.json())
 
-  if (!data || !data[0] || !data[0].attributes?.title) return {
+  if (!docs || !docs[0] || !docs[0].title) return {
     title: "Jacky FAN",
     description: "I build websites and eat computer bugs 😉",
     openGraph: {
@@ -50,11 +50,11 @@ export async function generateMetadata( { params, searchParams }: Props, parent:
   };
 
   return {
-    title: `${data[0].attributes.title} - Jacky FAN`,
-    description: data[0].attributes.desc ?? "",
+    title: `${docs[0].title} - Jacky FAN`,
+    description: docs[0].desc ?? "",
     openGraph: {
-        title: `${data[0].attributes.title} - Jacky FAN`,
-        description: data[0].attributes.desc ?? "",
+        title: `${docs[0].title} - Jacky FAN`,
+        description: docs[0].desc ?? "",
         siteName: 'Jacky FAN',
         locale: 'en_US',
         type: 'website',
@@ -63,11 +63,11 @@ export async function generateMetadata( { params, searchParams }: Props, parent:
 }
 
 async function getData(alias: string) {
-    if (!STRAPI_URL) {
-        return { data: [] } as any;
+    if (!PAYLOAD_CMS_URL) {
+        return { docs: [] } as any;
     }
 
-    const res = await fetch(`${STRAPI_URL}/api/projects?populate=*&filters[alias][$eqi]=${alias}`);
+    const res = await fetch(`${PAYLOAD_CMS_URL}/api/projects?where[alias][equals]=${alias}`);
 
     if (!res.ok) {
         throw new Error("Failed to fetch data");
