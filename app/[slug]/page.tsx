@@ -102,14 +102,15 @@ export default async function NormalPage ({ params }: { params: Promise<{ slug: 
 
     await checkPageExist({ slug });
 
-    const { data } = await getData(slug);
+    const { docs } = await getData(slug);
+    const page = docs[0];
 
     return (
         <>
             <Page>
-                {getContents(data[0].attributes.Contents)}
+                {getContents(page.contents)}
             </Page>
-            {data[0].attributes.enableBgHeading && <BgHeading title={data[0].attributes.pageTitle} />}
+            {page.enableBgHeading && <BgHeading title={page.pageTitle} />}
         </>
 
     );
