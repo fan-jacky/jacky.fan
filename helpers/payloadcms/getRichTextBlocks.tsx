@@ -150,7 +150,9 @@ function renderLexicalNode(node: any, key: React.Key): React.ReactNode {
       if (!media || typeof media === "string") return null;
 
       const src = resolveMediaUrl(media.url ?? "");
-      if (!src) return null;
+      // If we couldn't build an absolute URL, skip — the optimizer would
+      // try to fetch a relative path against the Next.js server and fail.
+      if (!src || !src.startsWith("http")) return null;
 
       const alt: string = media.alt ?? "";
       const width: number | undefined = media.width ?? undefined;
@@ -164,6 +166,7 @@ function renderLexicalNode(node: any, key: React.Key): React.ReactNode {
             alt={alt}
             width={width}
             height={height}
+            unoptimized
             className="max-w-full h-auto"
           />
         );

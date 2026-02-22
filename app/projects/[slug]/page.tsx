@@ -78,7 +78,9 @@ async function getData(alias: string) {
     const res = await fetch(`${PAYLOAD_CMS_URL}/api/projects?where[alias][equals]=${alias}&depth=2`);
 
     if (!res.ok) {
-        throw new Error("Failed to fetch data");
+        console.log(res);
+        
+        throw new Error("Failed to fetch data", { cause: res.statusText });
     }
 
     return res.json();
