@@ -1,4 +1,14 @@
+import Image from "next/image";
 import { ActiveLink } from "@/components/basic";
+
+const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL ?? "";
+
+/** Resolve a Payload media URL to an absolute URL. */
+function resolveMediaUrl(url: string): string {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  return `${PAYLOAD_CMS_URL}${url}`;
+}
 
 // Lexical text format bitmask constants
 const IS_BOLD        = 1;
@@ -133,6 +143,38 @@ function renderLexicalNode(node: any, key: React.Key): React.ReactNode {
 
     case "listitem":
       return renderListItemNode(node, key);
+
+    case "upload": {
+      // Populated when depth >= 1; value may also be a bare string ID
+      const media = node.value;
+      if (!media || typeof media === "string") return null;
+
+      const src = resolveMediaUrl(media.url ?? "");
+      if (!src) return null;
+
+      const alt: string = media.alt ?? "";
+      const width: number | undefined = media.width ?? undefined;
+      const height: number | undefined = media.height ?? undefined;
+
+      if (width && height) {
+        return (
+          <Image
+            key={key}
+            src={src}
+            alt={alt}
+            width={width}
+            height={height}
+            className="max-w-full h-auto"
+          />
+        );
+      }
+
+      // Fallback when dimensions are not available
+      return (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img key={key} src={src} alt={alt} className="max-w-full h-auto" />
+      );
+    }
 
     case "horizontalrule":
       return <hr key={key} />;

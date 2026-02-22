@@ -26,6 +26,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "**",
       },
+      // Allow Payload CMS media over HTTP (local dev)
+      {
+        protocol: "http",
+        hostname: "**",
+      },
     ],
   },
 };
