@@ -6,7 +6,7 @@ import { ArrowLeftIcon, LinkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Tabs from "@/components/Tabs";
 import BgHeading from "@/components/visual/bgHeading";
-import { getRichTextBlocks } from "@/helpers/strapi/getRichTextBlocks";
+import { getRichTextBlocks } from "@/helpers/payloadcms/getRichTextBlocks";
 import type { Metadata, ResolvingMetadata } from 'next'
 
 const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;

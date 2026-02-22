@@ -1,4 +1,4 @@
-import { getRichTextBlocks } from "@/helpers/strapi/getRichTextBlocks";
+import { getRichTextBlocks } from "@/helpers/payloadcms/getRichTextBlocks";
 import Link from "next/link";
 
 const richText = (value: any) => {

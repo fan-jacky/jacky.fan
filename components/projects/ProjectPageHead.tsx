@@ -1,6 +1,6 @@
 import FadeInBottom from "../animation/FadeInBottom";
 import { Heading } from "../visual";
-import { getRichTextBlocks } from "@/helpers/strapi/getRichTextBlocks";
+import { getRichTextBlocks } from "@/helpers/payloadcms/getRichTextBlocks";
 
 const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;
 

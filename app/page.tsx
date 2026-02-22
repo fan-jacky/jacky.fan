@@ -1,5 +1,5 @@
 import { Page } from '@/components/basic'
-import { getContents } from '@/helpers/strapi/getContent'
+import { getContents } from '@/helpers/payloadcms/getContent'
 import { notFound } from 'next/navigation'
 import type { Metadata, ResolvingMetadata } from 'next'
 
