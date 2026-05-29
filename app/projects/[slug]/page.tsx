@@ -9,6 +9,8 @@ import { LinkIcon } from "@heroicons/react/24/outline";
 import BgHeading from "@/components/visual/bgHeading";
 import type { Metadata, ResolvingMetadata } from 'next'
 
+export const runtime = 'edge';
+
 type Props = {
   params: Promise<{ slug: string }>
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>

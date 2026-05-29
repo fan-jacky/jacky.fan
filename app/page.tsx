@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect, notFound } from 'next/navigation'
 import type { Metadata, ResolvingMetadata } from 'next'
 
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 const STRAPI_URL = process.env.STRAPI_URL;
 
