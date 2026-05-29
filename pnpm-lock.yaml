@@ -29,6 +29,18 @@ importers:
 
   .:
     dependencies:
+      '@fontsource/cabin-sketch':
+        specifier: ^5.2.8
+        version: 5.2.8
+      '@fontsource/dosis':
+        specifier: ^5.2.8
+        version: 5.2.8
+      '@fontsource/outfit':
+        specifier: ^5.2.8
+        version: 5.2.8
+      '@fontsource/patrick-hand':
+        specifier: ^5.2.8
+        version: 5.2.8
       '@heroicons/react':
         specifier: ^2.2.0
         version: 2.2.0(react@18.3.1)
@@ -253,6 +265,18 @@ packages:
   '@eslint/plugin-kit@0.4.1':
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@fontsource/cabin-sketch@5.2.8':
+    resolution: {integrity: sha512-3kwkejvSY5iTFDNP9v+LY9TIV0KTsb3EPkTgFVDbKUDq7kjtsEhCulHjh0CGofxB5G0+FJKnQ/Klqs6NdOZmhg==}
+
+  '@fontsource/dosis@5.2.8':
+    resolution: {integrity: sha512-8c7kJgWFeGr2/Oe+EqDPf3onSGs5bQmng7nZtKkdto62313CQCa0E7vSyFiKuh5jsXIVi8wz1mHih4kRhB2p+A==}
+
+  '@fontsource/outfit@5.2.8':
+    resolution: {integrity: sha512-rXC6g0MqD7cOBjht0bMqc43qM6lRqDLML9KXsmg9uykz0wLQhy8Z/ajrMG6iyoT3NJR+MYgU+OEHp7uHoTb+Yw==}
+
+  '@fontsource/patrick-hand@5.2.8':
+    resolution: {integrity: sha512-FZx34VLuiF+Pjv/A/m1bTxjR6hAvmL6vdCp62uypVdgFvSrPrBOxX+vCXVy8lfNVFqvKfm/ghun+aaYVYqfBEg==}
 
   '@heroicons/react@2.2.0':
     resolution: {integrity: sha512-LMcepvRaS9LYHJGsF0zzmgKCUim/X3N/DQKc4jepAXJ7l8QxJ1PmxJzqplF2Z3FE4PqBAIGyJAQ/w4B5dsqbtQ==}
@@ -3088,6 +3112,14 @@ snapshots:
     dependencies:
       '@eslint/core': 0.17.0
       levn: 0.4.1
+
+  '@fontsource/cabin-sketch@5.2.8': {}
+
+  '@fontsource/dosis@5.2.8': {}
+
+  '@fontsource/outfit@5.2.8': {}
+
+  '@fontsource/patrick-hand@5.2.8': {}
 
   '@heroicons/react@2.2.0(react@18.3.1)':
     dependencies:
