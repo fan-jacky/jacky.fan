@@ -40,7 +40,7 @@ export async function POST(request: Request) {
   }
 
   for (const tag of tags) {
-    revalidateTag(tag);
+    revalidateTag(tag, 'max');
   }
 
   for (const path of paths) {
