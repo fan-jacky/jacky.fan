@@ -1,13 +1,13 @@
 import Image from "next/image";
 import { createElement } from "react";
 import { ActiveLink } from "@/components/basic";
-import { getPayloadCmsUrl } from "./api";
+import { getPayloadCmsPublicUrl } from "./api";
 
 /** Resolve a Payload media URL to an absolute URL. */
 function resolveMediaUrl(url: string): string {
   if (!url) return "";
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
-  const cmsUrl = getPayloadCmsUrl();
+  const cmsUrl = getPayloadCmsPublicUrl();
   return cmsUrl ? `${cmsUrl}${url}` : url;
 }
 

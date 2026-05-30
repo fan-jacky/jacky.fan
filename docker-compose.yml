@@ -3,14 +3,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    env_file:
+      - path: ./.env
+        required: false
     ports:
       - "${HOST_PORT:-3000}:3000"
     environment:
       NODE_ENV: production
-      RECAPTCHA_SITE_KEY: ${RECAPTCHA_SITE_KEY:-}
-      RECAPTCHA_SECRET_KEY: ${RECAPTCHA_SECRET_KEY:-}
-      GA_ID: ${GA_ID:-}
-      PAYLOAD_CMS_URL: ${PAYLOAD_CMS_URL:-http://cms:3000}
+      PAYLOAD_CMS_URL: http://cms:3000
+      NEXT_PUBLIC_PAYLOAD_CMS_URL: ${NEXT_PUBLIC_PAYLOAD_CMS_URL:-http://localhost:${CMS_HOST_PORT:-3001}}
     depends_on:
       - cms
     restart: unless-stopped
@@ -19,13 +20,17 @@ services:
     build:
       context: ./cms
       dockerfile: Dockerfile
+    env_file:
+      - path: ./.env
+        required: false
+      - path: ./cms/.env
+        required: false
     ports:
       - "${CMS_HOST_PORT:-3001}:3000"
     environment:
+      DATABASE_URL: mongodb://mongo:27017/payload
       NODE_ENV: production
-      DATABASE_URL: ${DATABASE_URL:-mongodb://mongo:27017/payload}
-      PAYLOAD_SECRET: ${PAYLOAD_SECRET:-}
-      LIVE_PREVIEW_URL: ${LIVE_PREVIEW_URL:-http://web:3000}
+      LIVE_PREVIEW_URL: ${LIVE_PREVIEW_URL:-http://localhost:${HOST_PORT:-3000}}
     depends_on:
       mongo:
         condition: service_healthy

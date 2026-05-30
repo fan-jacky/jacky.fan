@@ -2,7 +2,7 @@ import { Page, SectionContainer } from "@/components/basic";
 import LivePreviewPage from "@/components/payloadcms/LivePreviewPage";
 import type { ProjectGridItem } from "@/components/home/projects/ProjectGrid";
 import { sortProjects } from "@/components/home/projects/ProjectGrid";
-import { fetchPayloadJson, getPayloadCmsUrl, isLivePreviewEnabled } from "@/helpers/payloadcms/api";
+import { fetchPayloadJson, getPayloadCmsPublicUrl, getPayloadCmsUrl, isLivePreviewEnabled } from "@/helpers/payloadcms/api";
 import { getContents, hasProjectGridBlock } from "@/helpers/payloadcms/getContent";
 import type { Metadata, ResolvingMetadata } from 'next';
 import { revalidatePath } from "next/cache";
@@ -142,7 +142,7 @@ export default async function NormalPage ({
                     depth={PAGE_DEPTH}
                     initialPage={page as Record<string, unknown>}
                     projectGridItems={projectGridItems}
-                    serverURL={getPayloadCmsUrl()!}
+                    serverURL={getPayloadCmsPublicUrl() ?? getPayloadCmsUrl()!}
                     showBgHeading={true}
                 />
             ) : (

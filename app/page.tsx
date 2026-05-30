@@ -2,7 +2,7 @@ import { Page } from '@/components/basic'
 import LivePreviewPage from '@/components/payloadcms/LivePreviewPage'
 import type { ProjectGridItem } from '@/components/home/projects/ProjectGrid'
 import { sortProjects } from '@/components/home/projects/ProjectGrid'
-import { fetchPayloadJson, getPayloadCmsUrl, isLivePreviewEnabled } from '@/helpers/payloadcms/api'
+import { fetchPayloadJson, getPayloadCmsPublicUrl, getPayloadCmsUrl, isLivePreviewEnabled } from '@/helpers/payloadcms/api'
 import { getContents, hasProjectGridBlock } from '@/helpers/payloadcms/getContent'
 import { notFound } from 'next/navigation'
 import type { Metadata, ResolvingMetadata } from 'next'
@@ -116,7 +116,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
             depth={PAGE_DEPTH}
             initialPage={page as Record<string, unknown>}
             projectGridItems={projectGridItems}
-            serverURL={getPayloadCmsUrl()!}
+            serverURL={getPayloadCmsPublicUrl() ?? getPayloadCmsUrl()!}
           />
         ) : (
           getContents(page?.contents, { projectGridItems })

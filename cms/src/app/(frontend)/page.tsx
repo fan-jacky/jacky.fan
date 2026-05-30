@@ -1,10 +1,9 @@
 import { headers as getHeaders } from 'next/headers.js'
-import Image from 'next/image'
 import { getPayload } from 'payload'
 import React from 'react'
 import { fileURLToPath } from 'url'
 
-import config from '@/payload.config'
+import config from '../../payload.config'
 import './styles.css'
 
 export default async function HomePage() {
@@ -20,7 +19,7 @@ export default async function HomePage() {
       <div className="content">
         <picture>
           <source srcSet="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg" />
-          <Image
+          <img
             alt="Payload Logo"
             height={65}
             src="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg"

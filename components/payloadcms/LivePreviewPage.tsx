@@ -5,9 +5,10 @@ import { useLivePreview } from '@payloadcms/live-preview-react'
 import type { ProjectGridItem } from '@/components/home/projects/ProjectGrid'
 import BgHeading from '@/components/visual/bgHeading'
 import { getContents } from '@/helpers/payloadcms/getContent'
+import type { PageContentType } from '@/interfaces/ContentBlockProps'
 
 type PageDocument = {
-  contents?: unknown[] | null
+  contents?: PageContentType[] | null
   enableBgHeading?: boolean | null
   pageTitle?: string | null
 }

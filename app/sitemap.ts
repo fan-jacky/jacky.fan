@@ -8,8 +8,13 @@ async function getData(path: string) {
         return { docs: [] } as any;
     }
 
-    const data = await fetchPayloadJson<{ docs?: unknown[] }>(path);
-    return data ?? { docs: [] };
+    try {
+        const data = await fetchPayloadJson<{ docs?: unknown[] }>(path);
+        return data ?? { docs: [] };
+    } catch (error) {
+        console.error(`Error generating sitemap data for ${path}:`, error);
+        return { docs: [] } as any;
+    }
 }
 
 async function getPages () {
@@ -46,6 +51,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const pages = await getPages();
     const projectPages = await getProjectPages();
+
+    if (pages.length === 0 && projectPages.length === 0) {
+        return [{ url: siteUrl, changeFrequency: 'monthly', priority: 1 }];
+    }
 
     return [
         ...pages,

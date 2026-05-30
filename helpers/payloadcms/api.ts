@@ -32,6 +32,20 @@ export function getPayloadCmsUrl(): string | null {
   return null;
 }
 
+export function getPayloadCmsPublicUrl(): string | null {
+  const configuredUrl = normalizeBaseUrl(
+    process.env.NEXT_PUBLIC_PAYLOAD_CMS_URL ?? process.env.PAYLOAD_CMS_URL,
+  );
+
+  if (configuredUrl) return configuredUrl;
+
+  if (process.env.NODE_ENV !== "production") {
+    return DEFAULT_DEV_PAYLOAD_CMS_URL;
+  }
+
+  return null;
+}
+
 export function getPayloadApiUrl(path: string): string | null {
   const baseUrl = getPayloadCmsUrl();
 
