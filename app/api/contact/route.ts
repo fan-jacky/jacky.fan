@@ -1,5 +1,3 @@
-export const runtime = 'edge';
-
 interface ContactRequest {
   name: string;
   email: string;

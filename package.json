@@ -5,13 +5,17 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "start": "next start",
     "lint": "eslint .",
     "docker:build": "docker compose build --no-cache",
-    "docker:up": "docker compose up -d",
-    "deploy": "chmod +x ./script/deploy.sh && ./script/deploy.sh"
+    "docker:up": "docker compose up -d"
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "^1.13.2",
     "@fontsource/cabin-sketch": "^5.2.8",
     "@fontsource/dosis": "^5.2.8",
     "@fontsource/outfit": "^5.2.8",
@@ -47,7 +51,8 @@
   },
   "devDependencies": {
     "@types/locomotive-scroll": "^4.1.4",
-    "@types/three": "^0.155.1"
+    "@types/three": "^0.155.1",
+    "wrangler": "^4.18.0"
   },
   "resolutions": {
     "jackspeak": "2.1.1"

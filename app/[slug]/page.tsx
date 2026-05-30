@@ -5,8 +5,6 @@ import type { Metadata, ResolvingMetadata } from 'next';
 import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation'
 
-export const runtime = 'edge';
-
 type Props = {
     params: Promise<{ slug: string }>
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
