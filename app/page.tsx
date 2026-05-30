@@ -1,17 +1,17 @@
 import { Page } from '@/components/basic'
 import { getContents } from '@/helpers/payloadcms/getContent'
+import { fetchPayloadJson, getPayloadCmsUrl } from '@/helpers/payloadcms/api'
 import { notFound } from 'next/navigation'
 import type { Metadata, ResolvingMetadata } from 'next'
 
 export const dynamic = 'force-dynamic';
-const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;
 
 type Props = {
   params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
-  if (!PAYLOAD_CMS_URL) {
+  if (!getPayloadCmsUrl()) {
     return {
       title: "Jacky FAN - Frontend Developer in Hong Kong",
       description: "I build websites and eat computer bugs 😉",
@@ -19,8 +19,11 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
   }
 
   try {
-    const endpoint = `${PAYLOAD_CMS_URL}/api/pages?where[url][equals]=/&depth=3`;
-    const { docs } = await fetch(endpoint, { next: { revalidate: 3600 } }).then((res) => res.json());
+    const data = await fetchPayloadJson<{ docs?: Array<{ pageTitle?: string; metaDesc?: string }> }>(
+      'pages?where[url][equals]=/&depth=3',
+      { next: { revalidate: 3600 } },
+    );
+    const { docs } = data ?? {};
     const page = docs?.[0];
 
     if (!page?.pageTitle || !page?.metaDesc) {
@@ -44,24 +47,20 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 }
 
 async function getData() {
-  if (!PAYLOAD_CMS_URL) {
+  if (!getPayloadCmsUrl()) {
     return { docs: [] } as any;
   }
 
-  const res = await fetch(
-    `${PAYLOAD_CMS_URL}/api/pages?where[url][equals]=/&depth=3`,
-    { next: { revalidate: 3600 } }
+  const data = await fetchPayloadJson<{ docs?: unknown[] }>(
+    'pages?where[url][equals]=/&depth=3',
+    { next: { revalidate: 3600 } },
   );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch page data");
-  }
-
-  return res.json();
+  return data ?? { docs: [] };
 }
 
 export default async function Home() {
-  if (!PAYLOAD_CMS_URL) {
+  if (!getPayloadCmsUrl()) {
     return (
       <Page reserveNavbarHeight={false}>
         <div className="py-16 text-center">

@@ -35,6 +35,8 @@ services:
 
   mongo:
     image: mongo:7.0
+    ports:
+      - "${MONGO_HOST_PORT:-27017}:27017"
     command:
       - --storageEngine=wiredTiger
     volumes:

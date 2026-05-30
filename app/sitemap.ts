@@ -1,23 +1,15 @@
 import type { MetadataRoute } from 'next'
+import { fetchPayloadJson, getPayloadCmsUrl } from '@/helpers/payloadcms/api'
 
-const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;
-const api = PAYLOAD_CMS_URL ? `${PAYLOAD_CMS_URL}/api/` : null;
 const siteUrl = "https://jacky.fan";
 
 async function getData(path: string) {
-    if (!api) {
+    if (!getPayloadCmsUrl()) {
         return { docs: [] } as any;
     }
 
-    const res = await fetch(`${api}${path}`);
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch data");
-    }
-
-    const json = await res.json();
-
-    return json;
+    const data = await fetchPayloadJson<{ docs?: unknown[] }>(path);
+    return data ?? { docs: [] };
 }
 
 async function getPages () {
@@ -47,7 +39,7 @@ async function getProjectPages () {
 }
  
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    if (!PAYLOAD_CMS_URL) {
+    if (!getPayloadCmsUrl()) {
         // Fallback minimal sitemap when content API is not configured
         return [{ url: siteUrl, changeFrequency: 'monthly', priority: 1 }];
     }

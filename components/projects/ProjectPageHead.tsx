@@ -1,8 +1,7 @@
 import FadeInBottom from "../animation/FadeInBottom";
 import { Heading } from "../visual";
+import { fetchPayloadJson, getPayloadCmsUrl } from "@/helpers/payloadcms/api";
 import { getRichTextBlocks } from "@/helpers/payloadcms/getRichTextBlocks";
-
-const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;
 
 const richText = (value: any) => {
   if (!value) return [];
@@ -12,20 +11,11 @@ const richText = (value: any) => {
 };
 
 async function getData() {
-  if (!PAYLOAD_CMS_URL) {
+  if (!getPayloadCmsUrl()) {
     return { data: null } as any;
   }
 
-  const res = await fetch(
-    `${PAYLOAD_CMS_URL}/api/globals/project_page_settings?depth=2`,
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  const data = await res.json();
-  return data;
+  return fetchPayloadJson('globals/project_page_settings?depth=2');
 }
 
 export default async function ProjectPageHead() {

@@ -2,19 +2,12 @@ import React from "react";
 import { Navbar, Footer } from "@/components";
 import LocomotiveScrollWrappper from '@/components/animation/LocomotiveScrollWrapper'
 import PageEnterAnimation from "../animation/PageEnterAnimation";
-
-const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;
+import { fetchPayloadJson, getPayloadCmsUrl } from "@/helpers/payloadcms/api";
 
 async function getData() {
-    if (!PAYLOAD_CMS_URL) return null;
+    if (!getPayloadCmsUrl()) return null;
 
-    const res = await fetch(`${PAYLOAD_CMS_URL}/api/globals/site_settings?depth=2`, { next: { revalidate: 3600 } });
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch site settings");
-    }
-
-    return res.json();
+    return fetchPayloadJson('globals/site_settings?depth=2', { next: { revalidate: 3600 } });
 }
 
 export default async function Page({ children, reserveNavbarHeight = true }: { children?: React.ReactNode, reserveNavbarHeight?: boolean }) {

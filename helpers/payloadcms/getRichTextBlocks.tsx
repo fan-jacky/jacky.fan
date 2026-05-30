@@ -1,14 +1,14 @@
 import Image from "next/image";
 import { createElement } from "react";
 import { ActiveLink } from "@/components/basic";
-
-const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL ?? "";
+import { getPayloadCmsUrl } from "./api";
 
 /** Resolve a Payload media URL to an absolute URL. */
 function resolveMediaUrl(url: string): string {
   if (!url) return "";
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
-  return `${PAYLOAD_CMS_URL}${url}`;
+  const cmsUrl = getPayloadCmsUrl();
+  return cmsUrl ? `${cmsUrl}${url}` : url;
 }
 
 // Lexical text format bitmask constants

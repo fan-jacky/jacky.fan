@@ -1,21 +1,15 @@
 import FadeInBottom from "@/components/animation/FadeInBottom";
 import { SectionContainer } from "@/components/basic";
 import ProjectBlock from "@/components/home/projects/ProjectBlock";
-
-const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;
+import { fetchPayloadJson, getPayloadCmsUrl } from "@/helpers/payloadcms/api";
 
 async function getData() {
-    if (!PAYLOAD_CMS_URL) {
+    if (!getPayloadCmsUrl()) {
         return { docs: [] } as any;
     }
 
-    const res = await fetch(`${PAYLOAD_CMS_URL}/api/projects?depth=1`);
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch data");
-    }
-
-    return res.json();
+    const data = await fetchPayloadJson<{ docs?: unknown[] }>('projects?depth=1');
+    return data ?? { docs: [] };
 }
 
 export default async function ProjectGrid() {

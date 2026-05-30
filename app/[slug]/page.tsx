@@ -1,5 +1,6 @@
 import { Page, SectionContainer } from "@/components/basic";
 import BgHeading from "@/components/visual/bgHeading";
+import { fetchPayloadJson, getPayloadCmsUrl } from "@/helpers/payloadcms/api";
 import { getContents } from "@/helpers/payloadcms/getContent";
 import type { Metadata, ResolvingMetadata } from 'next';
 import { revalidatePath } from "next/cache";
@@ -10,13 +11,11 @@ type Props = {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;
-
 export async function generateMetadata({ params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     const { slug } = await params;
     const url = slug;
 
-    if (!PAYLOAD_CMS_URL) {
+    if (!getPayloadCmsUrl()) {
         return {
             title: "Jacky FAN",
             description: "I build websites and eat computer bugs 😉",
@@ -30,8 +29,8 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
         };
     }
 
-    const endpoint = `${PAYLOAD_CMS_URL}/api/pages?where[url][equals]=/${url}`;
-    const { docs } = await fetch(endpoint).then((res) => res.json())
+    const data = await fetchPayloadJson<{ docs?: Array<{ pageTitle?: string; metaDesc?: string }> }>(`pages?where[url][equals]=/${url}`);
+    const { docs } = data ?? {};
 
     if (!docs || !docs[0] || !docs[0].pageTitle || !docs[0].metaDesc) return {
         title: "Jacky FAN",
@@ -59,17 +58,12 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
 }
 
 async function getData(url: string) {
-    if (!PAYLOAD_CMS_URL) {
+    if (!getPayloadCmsUrl()) {
         return { docs: [] } as any;
     }
 
-    const res = await fetch(`${PAYLOAD_CMS_URL}/api/pages?where[url][equals]=/${url}`);
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch data");
-    }
-
-    return res.json();
+    const data = await fetchPayloadJson<{ docs?: unknown[] }>(`pages?where[url][equals]=/${url}`);
+    return data ?? { docs: [] };
 }
 
 
@@ -90,7 +84,7 @@ async function checkPageExist(params: { slug: string }) {
 export default async function NormalPage ({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
 
-    if (!PAYLOAD_CMS_URL) {
+    if (!getPayloadCmsUrl()) {
         return (
             <Page>
                 <SectionContainer>

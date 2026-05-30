@@ -6,10 +6,9 @@ import { ArrowLeftIcon, LinkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Tabs from "@/components/Tabs";
 import BgHeading from "@/components/visual/bgHeading";
+import { fetchPayloadJson, getPayloadCmsUrl } from "@/helpers/payloadcms/api";
 import { getRichTextBlocks } from "@/helpers/payloadcms/getRichTextBlocks";
 import type { Metadata, ResolvingMetadata } from 'next'
-
-const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL;
 
 const richText = (value: any) => {
     if (!value) return [];
@@ -27,7 +26,7 @@ export async function generateMetadata( { params, searchParams }: Props, parent:
   const { slug } = await params;
   const alias = slug;
 
-    if (!PAYLOAD_CMS_URL) {
+        if (!getPayloadCmsUrl()) {
         return {
             title: "Jacky FAN",
             description: "I build websites and eat computer bugs 😉",
@@ -41,8 +40,8 @@ export async function generateMetadata( { params, searchParams }: Props, parent:
         };
     }
   
-    const endpoint = `${PAYLOAD_CMS_URL}/api/projects?where[alias][equals]=${alias}&depth=2`;
-    const { docs } = await fetch(endpoint).then((res) => res.json());
+    const data = await fetchPayloadJson<{ docs?: Array<{ title?: string; desc?: string }> }>(`projects?where[alias][equals]=${alias}&depth=2`);
+    const { docs } = data ?? {};
     const project = docs?.[0];
 
   if (!project || !project.title) return {
@@ -71,26 +70,19 @@ export async function generateMetadata( { params, searchParams }: Props, parent:
 }
 
 async function getData(alias: string) {
-    if (!PAYLOAD_CMS_URL) {
+    if (!getPayloadCmsUrl()) {
         return { docs: [] } as any;
     }
 
-    const res = await fetch(`${PAYLOAD_CMS_URL}/api/projects?where[alias][equals]=${alias}&depth=2`);
-
-    if (!res.ok) {
-        console.log(res);
-        
-        throw new Error("Failed to fetch data", { cause: res.statusText });
-    }
-
-    return res.json();
+    const data = await fetchPayloadJson<{ docs?: unknown[] }>(`projects?where[alias][equals]=${alias}&depth=2`);
+    return data ?? { docs: [] };
 }
 
 export default async function ProjectDescPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const alias = slug;
 
-    if (!PAYLOAD_CMS_URL) {
+    if (!getPayloadCmsUrl()) {
         return (
             <Page>
                 <SectionContainer>
