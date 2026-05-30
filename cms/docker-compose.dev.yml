@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  payload-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3001:3000'
+    depends_on:
+      mongo:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-mongodb://mongo:27017/payload}
+      NODE_ENV: development
+      CI: "true"
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
+      - node_modules_volume:/app/node_modules
+      - next_cache:/app/.next
+    restart: unless-stopped
+    command: sh -c "pnpm install --frozen-lockfile && pnpm run generate:importmap && pnpm run dev"
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    command:
+      - --storageEngine=wiredTiger
+    volumes:
+      - mongo_data:/data/db
+    logging:
+      driver: none
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  node_modules_volume:
+  next_cache:
+  mongo_data:
+
+networks:
+  default:
+    name: payload-dev-network
