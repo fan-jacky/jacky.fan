@@ -17,21 +17,30 @@ const dirname = path.dirname(filename)
 
 const defaultFrontendUrl = 'http://localhost:3000'
 const defaultCmsUrl = 'http://localhost:3001'
+const isProduction = process.env.NODE_ENV === 'production'
+
+const frontendUrl = process.env.LIVE_PREVIEW_URL || (!isProduction ? defaultFrontendUrl : undefined)
+const cmsUrl =
+  process.env.PAYLOAD_SERVER_URL ||
+  process.env.NEXT_PUBLIC_PAYLOAD_CMS_URL ||
+  (!isProduction ? defaultCmsUrl : undefined)
 
 function getAllowedOrigins() {
-  const origins = new Set<string>([
-    defaultFrontendUrl,
-    'http://127.0.0.1:3000',
-    defaultCmsUrl,
-    'http://127.0.0.1:3001',
-  ])
+  const origins = new Set<string>()
 
-  if (process.env.LIVE_PREVIEW_URL) {
-    origins.add(process.env.LIVE_PREVIEW_URL)
+  if (!isProduction) {
+    origins.add(defaultFrontendUrl)
+    origins.add('http://127.0.0.1:3000')
+    origins.add(defaultCmsUrl)
+    origins.add('http://127.0.0.1:3001')
   }
 
-  if (process.env.PAYLOAD_SERVER_URL) {
-    origins.add(process.env.PAYLOAD_SERVER_URL)
+  if (frontendUrl) {
+    origins.add(frontendUrl)
+  }
+
+  if (cmsUrl) {
+    origins.add(cmsUrl)
   }
 
   return Array.from(origins)
@@ -45,10 +54,10 @@ export default buildConfig({
     },
     livePreview: {
       url: ({ data }) => {
-        const frontendUrl = process.env.LIVE_PREVIEW_URL || defaultFrontendUrl
+        const resolvedFrontendUrl = frontendUrl || defaultFrontendUrl
         const previewPath = typeof data?.url === 'string' && data.url.trim() ? data.url.trim() : '/'
         const normalizedPath = previewPath.startsWith('/') ? previewPath : `/${previewPath}`
-        const previewUrl = new URL(normalizedPath, frontendUrl)
+        const previewUrl = new URL(normalizedPath, resolvedFrontendUrl)
 
         previewUrl.searchParams.set('livePreview', 'true')
 
@@ -57,7 +66,7 @@ export default buildConfig({
       collections: ['pages'],
     },
   },
-  serverURL: process.env.PAYLOAD_SERVER_URL || defaultCmsUrl,
+  serverURL: cmsUrl,
   cors: getAllowedOrigins(),
   csrf: getAllowedOrigins(),
   collections: [Users, Media, Pages, Projects],

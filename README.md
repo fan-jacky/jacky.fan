@@ -53,7 +53,17 @@ The production compose stack now lives only in the repo root and starts three se
 - `cms` on `CMS_HOST_PORT` (default `3001`)
 - `mongo` as the CMS database
 
-At minimum, set `PAYLOAD_SECRET` in `.env`. `PAYLOAD_CMS_URL` defaults to the internal `cms` service URL, so the web container works without extra wiring when all services run from the same compose file.
+At minimum, set `PAYLOAD_SECRET` in `.env`.
+
+For deployments where you open the CMS from a real hostname, also set the CMS public URL so Payload does not fall back to `localhost` for admin auth / CSRF checks:
+
+```bash
+NEXT_PUBLIC_PAYLOAD_CMS_URL=https://cms.your-domain.tld
+# Optional explicit override for the CMS container itself
+PAYLOAD_SERVER_URL=https://cms.your-domain.tld
+```
+
+`PAYLOAD_CMS_URL` can still point at the internal `cms` service URL for server-to-server traffic inside the compose network.
 
 ## Learn More
 
