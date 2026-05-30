@@ -2,9 +2,15 @@
 
 import { PageExitContext } from '@/contexts/PageExitContext';
 import { useRouter } from 'next/navigation'
-import { MouseEventHandler, useContext } from 'react'
+import { AnchorHTMLAttributes, MouseEventHandler, ReactNode, useContext } from 'react'
 
-function ActiveLink({ children, href, className = "" }: { children?: React.ReactNode, href: string, className?: string }) {
+type ActiveLinkProps = {
+    children?: ReactNode
+    href: string
+    className?: string
+} & Pick<AnchorHTMLAttributes<HTMLAnchorElement>, 'target' | 'rel'>
+
+function ActiveLink({ children, href, className = "", target, rel }: ActiveLinkProps) {
     const router = useRouter()
 
     const { pageExit, setPageExit } = useContext(PageExitContext);
@@ -24,7 +30,7 @@ function ActiveLink({ children, href, className = "" }: { children?: React.React
     }
 
     return (
-        <a href={href} onClick={handleClick} target="_blank" className={className}>
+        <a href={href} onClick={handleClick} target={target} rel={rel} className={className}>
             {children}
         </a>
     )

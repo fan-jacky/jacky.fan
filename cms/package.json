@@ -4,6 +4,7 @@
   "description": "A blank template to get started with Payload 3.0",
   "license": "MIT",
   "type": "module",
+  "packageManager": "pnpm@10.17.1",
   "scripts": {
     "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
@@ -15,18 +16,7 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --no-experimental-strip-types\" pnpm exec playwright test",
-    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
-    "docker:dev": "docker-compose -f docker-compose.dev.yml up -d",
-    "docker:dev:build": "docker-compose -f docker-compose.dev.yml up -d --build",
-    "docker:dev:down": "docker-compose -f docker-compose.dev.yml down",
-    "docker:dev:logs": "docker-compose -f docker-compose.dev.yml logs -f payload-dev",
-    "docker:dev:db-logs": "docker-compose -f docker-compose.dev.yml logs -f mongo",
-    "docker:dev:shell": "docker-compose -f docker-compose.dev.yml exec payload-dev sh",
-    "docker:prod": "docker-compose up",
-    "docker:prod:build": "docker-compose up --build",
-    "docker:prod:down": "docker-compose down",
-    "docker:prod:logs": "docker-compose logs -f payload",
-    "docker:clean": "docker-compose -f docker-compose.dev.yml down -v && docker-compose down -v"
+    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
   },
   "dependencies": {
     "@payloadcms/next": "3.72.0",
@@ -43,6 +33,7 @@
     "@payloadcms/db-mongodb": "3.72.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
     "@playwright/test": "1.56.1",
     "@testing-library/react": "16.3.0",
     "@types/node": "^22.5.4",

@@ -36,6 +36,9 @@ const nextConfig = {
 };
 
 const { initOpenNextCloudflareForDev } = require("@opennextjs/cloudflare");
-initOpenNextCloudflareForDev();
+
+if (process.env.NODE_ENV !== "production") {
+  initOpenNextCloudflareForDev();
+}
 
 module.exports = nextConfig;

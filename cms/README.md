@@ -19,15 +19,17 @@ PAYLOAD_SECRET=your-long-secret
 - For local development without Docker, point `DATABASE_URL` to `mongodb://127.0.0.1/payload` (with a locally running MongoDB).
 - `PAYLOAD_SECRET` is required by Payload auth. Generate a new value for non-development use.
 
-## Running with Docker Compose (production-style)
-Prereqs: Docker + Docker Compose, `pnpm` available for local tooling if you need to regenerate types.
+## Production Docker stack
+The only production compose file for this repository is `../docker-compose.yml` in the repo root.
+
+From the repo root:
 
 1) Build and start: `docker compose up -d --build`
-2) First-time admin user: open http://localhost:3000/admin and follow the UI to create the initial user.
-3) Logs: `docker compose logs -f payload`
+2) Open the admin UI at http://localhost:3001/admin
+3) Logs: `docker compose logs -f cms`
 4) Stop: `docker compose down`
 
-The `payload` service builds from the Dockerfile (standalone Next.js output) and uses the `mongo` service defined in the same compose file.
+The root compose file builds this CMS from `cms/Dockerfile` and runs MongoDB alongside it.
 
 ## Local development (optional)
 - `pnpm install`

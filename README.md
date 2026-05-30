@@ -42,9 +42,18 @@ yarn dev
 Build for Production:
 
 ```bash
-# Build the project
-docker composer build --no-cache && docker composer up -d
+# Create .env in the repo root with both site and CMS settings
+# Then build and start the production stack
+docker compose up -d --build
 ```
+
+The production compose stack now lives only in the repo root and starts three services:
+
+- `web` on `HOST_PORT` (default `3000`)
+- `cms` on `CMS_HOST_PORT` (default `3001`)
+- `mongo` as the CMS database
+
+At minimum, set `PAYLOAD_SECRET` in `.env`. `PAYLOAD_CMS_URL` defaults to the internal `cms` service URL, so the web container works without extra wiring when all services run from the same compose file.
 
 ## Learn More
 

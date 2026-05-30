@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { createElement } from "react";
 import { ActiveLink } from "@/components/basic";
 
 const PAYLOAD_CMS_URL = process.env.PAYLOAD_CMS_URL ?? "";
@@ -118,8 +119,7 @@ function renderLexicalNode(node: any, key: React.Key): React.ReactNode {
       // Lexical headings use `tag`: "h1" | "h2" | ... | "h6"
       const tag: string = node.tag ?? "h2";
       const children = renderChildren(node.children);
-      const Tag = tag as keyof React.JSX.IntrinsicElements;
-      return <Tag key={key}>{children}</Tag>;
+      return createElement(tag, { key }, children);
     }
 
     case "quote": {

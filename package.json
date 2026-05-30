@@ -2,6 +2,7 @@
   "name": "v2.jacky.fan",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.17.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,8 +12,10 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "start": "next start",
     "lint": "eslint .",
-    "docker:build": "docker compose build --no-cache",
-    "docker:up": "docker compose up -d"
+    "docker:build": "docker compose build --pull",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.13.2",

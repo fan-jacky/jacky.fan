@@ -1,38 +1,28 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting deployment..."
+echo "Starting deployment..."
 
 # Load environment variables if .env file exists
 if [ -f .env ]; then
-    echo "📋 Loading environment variables from .env"
+    echo "Loading environment variables from .env"
     export $(cat .env | grep -v '^#' | xargs)
 fi
 
-# Set default image if not provided
-IMAGE_NAME=${IMAGE_NAME:-ghcr.io/fan-jacky/v2.jacky.fan:latest}
-export IMAGE_NAME
-
-echo "📦 Using image: $IMAGE_NAME"
-
 # Stop existing containers
-echo "⏹️  Stopping existing containers..."
-sudo docker compose -f docker-compose.yml -f docker-compose.deploy.yml down || true
-
-# Pull latest image
-echo "⬇️  Pulling latest image..."
-sudo docker compose -f docker-compose.yml -f docker-compose.deploy.yml pull
+echo "Stopping existing containers..."
+sudo docker compose down || true
 
 # Start containers
-echo "▶️  Starting containers..."
-sudo docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
+echo "Building and starting containers..."
+sudo docker compose up -d --build
 
 # Show running containers
-echo "✅ Deployment complete!"
+echo "Deployment complete!"
 echo ""
-echo "📊 Running containers:"
-sudo docker compose -f docker-compose.yml -f docker-compose.deploy.yml ps
+echo "Running containers:"
+sudo docker compose ps
 
 echo ""
-echo "📝 View logs with:"
-echo "   sudo docker compose -f docker-compose.yml -f docker-compose.deploy.yml logs -f"
+echo "View logs with:"
+echo "   sudo docker compose logs -f"

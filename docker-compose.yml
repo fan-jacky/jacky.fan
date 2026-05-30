@@ -1,12 +1,52 @@
 services:
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "${HOST_PORT}:3000"
+      - "${HOST_PORT:-3000}:3000"
     environment:
-      - NODE_ENV=production
-      - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
-      - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
-      - GA_ID=${GA_ID}
-      - PAYLOAD_CMS_URL=${PAYLOAD_CMS_URL}
-    restart: unless-stopped 
+      NODE_ENV: production
+      RECAPTCHA_SITE_KEY: ${RECAPTCHA_SITE_KEY:-}
+      RECAPTCHA_SECRET_KEY: ${RECAPTCHA_SECRET_KEY:-}
+      GA_ID: ${GA_ID:-}
+      PAYLOAD_CMS_URL: ${PAYLOAD_CMS_URL:-http://cms:3000}
+    depends_on:
+      - cms
+    restart: unless-stopped
+
+  cms:
+    build:
+      context: ./cms
+      dockerfile: Dockerfile
+    ports:
+      - "${CMS_HOST_PORT:-3001}:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:-mongodb://mongo:27017/payload}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:-}
+      LIVE_PREVIEW_URL: ${LIVE_PREVIEW_URL:-http://web:3000}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    volumes:
+      - cms_media:/app/media
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:7.0
+    command:
+      - --storageEngine=wiredTiger
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'db.runCommand({ ping: 1 }).ok' | mongosh localhost:27017/test --quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  cms_media:
+  mongo_data:
