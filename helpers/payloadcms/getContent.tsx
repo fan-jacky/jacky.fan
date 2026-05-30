@@ -8,6 +8,7 @@ import { ProjectGrid } from "@/components/home/projects";
 import { ContactForm, Letter3D } from "@/components/home";
 import { AboutMeSection, HeroSection } from "@/components/home/sections";
 import type { PageContentType } from "@/interfaces/ContentBlockProps";
+import type { ProjectGridItem } from "@/components/home/projects/ProjectGrid";
 
 const richText = (value: any) => {
     if (!value) return [];
@@ -16,7 +17,21 @@ const richText = (value: any) => {
     return [];
 };
 
-function getContents(data: PageContentType[] | null | undefined) {
+type GetContentsOptions = {
+    projectGridItems?: ProjectGridItem[];
+};
+
+function hasProjectGridBlock(data: PageContentType[] | null | undefined) {
+    if (!data || !Array.isArray(data)) return false;
+
+    return data.some((block: any) => {
+        const type = block?.__component ?? block?.blockType;
+
+        return type === "page.project-grid" || type === "pageProjectGrid";
+    });
+}
+
+function getContents(data: PageContentType[] | null | undefined, options: GetContentsOptions = {}) {
     if (!data || !Array.isArray(data)) return null;
 
     return data.map((block: any, i: number) => {
@@ -94,7 +109,7 @@ function getContents(data: PageContentType[] | null | undefined) {
 
             case "page.project-grid":
             case "pageProjectGrid":
-                return <ProjectGrid key={i} />;
+                return <ProjectGrid key={i} projects={options.projectGridItems} />;
 
             case "page.contact-form":
             case "pageContactForm":
@@ -150,4 +165,4 @@ function getContents(data: PageContentType[] | null | undefined) {
     });
 }
 
-export { getContents };
+export { getContents, hasProjectGridBlock };

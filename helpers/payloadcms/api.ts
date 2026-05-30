@@ -1,4 +1,4 @@
-const DEFAULT_DEV_PAYLOAD_CMS_URL = "http://127.0.0.1:3001";
+const DEFAULT_DEV_PAYLOAD_CMS_URL = "http://localhost:3001";
 
 type PayloadFetchInit = RequestInit & {
   next?: {
@@ -6,6 +6,8 @@ type PayloadFetchInit = RequestInit & {
     tags?: string[];
   };
 };
+
+type SearchParamValue = string | string[] | undefined;
 
 function normalizeBaseUrl(value: string | undefined): string | null {
   if (!value) return null;
@@ -36,6 +38,14 @@ export function getPayloadApiUrl(path: string): string | null {
   if (!baseUrl) return null;
 
   return `${baseUrl}/api/${path.replace(/^\/+/, "")}`;
+}
+
+export function isLivePreviewEnabled(value: SearchParamValue): boolean {
+  if (Array.isArray(value)) {
+    return value.includes("true");
+  }
+
+  return value === "true";
 }
 
 export async function fetchPayloadJson<T>(

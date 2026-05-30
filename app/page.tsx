@@ -1,16 +1,22 @@
 import { Page } from '@/components/basic'
-import { getContents } from '@/helpers/payloadcms/getContent'
-import { fetchPayloadJson, getPayloadCmsUrl } from '@/helpers/payloadcms/api'
+import LivePreviewPage from '@/components/payloadcms/LivePreviewPage'
+import type { ProjectGridItem } from '@/components/home/projects/ProjectGrid'
+import { sortProjects } from '@/components/home/projects/ProjectGrid'
+import { fetchPayloadJson, getPayloadCmsUrl, isLivePreviewEnabled } from '@/helpers/payloadcms/api'
+import { getContents, hasProjectGridBlock } from '@/helpers/payloadcms/getContent'
 import { notFound } from 'next/navigation'
 import type { Metadata, ResolvingMetadata } from 'next'
 
 export const dynamic = 'force-dynamic';
 
-type Props = {
-  params: Promise<{ slug: string }>
-}
+const PAGE_DEPTH = 3
 
-export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+
+export async function generateMetadata(
+  { searchParams }: { searchParams: SearchParams },
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   if (!getPayloadCmsUrl()) {
     return {
       title: "Jacky FAN - Frontend Developer in Hong Kong",
@@ -19,9 +25,11 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
   }
 
   try {
+    const resolvedSearchParams = await searchParams
+    const livePreview = isLivePreviewEnabled(resolvedSearchParams.livePreview)
     const data = await fetchPayloadJson<{ docs?: Array<{ pageTitle?: string; metaDesc?: string }> }>(
-      'pages?where[url][equals]=/&depth=3',
-      { next: { revalidate: 3600 } },
+      `pages?where[url][equals]=/&depth=${PAGE_DEPTH}`,
+      livePreview ? { cache: 'no-store' } : { next: { revalidate: 3600 } },
     );
     const { docs } = data ?? {};
     const page = docs?.[0];
@@ -47,19 +55,36 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 }
 
 async function getData() {
+  return getDataForPreview(false)
+}
+
+async function getProjectGridItems(livePreview: boolean) {
+  if (!getPayloadCmsUrl()) {
+    return [] as ProjectGridItem[]
+  }
+
+  const data = await fetchPayloadJson<{ docs?: ProjectGridItem[] }>(
+    'projects?depth=1',
+    livePreview ? { cache: 'no-store' } : { next: { revalidate: 3600 } },
+  )
+
+  return sortProjects(data?.docs ?? [])
+}
+
+async function getDataForPreview(livePreview: boolean) {
   if (!getPayloadCmsUrl()) {
     return { docs: [] } as any;
   }
 
   const data = await fetchPayloadJson<{ docs?: unknown[] }>(
-    'pages?where[url][equals]=/&depth=3',
-    { next: { revalidate: 3600 } },
+    `pages?where[url][equals]=/&depth=${PAGE_DEPTH}`,
+    livePreview ? { cache: 'no-store' } : { next: { revalidate: 3600 } },
   );
 
   return data ?? { docs: [] };
 }
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: SearchParams }) {
   if (!getPayloadCmsUrl()) {
     return (
       <Page reserveNavbarHeight={false}>
@@ -71,16 +96,31 @@ export default async function Home() {
   }
 
   try {
-    const { docs } = await getData();
+    const resolvedSearchParams = await searchParams
+    const livePreview = isLivePreviewEnabled(resolvedSearchParams.livePreview)
+    const { docs } = await getDataForPreview(livePreview);
     const page = docs?.[0];
 
     if (!page) {
       notFound();
     }
 
+    const projectGridItems = hasProjectGridBlock(page?.contents)
+      ? await getProjectGridItems(livePreview)
+      : []
+
     return (
       <Page reserveNavbarHeight={false}>
-        {getContents(page?.contents)}
+        {livePreview ? (
+          <LivePreviewPage
+            depth={PAGE_DEPTH}
+            initialPage={page as Record<string, unknown>}
+            projectGridItems={projectGridItems}
+            serverURL={getPayloadCmsUrl()!}
+          />
+        ) : (
+          getContents(page?.contents, { projectGridItems })
+        )}
       </Page>
     )
   } catch (error) {

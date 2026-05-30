@@ -29,6 +29,9 @@ importers:
       '@opennextjs/cloudflare':
         specifier: ^1.13.2
         version: 1.19.11(encoding@0.1.13)(next@16.2.6(@playwright/test@1.56.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.4))(wrangler@4.95.0)
+      '@payloadcms/live-preview-react':
+        specifier: 3.72.0
+        version: 3.72.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-three/drei':
         specifier: ^9.122.0
         version: 9.122.0(@react-three/fiber@9.5.0(@types/react@18.2.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.182.0))(@types/react@18.2.20)(@types/three@0.155.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(three@0.182.0)(use-sync-external-store@1.5.0(react@18.3.1))
@@ -1715,6 +1718,15 @@ packages:
     peerDependencies:
       graphql: ^16.8.1
       payload: 3.72.0
+
+  '@payloadcms/live-preview-react@3.72.0':
+    resolution: {integrity: sha512-qiywzscOdpDqRtdFiiG/AQw+ibyIJQ1Cf0inaWEfrQahh6K+BqvoRQ6GLkhYsvkbqxKgEnXdUPh2ksIDSXZIfw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.1 || ^19.1.2 || ^19.2.1
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.1 || ^19.1.2 || ^19.2.1
+
+  '@payloadcms/live-preview@3.72.0':
+    resolution: {integrity: sha512-7/rk46ymYoC9GpPT88trtj7MHUcTOmHSiBQCR9oUDSfTDfqDypYcl7En00brphTDwKODKVz8+CgIqvAHRGXXNw==}
 
   '@payloadcms/next@3.72.0':
     resolution: {integrity: sha512-2/ng6iL/auwqWVj+hKixnYE6/ECs7ZRf1pieJaQT/T8T4gZrY2KiQjjRIFs5Zp1clfY/6tQq5BmBiXO6dypnkA==}
@@ -7680,6 +7692,14 @@ snapshots:
       tsx: 4.20.6
     transitivePeerDependencies:
       - typescript
+
+  '@payloadcms/live-preview-react@3.72.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@payloadcms/live-preview': 3.72.0
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@payloadcms/live-preview@3.72.0': {}
 
   '@payloadcms/next@3.72.0(@types/react@19.2.1)(graphql@16.14.0)(monaco-editor@0.55.1)(next@15.4.10(@babel/core@7.28.6)(@playwright/test@1.56.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.77.4))(payload@3.72.0(graphql@16.14.0)(typescript@5.7.3))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(typescript@5.7.3)':
     dependencies:

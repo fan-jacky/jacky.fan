@@ -1,10 +1,14 @@
 import { Page, SectionContainer } from "@/components/basic";
-import BgHeading from "@/components/visual/bgHeading";
-import { fetchPayloadJson, getPayloadCmsUrl } from "@/helpers/payloadcms/api";
-import { getContents } from "@/helpers/payloadcms/getContent";
+import LivePreviewPage from "@/components/payloadcms/LivePreviewPage";
+import type { ProjectGridItem } from "@/components/home/projects/ProjectGrid";
+import { sortProjects } from "@/components/home/projects/ProjectGrid";
+import { fetchPayloadJson, getPayloadCmsUrl, isLivePreviewEnabled } from "@/helpers/payloadcms/api";
+import { getContents, hasProjectGridBlock } from "@/helpers/payloadcms/getContent";
 import type { Metadata, ResolvingMetadata } from 'next';
 import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation'
+
+const PAGE_DEPTH = 3;
 
 type Props = {
     params: Promise<{ slug: string }>
@@ -14,6 +18,8 @@ type Props = {
 export async function generateMetadata({ params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     const { slug } = await params;
     const url = slug;
+    const resolvedSearchParams = await searchParams;
+    const livePreview = isLivePreviewEnabled(resolvedSearchParams.livePreview);
 
     if (!getPayloadCmsUrl()) {
         return {
@@ -29,7 +35,10 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
         };
     }
 
-    const data = await fetchPayloadJson<{ docs?: Array<{ pageTitle?: string; metaDesc?: string }> }>(`pages?where[url][equals]=/${url}`);
+    const data = await fetchPayloadJson<{ docs?: Array<{ pageTitle?: string; metaDesc?: string }> }>(
+        `pages?where[url][equals]=/${url}&depth=${PAGE_DEPTH}`,
+        livePreview ? { cache: 'no-store' } : undefined,
+    );
     const { docs } = data ?? {};
 
     if (!docs || !docs[0] || !docs[0].pageTitle || !docs[0].metaDesc) return {
@@ -57,23 +66,39 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
     }
 }
 
-async function getData(url: string) {
+async function getData(url: string, livePreview = false) {
     if (!getPayloadCmsUrl()) {
         return { docs: [] } as any;
     }
 
-    const data = await fetchPayloadJson<{ docs?: unknown[] }>(`pages?where[url][equals]=/${url}`);
+    const data = await fetchPayloadJson<{ docs?: unknown[] }>(
+        `pages?where[url][equals]=/${url}&depth=${PAGE_DEPTH}`,
+        livePreview ? { cache: 'no-store' } : undefined,
+    );
     return data ?? { docs: [] };
 }
 
+async function getProjectGridItems(livePreview = false) {
+    if (!getPayloadCmsUrl()) {
+        return [] as ProjectGridItem[];
+    }
 
-async function checkPageExist(params: { slug: string }) {
+    const data = await fetchPayloadJson<{ docs?: ProjectGridItem[] }>(
+        'projects?depth=1',
+        livePreview ? { cache: 'no-store' } : { next: { revalidate: 3600 } },
+    );
+
+    return sortProjects(data?.docs ?? []);
+}
+
+
+async function checkPageExist(params: { slug: string }, livePreview = false) {
 
     if (!params?.slug) {
         redirect("/404");
     }
 
-    const { docs } = await getData(params.slug);
+    const { docs } = await getData(params.slug, livePreview);
 
     if (docs.length == 0) {
         revalidatePath(`/${params.slug}`);
@@ -81,8 +106,16 @@ async function checkPageExist(params: { slug: string }) {
     }
 }
 
-export default async function NormalPage ({ params }: { params: Promise<{ slug: string }> }) {
+export default async function NormalPage ({
+    params,
+    searchParams,
+}: {
+    params: Promise<{ slug: string }>
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
     const { slug } = await params;
+    const resolvedSearchParams = await searchParams;
+    const livePreview = isLivePreviewEnabled(resolvedSearchParams.livePreview);
 
     if (!getPayloadCmsUrl()) {
         return (
@@ -94,18 +127,28 @@ export default async function NormalPage ({ params }: { params: Promise<{ slug: 
         );
     }
 
-    await checkPageExist({ slug });
+    await checkPageExist({ slug }, livePreview);
 
-    const { docs } = await getData(slug);
+    const { docs } = await getData(slug, livePreview);
     const page = docs[0];
+    const projectGridItems = hasProjectGridBlock(page?.contents)
+        ? await getProjectGridItems(livePreview)
+        : [];
 
     return (
-        <>
-            <Page>
-                {getContents(page.contents)}
-            </Page>
-            {page.enableBgHeading && <BgHeading title={page.pageTitle} />}
-        </>
+        <Page>
+            {livePreview ? (
+                <LivePreviewPage
+                    depth={PAGE_DEPTH}
+                    initialPage={page as Record<string, unknown>}
+                    projectGridItems={projectGridItems}
+                    serverURL={getPayloadCmsUrl()!}
+                    showBgHeading={true}
+                />
+            ) : (
+                getContents(page.contents, { projectGridItems })
+            )}
+        </Page>
 
     );
 }
