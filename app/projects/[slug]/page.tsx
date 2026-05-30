@@ -6,7 +6,7 @@ import { ArrowLeftIcon, LinkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Tabs from "@/components/Tabs";
 import BgHeading from "@/components/visual/bgHeading";
-import { fetchPayloadJson, getPayloadCmsUrl } from "@/helpers/payloadcms/api";
+import { fetchPayloadJson, getPayloadCmsUrl, resolvePayloadMediaUrl } from "@/helpers/payloadcms/api";
 import { getRichTextBlocks } from "@/helpers/payloadcms/getRichTextBlocks";
 import type { Metadata, ResolvingMetadata } from 'next'
 
@@ -103,7 +103,7 @@ export default async function ProjectDescPage({ params }: { params: Promise<{ sl
     }
 
     const { title, desc, tags = [], img, links = [], contents = [] } = project;
-    const imageUrl = typeof img === 'string' ? img : img?.url;
+    const imageUrl = resolvePayloadMediaUrl(typeof img === 'string' ? img : img?.url ?? '');
 
     const tabData = (contents || []).map((block: any, index: number) => {
         const blockType = block?.blockType;
@@ -125,7 +125,7 @@ export default async function ProjectDescPage({ params }: { params: Promise<{ sl
                 content: (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {block.items?.map((item: any, i: number) => {
-                            const mediaUrl = typeof item.media === 'string' ? item.media : item.media?.url;
+                            const mediaUrl = resolvePayloadMediaUrl(typeof item.media === 'string' ? item.media : item.media?.url ?? '');
                             return (
                                 <div key={i} className="card bg-base-200 shadow-sm">
                                     {mediaUrl && (

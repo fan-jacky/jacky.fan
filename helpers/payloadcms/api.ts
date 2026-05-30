@@ -46,6 +46,38 @@ export function getPayloadCmsPublicUrl(): string | null {
   return null;
 }
 
+export function resolvePayloadMediaUrl(url: string, options?: { publicOrigin?: boolean }): string {
+  if (!url) return "";
+
+  const serverBaseUrl = getPayloadCmsUrl();
+  const publicBaseUrl = getPayloadCmsPublicUrl();
+  const preferredBaseUrl = options?.publicOrigin ? publicBaseUrl : serverBaseUrl ?? publicBaseUrl;
+
+  if (!preferredBaseUrl) return url;
+
+  try {
+    const preferredOrigin = new URL(preferredBaseUrl).origin;
+
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      const mediaUrl = new URL(url);
+
+      if (publicBaseUrl) {
+        const publicOrigin = new URL(publicBaseUrl).origin;
+
+        if (mediaUrl.origin === publicOrigin && mediaUrl.origin !== preferredOrigin) {
+          return `${preferredOrigin}${mediaUrl.pathname}${mediaUrl.search}${mediaUrl.hash}`;
+        }
+      }
+
+      return mediaUrl.toString();
+    }
+
+    return new URL(url, preferredBaseUrl).toString();
+  } catch {
+    return url;
+  }
+}
+
 export function getPayloadApiUrl(path: string): string | null {
   const baseUrl = getPayloadCmsUrl();
 

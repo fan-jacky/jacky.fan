@@ -1,6 +1,7 @@
 import FadeInBottom from "@/components/animation/FadeInBottom";
 import { SectionContainer } from "@/components/basic";
 import ProjectBlock from "@/components/home/projects/ProjectBlock";
+import { resolvePayloadMediaUrl } from "@/helpers/payloadcms/api";
 
 export type ProjectGridItem = {
     alias?: string;
@@ -22,7 +23,7 @@ export default function ProjectGrid({ projects = [] }: { projects?: ProjectGridI
             <FadeInBottom>
                 <div className="flex flex-wrap flex-row">
                     {projects.map((item, index) => {
-                        const imageUrl = typeof item.img === 'string' ? item.img : item.img?.url;
+                        const imageUrl = resolvePayloadMediaUrl(typeof item.img === 'string' ? item.img : item.img?.url ?? '');
 
                         if (!item.alias || !item.title || !item.desc || !imageUrl) {
                             return null;
