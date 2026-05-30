@@ -1,5 +1,3 @@
-export const runtime = "edge"; // cloudflare edge
-
 export async function POST(request: Request) {
     const { token } = await request.json();
     try {
