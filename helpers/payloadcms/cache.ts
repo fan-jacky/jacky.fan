@@ -1,0 +1,1 @@
+export const SITE_SETTINGS_TAG = 'site-settings';

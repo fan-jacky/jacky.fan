@@ -55,6 +55,8 @@ The production compose stack now lives only in the repo root and starts three se
 
 At minimum, set `PAYLOAD_SECRET` in `.env`.
 
+The frontend cache revalidation endpoint uses `REVALIDATE_SECRET` when provided, and otherwise falls back to `PAYLOAD_SECRET`. In the current compose setup, setting `PAYLOAD_SECRET` in the repo-root `.env` is enough for CMS publish hooks to invalidate tagged frontend content.
+
 For deployments where you open the CMS from a real hostname, also set the CMS public URL so Payload does not fall back to `localhost` for admin auth / CSRF checks:
 
 ```bash

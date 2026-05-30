@@ -1,10 +1,24 @@
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import type { GlobalConfig } from 'payload'
+import type { GlobalAfterChangeHook, GlobalConfig } from 'payload'
+import { revalidateFrontendTag, SITE_SETTINGS_TAG } from '../utilities/revalidateFrontend'
+
+const revalidateSiteSettings: GlobalAfterChangeHook = async ({ req }) => {
+  try {
+    await revalidateFrontendTag(SITE_SETTINGS_TAG)
+  } catch (error) {
+    req.payload.logger.error(
+      `Failed to revalidate frontend site settings cache: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    )
+  }
+}
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site_settings',
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [revalidateSiteSettings],
   },
   versions: {
     drafts: true,
