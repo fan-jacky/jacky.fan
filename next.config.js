@@ -10,7 +10,7 @@ const nextConfig = {
   webpack: function (config) {
     config.module.rules.push({
       test: /\.md$/,
-      use: "raw-loader",
+      type: "asset/source",
     });
     return config;
   },
@@ -34,5 +34,8 @@ const nextConfig = {
     ],
   },
 };
+
+const { initOpenNextCloudflareForDev } = require("@opennextjs/cloudflare");
+initOpenNextCloudflareForDev();
 
 module.exports = nextConfig;
