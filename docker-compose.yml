@@ -31,8 +31,6 @@ services:
       DATABASE_URL: mongodb://mongo:27017/payload
       NODE_ENV: production
       NEXT_PUBLIC_PAYLOAD_CMS_URL: ${NEXT_PUBLIC_PAYLOAD_CMS_URL:-http://localhost:${CMS_HOST_PORT:-3001}}
-      PAYLOAD_SERVER_URL: ${PAYLOAD_SERVER_URL:-}
-      LIVE_PREVIEW_URL: ${LIVE_PREVIEW_URL:-http://localhost:${HOST_PORT:-3000}}
     depends_on:
       mongo:
         condition: service_healthy
