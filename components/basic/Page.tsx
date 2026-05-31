@@ -8,12 +8,17 @@ import { SITE_SETTINGS_TAG } from "@/helpers/payloadcms/cache";
 async function getData() {
     if (!getPayloadCmsUrl()) return null;
 
-    return fetchPayloadJson('globals/site_settings?depth=2', {
-        next: {
-            revalidate: 3600,
-            tags: [SITE_SETTINGS_TAG],
-        },
-    });
+    try {
+        return await fetchPayloadJson('globals/site_settings?depth=2', {
+            next: {
+                revalidate: 3600,
+                tags: [SITE_SETTINGS_TAG],
+            },
+        });
+    } catch (error) {
+        console.error('Failed to load site settings for page chrome.', error);
+        return null;
+    }
 }
 
 export default async function Page({ children, reserveNavbarHeight = true }: { children?: React.ReactNode, reserveNavbarHeight?: boolean }) {

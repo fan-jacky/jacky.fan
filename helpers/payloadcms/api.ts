@@ -1,4 +1,5 @@
 const DEFAULT_DEV_PAYLOAD_CMS_URL = "http://localhost:3001";
+let hasWarnedAboutDevCmsConnection = false;
 
 type PayloadFetchInit = RequestInit & {
   next?: {
@@ -86,6 +87,17 @@ export function getPayloadApiUrl(path: string): string | null {
   return `${baseUrl}/api/${path.replace(/^\/+/, "")}`;
 }
 
+function isDefaultDevCmsEndpoint(endpoint: string): boolean {
+  return process.env.NODE_ENV !== "production" && endpoint.startsWith(`${DEFAULT_DEV_PAYLOAD_CMS_URL}/`);
+}
+
+function warnAboutDevCmsConnection(endpoint: string, error: unknown) {
+  if (hasWarnedAboutDevCmsConnection) return;
+
+  hasWarnedAboutDevCmsConnection = true;
+  console.warn(`Payload CMS is unreachable at ${endpoint}. Falling back to empty content until the CMS is available again.`, error);
+}
+
 export function isLivePreviewEnabled(value: SearchParamValue): boolean {
   if (Array.isArray(value)) {
     return value.includes("true");
@@ -102,7 +114,19 @@ export async function fetchPayloadJson<T>(
 
   if (!endpoint) return null;
 
-  const res = await fetch(endpoint, init);
+  let res: Response;
+
+  try {
+    res = await fetch(endpoint, init);
+  } catch (error) {
+    if (isDefaultDevCmsEndpoint(endpoint)) {
+      warnAboutDevCmsConnection(endpoint, error);
+      return null;
+    }
+
+    throw error;
+  }
+
   const contentType = res.headers.get("content-type") ?? "";
 
   if (!res.ok) {

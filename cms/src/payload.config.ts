@@ -25,6 +25,28 @@ const cmsUrl =
   process.env.NEXT_PUBLIC_PAYLOAD_CMS_URL ||
   (!isProduction ? defaultCmsUrl : undefined)
 
+function getLivePreviewPath({
+  collectionConfig,
+  data,
+}: {
+  collectionConfig?: { slug?: string } | null
+  data?: { alias?: unknown; url?: unknown } | null
+}) {
+  if (collectionConfig?.slug === 'projects') {
+    const alias = typeof data?.alias === 'string' ? data.alias.trim() : ''
+
+    if (alias) {
+      return `/projects/${alias}`
+    }
+  }
+
+  if (typeof data?.url === 'string' && data.url.trim()) {
+    return data.url.trim()
+  }
+
+  return '/'
+}
+
 function getAllowedOrigins() {
   const origins = new Set<string>()
 
@@ -53,9 +75,9 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     livePreview: {
-      url: ({ data }) => {
+      url: ({ collectionConfig, data }) => {
         const resolvedFrontendUrl = frontendUrl || defaultFrontendUrl
-        const previewPath = typeof data?.url === 'string' && data.url.trim() ? data.url.trim() : '/'
+        const previewPath = getLivePreviewPath({ collectionConfig, data })
         const normalizedPath = previewPath.startsWith('/') ? previewPath : `/${previewPath}`
         const previewUrl = new URL(normalizedPath, resolvedFrontendUrl)
 
@@ -63,7 +85,7 @@ export default buildConfig({
 
         return previewUrl.toString()
       },
-      collections: ['pages'],
+      collections: ['pages', 'projects'],
     },
   },
   serverURL: cmsUrl,
