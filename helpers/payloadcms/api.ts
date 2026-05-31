@@ -52,7 +52,7 @@ export function resolvePayloadMediaUrl(url: string, options?: { publicOrigin?: b
 
   const serverBaseUrl = getPayloadCmsUrl();
   const publicBaseUrl = getPayloadCmsPublicUrl();
-  const preferredBaseUrl = options?.publicOrigin ? publicBaseUrl : serverBaseUrl ?? publicBaseUrl;
+  const preferredBaseUrl = options?.publicOrigin ? publicBaseUrl : publicBaseUrl ?? serverBaseUrl;
 
   if (!preferredBaseUrl) return url;
 
