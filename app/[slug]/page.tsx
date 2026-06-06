@@ -5,7 +5,6 @@ import { sortProjects } from "@/components/home/projects/ProjectGrid";
 import { fetchPayloadJson, getPayloadCmsPublicUrl, getPayloadCmsUrl, isLivePreviewEnabled } from "@/helpers/payloadcms/api";
 import { getContents, hasProjectGridBlock } from "@/helpers/payloadcms/getContent";
 import type { Metadata, ResolvingMetadata } from 'next';
-import { revalidatePath } from "next/cache";
 import { redirect } from 'next/navigation'
 
 const PAGE_DEPTH = 3;
@@ -91,21 +90,6 @@ async function getProjectGridItems(livePreview = false) {
     return sortProjects(data?.docs ?? []);
 }
 
-
-async function checkPageExist(params: { slug: string }, livePreview = false) {
-
-    if (!params?.slug) {
-        redirect("/404");
-    }
-
-    const { docs } = await getData(params.slug, livePreview);
-
-    if (docs.length == 0) {
-        revalidatePath(`/${params.slug}`);
-        redirect("/404?from=" + params.slug);
-    }
-}
-
 export default async function NormalPage ({
     params,
     searchParams,
@@ -127,9 +111,12 @@ export default async function NormalPage ({
         );
     }
 
-    await checkPageExist({ slug }, livePreview);
-
     const { docs } = await getData(slug, livePreview);
+
+    if (!slug || docs.length === 0) {
+        redirect(slug ? "/404?from=" + slug : "/404");
+    }
+
     const page = docs[0];
     const projectGridItems = hasProjectGridBlock(page?.contents)
         ? await getProjectGridItems(livePreview)
