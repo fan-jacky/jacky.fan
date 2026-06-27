@@ -1,6 +1,14 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "types": [
+      "node",
+      "react",
+      "react-dom"
+    ],
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
     "lib": [
       "DOM",
       "DOM.Iterable",

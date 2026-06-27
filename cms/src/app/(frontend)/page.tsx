@@ -7,10 +7,16 @@ import config from '../../payload.config'
 import './styles.css'
 
 export default async function HomePage() {
-  const headers = await getHeaders()
   const payloadConfig = await config
-  const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
+  let user: { email?: string | null } | null = null
+
+  if (process.env.PAYLOAD_SECRET) {
+    const headers = await getHeaders()
+    const payload = await getPayload({ config: payloadConfig })
+    const authResult = await payload.auth({ headers })
+
+    user = authResult.user
+  }
 
   const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
 

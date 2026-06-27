@@ -1,7 +1,5 @@
 import React from "react";
 import { Navbar, Footer } from "@/components";
-import LocomotiveScrollWrappper from '@/components/animation/LocomotiveScrollWrapper'
-import PageEnterAnimation from "../animation/PageEnterAnimation";
 import { fetchPayloadJson, getPayloadCmsUrl } from "@/helpers/payloadcms/api";
 import { SITE_SETTINGS_TAG } from "@/helpers/payloadcms/cache";
 
@@ -28,13 +26,10 @@ export default async function Page({ children, reserveNavbarHeight = true }: { c
     return (
         <main className="relative">
             <Navbar siteSetting={siteSetting} />
-            <PageEnterAnimation />
-            <LocomotiveScrollWrappper>
-                <div className={`min-h-screen text-md md:text-xl ${reserveNavbarHeight ? "page" : ""}`}>
+                <div className={`portfolio-main min-h-screen text-md md:text-xl ${reserveNavbarHeight ? "page" : ""}`}>
                     {children}
                 </div>
                 <Footer siteSetting={siteSetting} />
-            </LocomotiveScrollWrappper>
         </main>
     );
 }

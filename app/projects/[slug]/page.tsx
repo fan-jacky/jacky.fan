@@ -1,4 +1,6 @@
 import { Page, SectionContainer } from "@/components/basic";
+import PortfolioEnhancements from "@/components/portfolio/PortfolioEnhancements";
+import { getStaticProject } from "@/components/portfolio/data";
 import LivePreviewProject from "@/components/payloadcms/LivePreviewProject";
 import ProjectDetail from "@/components/projects/ProjectDetail";
 import type { ProjectDocument } from "@/components/projects/ProjectDetailContent";
@@ -82,6 +84,19 @@ async function getData(alias: string, livePreview = false) {
     return data ?? { docs: [] };
 }
 
+function mapStaticProjectToDocument(project: NonNullable<ReturnType<typeof getStaticProject>>): ProjectDocument {
+    return {
+        alias: project.slug,
+        title: project.title,
+        desc: project.shortDescription,
+        tags: project.tags,
+        links: project.links.map((link) => ({
+            name: link.label,
+            links: link.href,
+        })),
+    }
+}
+
 export default async function ProjectDescPage({
     params,
     searchParams,
@@ -95,13 +110,21 @@ export default async function ProjectDescPage({
         const livePreview = isLivePreviewEnabled(resolvedSearchParams.livePreview);
 
     if (!getPayloadCmsUrl()) {
+        const staticProject = getStaticProject(alias)
+
+        if (!staticProject) {
+            return <div className="min-h-screen w-screen flex flex-col gap-4 items-center justify-center">
+                <p className="text-xl md:text-2xl w-fit">Project Not Found</p>
+                <Link href="/projects" className="btn btn-primary">Back to Projects</Link>
+            </div>;
+        }
+
         return (
             <Page>
-                <SectionContainer>
-                    <p className="text-lg md:text-xl">Content API not configured. Set PAYLOAD_CMS_URL to load this project.</p>
-                </SectionContainer>
+                <PortfolioEnhancements />
+                <ProjectDetail project={mapStaticProjectToDocument(staticProject)} />
             </Page>
-        );
+        )
     }
 
     const { docs } = await getData(alias, livePreview);

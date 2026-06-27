@@ -18,6 +18,8 @@ const dirname = path.dirname(filename)
 const defaultFrontendUrl = 'http://localhost:3000'
 const defaultCmsUrl = 'http://localhost:3001'
 const isProduction = process.env.NODE_ENV === 'production'
+const devPayloadSecret = 'local-payload-dev-secret'
+const devDatabaseUrl = 'mongodb://127.0.0.1/payload'
 
 const frontendUrl = process.env.LIVE_PREVIEW_URL || (!isProduction ? defaultFrontendUrl : undefined)
 const cmsUrl =
@@ -68,6 +70,34 @@ function getAllowedOrigins() {
   return Array.from(origins)
 }
 
+function getPayloadSecret() {
+  const configuredSecret = process.env.PAYLOAD_SECRET?.trim()
+
+  if (configuredSecret) {
+    return configuredSecret
+  }
+
+  if (!isProduction) {
+    return devPayloadSecret
+  }
+
+  return ''
+}
+
+function getDatabaseUrl() {
+  const configuredDatabaseUrl = process.env.DATABASE_URL?.trim()
+
+  if (configuredDatabaseUrl) {
+    return configuredDatabaseUrl
+  }
+
+  if (!isProduction) {
+    return devDatabaseUrl
+  }
+
+  return ''
+}
+
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -94,12 +124,12 @@ export default buildConfig({
   collections: [Users, Media, Pages, Projects],
   editor: lexicalEditor(),
   globals: [ProjectPageSettings, SiteSettings],
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: getPayloadSecret(),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: mongooseAdapter({
-    url: process.env.DATABASE_URL || '',
+    url: getDatabaseUrl(),
   }),
   sharp,
   plugins: [],

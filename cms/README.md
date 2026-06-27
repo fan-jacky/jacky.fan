@@ -16,8 +16,10 @@ DATABASE_URL=mongodb://mongo/payload
 PAYLOAD_SECRET=your-long-secret
 ```
 
-- For local development without Docker, point `DATABASE_URL` to `mongodb://127.0.0.1/payload` (with a locally running MongoDB).
-- `PAYLOAD_SECRET` is required by Payload auth. Generate a new value for non-development use.
+- For local development without Docker, the CMS falls back to `mongodb://127.0.0.1/payload` when `DATABASE_URL` is omitted.
+- Set `DATABASE_URL` explicitly if your local MongoDB runs elsewhere.
+- In local development, the CMS falls back to a fixed dev-only secret if `PAYLOAD_SECRET` is omitted.
+- Set `PAYLOAD_SECRET` explicitly for shared environments and all non-development deployments.
 
 ## Production Docker stack
 The only production compose file for this repository is `../docker-compose.yml` in the repo root.

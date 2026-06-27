@@ -1,122 +1,184 @@
 'use client'
 
-import { useContext, useEffect, useRef, useState } from "react";
-import ToggleDayNight from "./ToggleDayNight";
-import { LocomotiveScrollPositionContext } from "@/contexts/LocomotiveScrollPositionContext";
-import Link from "next/link";
-import { ActiveLink } from "./basic";
-import { Bars3Icon } from "@heroicons/react/24/outline";
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
+
+const fallbackNavItems = [
+    { href: '/', label: 'Home' },
+    { href: '/projects', label: 'Projects' },
+    { href: '/about', label: 'About' },
+]
+
+type NavItem = {
+    href: string
+    label: string
+}
 
 const extractPageUrl = (page: any): string | undefined => {
-    if (!page) return undefined;
-    if (typeof page === "string") return undefined;
-    if (page?.url) return page.url;
-    if (page?.slug) return `/${page.slug}`;
-    return undefined;
-};
-
-export default function Navbar({ siteSetting }: { siteSetting: any }) {
-    const [prevScrollPos, setPrevScrollPos] = useState(0);
-    const [visible, setVisible] = useState(true);
-    const [isTop, setIsTop] = useState(true);
-
-    const { scrollPos } = useContext(LocomotiveScrollPositionContext);
-
-    const navbarRef = useRef<HTMLDivElement | null>(null);
-
-    if (!siteSetting) {
-        return null;
+    if (!page || typeof page === 'string') {
+        return undefined
     }
 
-    const menuItems = siteSetting.menuItem ?? [];
-    const quickLinks = siteSetting.quickLinks ?? [];
+    if (page.url) {
+        return page.url
+    }
+
+    if (page.slug) {
+        return `/${page.slug}`
+    }
+
+    return undefined
+}
+
+const resolveTheme = () => {
+    const savedTheme = window.localStorage.getItem('theme')
+    if (savedTheme === 'dark') {
+        return 'dark'
+    }
+
+    if (savedTheme === 'light') {
+        return 'light'
+    }
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
+const applyTheme = (theme: 'light' | 'dark') => {
+    if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        return
+    }
+
+    document.documentElement.removeAttribute('data-theme')
+}
+
+export default function Navbar({ siteSetting }: { siteSetting: any }) {
+    const pathname = usePathname()
+    const headerRef = useRef<HTMLElement | null>(null)
+    const [isScrolled, setIsScrolled] = useState(false)
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
     useEffect(() => {
-        const navbarHeight = navbarRef.current?.offsetHeight ?? 0;
-        document.querySelector("html")?.style.setProperty("--navbar-height", `${navbarHeight}px`);
+        const syncNavbarHeight = () => {
+            const navbarHeight = headerRef.current?.offsetHeight ?? 64
+            document.documentElement.style.setProperty('--navbar-height', `${navbarHeight}px`)
+        }
+
+        syncNavbarHeight()
+        window.addEventListener('resize', syncNavbarHeight)
+
+        return () => window.removeEventListener('resize', syncNavbarHeight)
     }, [])
 
     useEffect(() => {
-        const currentScrollPos = scrollPos?.scroll.y ?? 0;
-        const navbarHeight = navbarRef.current?.offsetHeight ?? 0;
-        setVisible(prevScrollPos > currentScrollPos || currentScrollPos <= navbarHeight);
+        const nextTheme = resolveTheme()
+        applyTheme(nextTheme)
+    }, [])
 
-        setPrevScrollPos(currentScrollPos);
-        setIsTop(currentScrollPos <= navbarHeight);
-    }, [scrollPos])
+    useEffect(() => {
+        const onScroll = () => setIsScrolled(window.scrollY > 10)
+
+        onScroll()
+        window.addEventListener('scroll', onScroll, { passive: true })
+
+        return () => window.removeEventListener('scroll', onScroll)
+    }, [])
+
+    const toggleTheme = () => {
+        const nextTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
+        applyTheme(nextTheme)
+
+        window.localStorage.setItem('theme', nextTheme)
+    }
+
+    const logoText = siteSetting?.siteLogoText ?? 'Jacky FAN'
+    const navItems: NavItem[] = siteSetting?.menuItem
+        ?.map((item: any): Partial<NavItem> => ({ href: extractPageUrl(item?.page), label: item?.name }))
+        .filter((item: Partial<NavItem>): item is NavItem => Boolean(item.href && item.label)) ?? fallbackNavItems
+    const showThemeToggle = siteSetting?.showNightModeToggle ?? true
 
     return (
-        <div className={`navbar bg-base-300 fixed z-50 transition-all w-screen ${visible ? "translate-y-0" : "-translate-y-[110%]"} ${isTop ? "shadow-none" : "shadow-md"}`} ref={navbarRef}>
-            <div className="flex-1">
-                <ActiveLink href="/" className="btn btn-ghost normal-case text-xl">
-                    <span className="text-primary font-dosis font-semibold">{siteSetting.siteLogoText}</span>
-                </ActiveLink>
-            </div>
-            <div className="flex-none hidden md:flex md:mx-5">
-                <ul className="menu menu-horizontal px-1">
-                    {siteSetting.showNightModeToggle && <li className="hidden md:flex"><ToggleDayNight /></li>}
-                    {menuItems?.filter((item: any) => extractPageUrl(item.page)).map((item: any, index: number) => (
-                        <li key={index} className="hidden md:flex">
-                            <ActiveLink href={extractPageUrl(item.page) ?? "#"}>{item.name}</ActiveLink>
-                        </li>
-                    ))}
-                    {siteSetting.showMenuQuickLinksMenu &&
-                        <li className="hidden md:flex">
-                            <details>
-                                <summary>
-                                    Quick Links
-                                </summary>
-                                <ul className="p-2 bg-base-100">
-                                    {quickLinks?.map((link: any, index: number) => (
-                                        <li key={index}>
-                                            <Link href={link.url} target="_blank">{link.name}</Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </details>
-                        </li>
-                    }
-                </ul>
-            </div>
-            <div className="flex-none flex md:hidden md:mx-5">
-                <div className="drawer">
-                    <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-                    <div className="drawer-content">
-                        <label htmlFor="my-drawer" className="btn btn-ghost drawer-button" aria-label="Open Mobile Menu">
-                            <Bars3Icon className="h-5 w-5 text-base-content" />
-                        </label>
-                    </div>
-                    <div className="drawer-side">
-                        <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                        <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content ml-0">
+        <>
+            <a href="#main-content" className="skip-link">
+                Skip to content
+            </a>
+            <header className={`site-header${isScrolled ? ' scrolled' : ''}`} id="siteHeader" ref={headerRef}>
+                <div className="container">
+                    <Link href="/" className="site-logo">
+                        <span className="site-logo-dot"></span>
+                        {logoText}
+                    </Link>
 
-                            <p className="ml-4 my-4 font-bold">Pages</p>
-                            {menuItems?.filter((item: any) => extractPageUrl(item.page)).map((item: any, index: number) => (
-                                <li key={index}>
-                                    <ActiveLink href={extractPageUrl(item.page) ?? "#"}>{item.name}</ActiveLink>
-                                </li>
-                            ))}
+                    <nav className="site-nav" aria-label="Primary navigation">
+                        <div className="site-nav-links">
+                              {navItems.map((item: NavItem) => {
+                                const isActive = pathname === item.href
 
-                            {siteSetting.showMenuQuickLinksMenu && <>
-                                <hr className="border-base-content my-4 ml-4 mr-8" />
-                                <p className="ml-4 my-4 font-bold">Quick Links</p>
-                            </>}
-                            {siteSetting.showMenuQuickLinksMenu && quickLinks?.map((link: any, index: number) => (
-                                <li key={index}>
-                                    <Link href={link.url} target="_blank">{link.name}</Link>
-                                </li>
-                            ))}
+                                return (
+                                    <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        className={isActive ? 'active' : undefined}
+                                        aria-current={isActive ? 'page' : undefined}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                    >
+                                        {item.label}
+                                    </Link>
+                                )
+                            })}
+                            <Link
+                                href="/contact"
+                                className={pathname === '/contact' ? 'site-nav-cta active' : 'site-nav-cta'}
+                                aria-current={pathname === '/contact' ? 'page' : undefined}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                Contact
+                            </Link>
+                        </div>
 
-                            {siteSetting.showNightModeToggle && <>
-                                <hr className="border-base-content my-4 ml-4 mr-8" />
-                                <li><ToggleDayNight /></li>
-                            </>}
-                        </ul>
-                    </div>
+                        {showThemeToggle ? (
+                            <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle dark mode" title="Toggle dark mode">
+                                <svg className="icon-sun" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                    <circle cx="8" cy="8" r="3" fill="currentColor" />
+                                    <path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M2.929 2.929l1.06 1.06m8.486 8.486l1.06 1.06M2.929 13.071l1.06-1.06m8.486-8.486l1.06-1.06" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                                </svg>
+                                <svg className="icon-moon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                    <path d="M13.5 10.5a6 6 0 01-7.5-7.5A6 6 0 1013.5 10.5z" fill="currentColor" />
+                                </svg>
+                            </button>
+                        ) : null}
+
+                        <button
+                            className="mobile-nav-toggle"
+                            type="button"
+                            onClick={() => setIsMobileMenuOpen((open) => !open)}
+                            aria-expanded={isMobileMenuOpen}
+                            aria-controls="mobile-site-nav"
+                            aria-label="Toggle navigation menu"
+                        >
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </nav>
                 </div>
-            </div>
 
-        </div>
+                <div className={`mobile-nav-panel${isMobileMenuOpen ? ' mobile-nav-panel-open' : ''}`} id="mobile-site-nav">
+                      {navItems.map((item: NavItem) => {
+                        const isActive = pathname === item.href
 
-    );
+                        return (
+                            <Link key={item.href} href={item.href} className={isActive ? 'active' : undefined} aria-current={isActive ? 'page' : undefined}>
+                                {item.label}
+                            </Link>
+                        )
+                    })}
+                    <Link href="/contact" className={pathname === '/contact' ? 'site-nav-cta active' : 'site-nav-cta'} aria-current={pathname === '/contact' ? 'page' : undefined}>
+                        Contact
+                    </Link>
+                </div>
+            </header>
+        </>
+    )
 }
