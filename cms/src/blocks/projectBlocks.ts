@@ -4,8 +4,8 @@ import type { Block } from 'payload'
 export const projectsCarousel: Block = {
   slug: 'projectsCarousel',
   labels: {
-    singular: 'Projects Carousel',
-    plural: 'Projects Carousels',
+    singular: 'Screenshots Gallery',
+    plural: 'Screenshots Galleries',
   },
   fields: [
     {
@@ -211,6 +211,12 @@ export const projectTechStackSection: Block = {
           type: 'text',
           required: true,
           label: 'Label',
+        },
+        {
+          name: 'icon',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Icon (SVG/PNG)',
         },
       ],
     },

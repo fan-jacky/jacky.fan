@@ -181,6 +181,17 @@ export default function Navbar({ siteSetting }: { siteSetting: any }) {
 
             {mounted && createPortal(
                 <div className={`mobile-nav-overlay${isMobileMenuOpen ? ' mobile-nav-overlay--open' : ''}`} id="mobile-nav-overlay" aria-hidden={!isMobileMenuOpen}>
+                    <button
+                        className="mobile-nav-overlay__close"
+                        type="button"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        aria-label="Close navigation menu"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
                     <nav className="mobile-nav-overlay__nav" aria-label="Mobile navigation">
                         {navItems.map((item: NavItem, index: number) => {
                             const isActive = pathname === item.href

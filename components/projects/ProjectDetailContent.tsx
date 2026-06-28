@@ -72,6 +72,7 @@ type ProjectTechStackBlock = {
   subtitle?: string | null;
   items?: Array<{
     label?: string | null;
+    icon?: string | ProjectMedia | null;
   }> | null;
   primaryButtonText?: string | null;
   primaryButtonUrl?: string | null;
@@ -139,7 +140,10 @@ export default function ProjectDetailContent({ project }: { project: ProjectDocu
   const overviewContent = richText(overviewSection?.content)
   const displayScope = (overviewSection?.scopeItems ?? []).filter((item): item is { label: string; value: string } => Boolean(item?.label && item?.value))
   const displayFeatures = (featureSection?.items ?? []).filter((item): item is { iconText?: string | null; title: string; desc: string } => Boolean(item?.title && item?.desc))
-  const displayStack = (stackSection?.items ?? []).map((item) => item?.label).filter((item): item is string => Boolean(item))
+  const displayStack = (stackSection?.items ?? []).map((item) => ({
+    label: item?.label ?? '',
+    iconUrl: item?.icon ? resolvePayloadMediaUrl(typeof item.icon === 'string' ? item.icon : item.icon?.url ?? '') : '',
+  })).filter((item): item is { label: string; iconUrl: string } => Boolean(item.label))
   const primaryLinks = links.filter((link) => link?.links).map((link) => ({ href: link.links as string, label: link.name ?? 'Open link', primary: false }))
 
   const stackButtons = [
@@ -180,14 +184,7 @@ export default function ProjectDetailContent({ project }: { project: ProjectDocu
                 <Image src={imageUrl} alt={title ?? 'Project image'} fill unoptimized className="object-cover object-top" />
               </div>
             ) : (
-              <div className="project-detail__mockup-content">
-                <div className="project-detail__mockup-hero"><div className="project-detail__mockup-title-line"></div></div>
-                <div className="project-detail__mockup-grid">
-                  <div className="project-detail__mockup-column"><div className="project-detail__mockup-image"></div><div className="project-detail__mockup-line"></div></div>
-                  <div className="project-detail__mockup-column"><div className="project-detail__mockup-image"></div><div className="project-detail__mockup-line"></div></div>
-                  <div className="project-detail__mockup-column"><div className="project-detail__mockup-image"></div><div className="project-detail__mockup-line"></div></div>
-                </div>
-              </div>
+              <div className="project-detail__mockup-gradient" />
             )}
           </div>
         </div>
@@ -300,7 +297,16 @@ export default function ProjectDetailContent({ project }: { project: ProjectDocu
             <h2 className="slide__headline reveal">{stackSection?.title ?? 'Built with'}</h2>
             <p className="slide__subtitle reveal" style={{ marginBottom: '2.5rem' }}>{stackSection?.subtitle ?? 'The tools chosen for performance, DX, and maintainability.'}</p>
             <div className="tech-stack-grid reveal-stagger">
-              {displayStack.map((item) => <div className="tech-stack-grid__item" key={item}><span>{item}</span></div>)}
+              {displayStack.map((item) => (
+                <div className="tech-stack-grid__item" key={item.label}>
+                  {item.iconUrl ? (
+                    <img src={item.iconUrl} alt={item.label} width="24" height="24" />
+                  ) : (
+                    <span className="tech-stack-grid__icon-placeholder">{item.label.slice(0, 2).toUpperCase()}</span>
+                  )}
+                  <span>{item.label}</span>
+                </div>
+              ))}
             </div>
             {(stackButtons.length > 0 || primaryLinks.length > 0) && (
               <div className="reveal" style={{ marginTop: '3rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>

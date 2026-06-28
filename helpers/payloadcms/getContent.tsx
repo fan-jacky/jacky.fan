@@ -1,4 +1,5 @@
 import FadeInBottom from "@/components/animation/FadeInBottom";
+import CountUp from "@/components/animation/CountUp";
 import { getRichTextBlocks } from "./getRichTextBlocks";
 import { Heading } from "@/components/visual";
 import { resolvePayloadMediaUrl } from "./api";
@@ -345,12 +346,22 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                             {block.title ? <h2 className="slide__headline reveal">{block.title}</h2> : null}
                             {block.subtitle ? <p className="slide__subtitle reveal" style={{ marginBottom: "3rem" }}>{block.subtitle}</p> : null}
                             <div className="stats-grid reveal-stagger">
-                                {(block.items ?? []).map((item: any, itemIndex: number) => (
-                                    <div key={`${item.label}-${itemIndex}`}>
-                                        <div style={{ fontSize: "4rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.04em", lineHeight: 1 }}>{item.value}</div>
-                                        <div className="stat-label">{item.label}</div>
-                                    </div>
-                                ))}
+                                {(block.items ?? []).map((item: any, itemIndex: number) => {
+                                    const match = String(item.value).match(/^(\d+)(\+?)$/);
+                                    const num = match ? parseInt(match[1], 10) : 0;
+                                    const suffix = match?.[2] ?? '';
+
+                                    return (
+                                        <div key={`${item.label}-${itemIndex}`}>
+                                            {num > 0 ? (
+                                                <CountUp end={num} suffix={suffix} />
+                                            ) : (
+                                                <div style={{ fontSize: "4rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.04em", lineHeight: 1 }}>{item.value}</div>
+                                            )}
+                                            <div className="stat-label">{item.label}</div>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     </section>
@@ -432,7 +443,7 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                         <div className="geo-circle sm" style={{ top: "15%", right: "6%" }}></div>
                         <div className="container">
                             {block.label ? <span className="slide__label reveal">{block.label}</span> : null}
-                            {block.title ? <h1 className="slide__headline reveal">{block.title}</h1> : null}
+                            {block.title ? (block.topPadding ? <h1 className="slide__headline reveal">{block.title}</h1> : <h2 className="slide__headline reveal">{block.title}</h2>) : null}
                             {block.subtitle ? <p className="slide__subtitle reveal" style={{ marginBottom: "3rem" }}>{block.subtitle}</p> : null}
                             <div className="about-grid">
                                 <div className="about-bio reveal">
@@ -443,7 +454,7 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                                         <div className="about-avatar">
                                             <UserAvatarIcon />
                                         </div>
-                                        {block.sidebarTitle ? <h3>{block.sidebarTitle}</h3> : null}
+                                        {block.sidebarTitle ? <p className="info-card__title">{block.sidebarTitle}</p> : null}
                                         <ul className="info-list">
                                             {(block.details ?? []).map((detail: any, detailIndex: number) => (
                                                 <li key={`${detail.label}-${detailIndex}`}>
@@ -521,7 +532,7 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                                         <div className={iconClassName}>
                                             {CardGridIcon({ tone: block.tone, title: item.title }) ?? <span>{item.iconText || `${itemIndex + 1}`}</span>}
                                         </div>
-                                        {block.tone === 'dark' ? <h3 className={titleClassName}>{item.title}</h3> : <h4>{item.title}</h4>}
+                                        {<h3 className={block.tone === 'dark' ? titleClassName : undefined}>{item.title}</h3>}
                                         <p className={descClassName}>{item.desc}</p>
                                     </div>
                                 ))}
@@ -540,7 +551,7 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                         <div className="geo-circle sm" style={{ bottom: "10%", left: "8%" }}></div>
                         <div className="container">
                             {block.label ? <span className="slide__label reveal">{block.label}</span> : null}
-                            {block.title ? <h1 className="slide__headline reveal">{block.title}</h1> : null}
+                            {block.title ? (block.topPadding ? <h1 className="slide__headline reveal">{block.title}</h1> : <h2 className="slide__headline reveal">{block.title}</h2>) : null}
                             {block.subtitle ? <p className="slide__subtitle reveal" style={{ marginBottom: "3rem" }}>{block.subtitle}</p> : null}
                             <div className="contact-grid">
                                 <div className="reveal">
@@ -556,7 +567,7 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                                 <div className="reveal" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                                     <div className="contact-card">
                                         <div style={{ marginBottom: "1rem" }}><CheckIcon /></div>
-                                        {block.cardTitle ? <h3 style={{ marginBottom: "0.5rem" }}>{block.cardTitle}</h3> : null}
+                                        {block.cardTitle ? <p style={{ marginBottom: "0.5rem", color: "var(--text-primary)", fontSize: "1.25rem", fontWeight: 600 }}>{block.cardTitle}</p> : null}
                                         {block.cardDescription ? <p style={{ color: "var(--text-muted)", fontSize: "0.9375rem", lineHeight: 1.6, maxWidth: "260px" }}>{block.cardDescription}</p> : null}
                                     </div>
                                 </div>

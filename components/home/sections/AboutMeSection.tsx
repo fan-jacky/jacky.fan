@@ -22,7 +22,7 @@ export default function AboutMeSection(props: AboutMeSectionProps) {
             <div className="container">
                 <FadeInBottom>
                     <span className="slide__label">{props.topTitle}</span>
-                    <h1 className="slide__headline">{props.leftTitle} {props.rightTitle}</h1>
+                    <h2 className="slide__headline">{props.leftTitle} {props.rightTitle}</h2>
                 </FadeInBottom>
 
                 <FadeInBottom>

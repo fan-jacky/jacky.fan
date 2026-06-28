@@ -9,5 +9,5 @@ export async function generateMetadata({ searchParams }: Props) {
 }
 
 export default async function ProjectsPage({ searchParams }: Props) {
-  return renderCmsPageRoute({ url: '/projects', searchParams })
+  return renderCmsPageRoute({ url: '/projects', searchParams, reserveNavbarHeight: false })
 }

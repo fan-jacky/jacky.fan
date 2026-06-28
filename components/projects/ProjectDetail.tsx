@@ -5,7 +5,7 @@ import ProjectDetailContent, { type ProjectDocument } from "./ProjectDetailConte
 
 export default function ProjectDetail({ project }: { project: ProjectDocument }) {
   return (
-    <Page>
+    <Page reserveNavbarHeight={false}>
       <PortfolioEnhancements />
       <ProjectDetailContent project={project} />
     </Page>

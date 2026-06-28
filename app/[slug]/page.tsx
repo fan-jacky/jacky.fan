@@ -104,7 +104,7 @@ export default async function NormalPage ({
 
     if (!getPayloadCmsUrl()) {
         return (
-            <Page>
+            <Page reserveNavbarHeight={false}>
                 <SectionContainer>
                     <p className="text-lg md:text-xl">Content API not configured. Set PAYLOAD_CMS_URL to load this page.</p>
                 </SectionContainer>

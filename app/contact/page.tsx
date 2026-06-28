@@ -9,5 +9,5 @@ export async function generateMetadata({ searchParams }: Props) {
 }
 
 export default async function ContactPage({ searchParams }: Props) {
-  return renderCmsPageRoute({ url: '/contact', searchParams })
+  return renderCmsPageRoute({ url: '/contact', searchParams, reserveNavbarHeight: false })
 }

@@ -560,6 +560,7 @@ export interface Project {
             items?:
               | {
                   label: string;
+                  icon?: (string | null) | Media;
                   id?: string | null;
                 }[]
               | null;
@@ -1037,6 +1038,7 @@ export interface ProjectsSelect<T extends boolean = true> {
                 | T
                 | {
                     label?: T;
+                    icon?: T;
                     id?: T;
                   };
               primaryButtonText?: T;
