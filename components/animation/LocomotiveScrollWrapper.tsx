@@ -6,66 +6,80 @@ import { LocomotiveScrollContext } from '@/contexts/LocomotiveScrollContext';
 
 function LocomotiveScrollWrappper({ children }: { children: React.ReactNode }) {
 
-    const scrollRef = useRef<HTMLDivElement | null>(null);
+    const cleanupRef = useRef<Array<() => void>>([]);
+    const instanceRef = useRef<any>(undefined);
 
-    const {scrollPos, setScrollPos} = useContext(LocomotiveScrollPositionContext);
-    const {locoScroll, setlocoScroll} = useContext(LocomotiveScrollContext);
+    const { setScrollPos } = useContext(LocomotiveScrollPositionContext);
+    const { setlocoScroll } = useContext(LocomotiveScrollContext);
 
     useEffect(() => {
         let scroll : any;
-        
-        // if(scroll || locoScroll) {
-        //     scroll?.destroy();
-        //     locoScroll?.destroy();
-        // }
 
         (async () => {
 
             const LocomotiveScroll = (await import('locomotive-scroll')).default;
             const locomotiveScroll = new LocomotiveScroll({
-                scrollFromAnywhere: true,
-                el: scrollRef.current === null ? undefined : scrollRef.current,
-                smooth: true,
-                multiplier: 1,
+                lenisOptions: {
+                    smoothWheel: true,
+                    wheelMultiplier: 1,
+                },
+                scrollCallback: ({ limit, scroll }) => {
+                    if (setScrollPos) {
+                        setScrollPos({
+                            limit: { x: 0, y: limit },
+                            scroll: { x: 0, y: scroll },
+                        });
+                    }
+                },
             });
             
-            setlocoScroll(locomotiveScroll);
+            if (setlocoScroll) {
+                setlocoScroll(locomotiveScroll);
+            }
+            instanceRef.current = locomotiveScroll;
             scroll = locomotiveScroll;
-            
-            // Handle Anchor Links because Locomotive Scroll breaks the behavior of anchor scroll
+
             document.querySelectorAll("a[href^='#']").forEach(anchor => {
-                anchor.addEventListener("click", event => {
+                const handleClick = (event: Event) => {
                     const anchorTarget = anchor.getAttribute("href") ?? "";
+                    if (anchorTarget.length <= 1 || !document.querySelector(anchorTarget)) {
+                        return;
+                    }
 
                     event.preventDefault();
-                    locomotiveScroll.scrollTo(anchorTarget)
-                })
+                    locomotiveScroll.scrollTo(anchorTarget);
+                };
+
+                anchor.addEventListener("click", handleClick);
+                cleanupRef.current.push(() => {
+                    anchor.removeEventListener("click", handleClick);
+                });
             });
 
-            // Get Scroll Position
-            locomotiveScroll.on("scroll", ({limit, scroll}) => {
-                let newScrollPos = {limit, scroll};
-                if (setScrollPos) setScrollPos(newScrollPos);
-                if (setlocoScroll) setlocoScroll(locomotiveScroll);
-            });
-            
-            locomotiveScroll.on("call", () => {
-                if (setlocoScroll) setlocoScroll(locomotiveScroll);
+            const handleResize = () => {
+                locomotiveScroll.resize();
+            };
+
+            window.addEventListener('resize', handleResize);
+            cleanupRef.current.push(() => {
+                window.removeEventListener('resize', handleResize);
             });
         }
         )()
 
         return () => {
+            cleanupRef.current.forEach((cleanup) => cleanup());
+            cleanupRef.current = [];
             scroll?.destroy();
-            locoScroll?.destroy();
+            instanceRef.current?.destroy();
+            instanceRef.current = undefined;
+            if (setlocoScroll) {
+                setlocoScroll(undefined);
+            }
         }
-    }, [])
+    }, [setScrollPos, setlocoScroll])
 
-    return (
-        <div ref={scrollRef} data-scroll-container>
-            {children}
-        </div>
-    );
+    return <>{children}</>;
 }
 
 export default LocomotiveScrollWrappper;

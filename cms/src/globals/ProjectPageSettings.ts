@@ -1,4 +1,3 @@
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import type { GlobalConfig } from 'payload'
 
 export const ProjectPageSettings: GlobalConfig = {
@@ -11,30 +10,35 @@ export const ProjectPageSettings: GlobalConfig = {
   },
   fields: [
     {
-      name: 'topTitle',
+      name: 'label',
       type: 'text',
-      label: 'Top Title',
+      label: 'Eyebrow Label',
     },
     {
-      name: 'leftTitle',
+      name: 'title',
       type: 'text',
-      label: 'Left Title',
+      label: 'Title',
     },
     {
-      name: 'rightTitle',
-      type: 'text',
-      label: 'Right Title',
+      name: 'subtitle',
+      type: 'textarea',
+      label: 'Subtitle',
     },
     {
-      name: 'desc',
-      type: 'richText',
-      label: 'Description',
-      editor: lexicalEditor(),
+      name: 'topPadding',
+      type: 'checkbox',
+      defaultValue: true,
+      label: 'Add top padding',
     },
     {
       name: 'metaTitle',
       type: 'text',
       label: 'Meta Title',
+    },
+    {
+      name: 'metaDesc',
+      type: 'textarea',
+      label: 'Meta Description',
     },
   ],
 }

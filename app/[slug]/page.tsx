@@ -8,6 +8,7 @@ import type { Metadata, ResolvingMetadata } from 'next';
 import { redirect } from 'next/navigation'
 
 const PAGE_DEPTH = 3;
+const PROJECTS_TAG = 'projects';
 
 type Props = {
     params: Promise<{ slug: string }>
@@ -84,7 +85,7 @@ async function getProjectGridItems(livePreview = false) {
 
     const data = await fetchPayloadJson<{ docs?: ProjectGridItem[] }>(
         'projects?depth=1',
-        livePreview ? { cache: 'no-store' } : { next: { revalidate: 3600 } },
+        livePreview ? { cache: 'no-store' } : { next: { revalidate: 3600, tags: [PROJECTS_TAG] } },
     );
 
     return sortProjects(data?.docs ?? []);

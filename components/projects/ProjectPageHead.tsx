@@ -1,14 +1,5 @@
 import FadeInBottom from "../animation/FadeInBottom";
-import { Heading } from "../visual";
 import { fetchPayloadJson, getPayloadCmsUrl } from "@/helpers/payloadcms/api";
-import { getRichTextBlocks } from "@/helpers/payloadcms/getRichTextBlocks";
-
-const richText = (value: any) => {
-  if (!value) return [];
-  if (Array.isArray(value)) return value;
-  if (value.root?.children) return value.root.children;
-  return [];
-};
 
 async function getData() {
   if (!getPayloadCmsUrl()) {
@@ -23,22 +14,15 @@ export default async function ProjectPageHead() {
 
   if (!data) return null;
 
-  const descBlocks = richText(data?.desc).map((block: any, index: number) =>
-    getRichTextBlocks(block, {
-      className: "text-md md:text-xl mb-4 md:mb-8 leading-8",
-    }, index)
-  );
-
   return (
-    <FadeInBottom>
-      <Heading
-        topTitle={data?.topTitle}
-        leftTitle={data?.leftTitle}
-        rightTitle={data?.rightTitle}
-        colorReverse={true}
-      />
-
-      { descBlocks }
+    <FadeInBottom extraClassName={data?.topPadding ? 'pt-24 md:pt-36' : ''}>
+      {data?.label ? <span className="slide-label">{data.label}</span> : null}
+      {data?.title ? <h1 className="slide-headline">{data.title}</h1> : null}
+      {data?.subtitle ? (
+        <p className="slide-subtitle" style={{ marginBottom: '3rem' }}>
+          {data.subtitle}
+        </p>
+      ) : null}
     </FadeInBottom>
   );
 }

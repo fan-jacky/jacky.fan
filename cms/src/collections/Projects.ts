@@ -1,6 +1,7 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionAfterChangeHook, CollectionConfig } from 'payload'
 
 import { projectContentBlocks } from '../blocks/projectBlocks'
+import { revalidateFrontendTag } from '../utilities/revalidateFrontend'
 
 const TAG_OPTIONS = [
   'Web',
@@ -17,6 +18,25 @@ const TAG_OPTIONS = [
   'Strapi CMS',
 ]
 
+const CARD_STYLE_OPTIONS = [
+  { label: 'Blog', value: 'blog' },
+  { label: 'Portfolio', value: 'portfolio' },
+  { label: 'Terminal', value: 'terminal' },
+  { label: 'Code', value: 'code' },
+]
+
+const PROJECTS_TAG = 'projects'
+
+const revalidateProjectsGrid: CollectionAfterChangeHook = async ({ req }) => {
+  try {
+    await revalidateFrontendTag(PROJECTS_TAG)
+  } catch (error) {
+    req.payload.logger.error(
+      `Failed to revalidate frontend projects cache: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    )
+  }
+}
+
 export const Projects: CollectionConfig = {
   slug: 'projects',
   access: {
@@ -25,6 +45,9 @@ export const Projects: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     description: 'Portfolio projects with metadata, tags, and dynamic content.',
+  },
+  hooks: {
+    afterChange: [revalidateProjectsGrid],
   },
   versions: {
     drafts: true,
@@ -68,6 +91,14 @@ export const Projects: CollectionConfig = {
       type: 'upload',
       relationTo: 'media',
       label: 'Thumbnail',
+    },
+    {
+      name: 'cardStyle',
+      type: 'select',
+      required: true,
+      defaultValue: 'portfolio',
+      label: 'Project Card Style',
+      options: CARD_STYLE_OPTIONS,
     },
     {
       name: 'links',

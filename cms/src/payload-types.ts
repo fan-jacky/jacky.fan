@@ -222,6 +222,10 @@ export interface Page {
             blockType: 'pageButton';
           }
         | {
+            label?: string | null;
+            title?: string | null;
+            subtitle?: string | null;
+            topPadding?: boolean | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'pageProjectGrid';
@@ -279,6 +283,146 @@ export interface Page {
             blockName?: string | null;
             blockType: 'pageAboutMeSection';
           }
+        | {
+            label?: string | null;
+            title?: string | null;
+            subtitle?: string | null;
+            items?:
+              | {
+                  value: string;
+                  label: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'pageStatsSection';
+          }
+        | {
+            label?: string | null;
+            title?: string | null;
+            subtitle?: string | null;
+            items?:
+              | {
+                  name: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'pageTechStackSection';
+          }
+        | {
+            tone?: ('default' | 'tinted' | 'dark') | null;
+            centered?: boolean | null;
+            label?: string | null;
+            title?: string | null;
+            subtitle?: string | null;
+            primaryButtonText?: string | null;
+            primaryButtonUrl?: string | null;
+            primaryButtonExternal?: boolean | null;
+            secondaryButtonText?: string | null;
+            secondaryButtonUrl?: string | null;
+            secondaryButtonExternal?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'pageCtaSection';
+          }
+        | {
+            label?: string | null;
+            title?: string | null;
+            subtitle?: string | null;
+            topPadding?: boolean | null;
+            body?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            sidebarTitle?: string | null;
+            details?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            socialLinks?:
+              | {
+                  label: string;
+                  url: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'pageProfileSection';
+          }
+        | {
+            label?: string | null;
+            title?: string | null;
+            subtitle?: string | null;
+            groups?:
+              | {
+                  items?:
+                    | {
+                        label: string;
+                        value: number;
+                        id?: string | null;
+                      }[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'pageSkillBarsSection';
+          }
+        | {
+            tone?: ('default' | 'tinted' | 'dark') | null;
+            label?: string | null;
+            title?: string | null;
+            subtitle?: string | null;
+            items?:
+              | {
+                  iconText?: string | null;
+                  title: string;
+                  desc: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'pageCardGridSection';
+          }
+        | {
+            label?: string | null;
+            title?: string | null;
+            subtitle?: string | null;
+            topPadding?: boolean | null;
+            methods?:
+              | {
+                  label: string;
+                  value: string;
+                  url: string;
+                  id?: string | null;
+                }[]
+              | null;
+            cardTitle?: string | null;
+            cardDescription?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'pageContactMethodsSection';
+          }
       )[]
     | null;
   metaDesc?: string | null;
@@ -316,6 +460,7 @@ export interface Project {
       )[]
     | null;
   img?: (string | null) | Media;
+  cardStyle: 'blog' | 'portfolio' | 'terminal' | 'code';
   links?:
     | {
         name: string;
@@ -326,15 +471,65 @@ export interface Project {
   contents?:
     | (
         | {
+            label?: string | null;
+            title?: string | null;
+            subtitle?: string | null;
+            content?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            scopeTitle?: string | null;
+            scopeItems?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'projectOverviewSection';
+          }
+        | {
+            label?: string | null;
+            title?: string | null;
+            subtitle?: string | null;
             name: string;
             items: {
-              media: string | Media;
+              media?: (string | null) | Media;
               desc?: string | null;
               id?: string | null;
             }[];
             id?: string | null;
             blockName?: string | null;
             blockType: 'projectsCarousel';
+          }
+        | {
+            label?: string | null;
+            title?: string | null;
+            subtitle?: string | null;
+            items?:
+              | {
+                  iconText?: string | null;
+                  title: string;
+                  desc: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'projectFeatureGridSection';
           }
         | {
             name?: string | null;
@@ -356,6 +551,40 @@ export interface Project {
             id?: string | null;
             blockName?: string | null;
             blockType: 'projectContents';
+          }
+        | {
+            label?: string | null;
+            title?: string | null;
+            subtitle?: string | null;
+            items?:
+              | {
+                  label: string;
+                  id?: string | null;
+                }[]
+              | null;
+            primaryButtonText?: string | null;
+            primaryButtonUrl?: string | null;
+            primaryButtonExternal?: boolean | null;
+            secondaryButtonText?: string | null;
+            secondaryButtonUrl?: string | null;
+            secondaryButtonExternal?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'projectTechStackSection';
+          }
+        | {
+            label?: string | null;
+            title?: string | null;
+            subtitle?: string | null;
+            primaryButtonText?: string | null;
+            primaryButtonUrl?: string | null;
+            primaryButtonExternal?: boolean | null;
+            secondaryButtonText?: string | null;
+            secondaryButtonUrl?: string | null;
+            secondaryButtonExternal?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'projectCtaSection';
           }
       )[]
     | null;
@@ -524,6 +753,10 @@ export interface PagesSelect<T extends boolean = true> {
         pageProjectGrid?:
           | T
           | {
+              label?: T;
+              title?: T;
+              subtitle?: T;
+              topPadding?: T;
               id?: T;
               blockName?: T;
             };
@@ -570,6 +803,139 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        pageStatsSection?:
+          | T
+          | {
+              label?: T;
+              title?: T;
+              subtitle?: T;
+              items?:
+                | T
+                | {
+                    value?: T;
+                    label?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        pageTechStackSection?:
+          | T
+          | {
+              label?: T;
+              title?: T;
+              subtitle?: T;
+              items?:
+                | T
+                | {
+                    name?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        pageCtaSection?:
+          | T
+          | {
+              tone?: T;
+              centered?: T;
+              label?: T;
+              title?: T;
+              subtitle?: T;
+              primaryButtonText?: T;
+              primaryButtonUrl?: T;
+              primaryButtonExternal?: T;
+              secondaryButtonText?: T;
+              secondaryButtonUrl?: T;
+              secondaryButtonExternal?: T;
+              id?: T;
+              blockName?: T;
+            };
+        pageProfileSection?:
+          | T
+          | {
+              label?: T;
+              title?: T;
+              subtitle?: T;
+              topPadding?: T;
+              body?: T;
+              sidebarTitle?: T;
+              details?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              socialLinks?:
+                | T
+                | {
+                    label?: T;
+                    url?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        pageSkillBarsSection?:
+          | T
+          | {
+              label?: T;
+              title?: T;
+              subtitle?: T;
+              groups?:
+                | T
+                | {
+                    items?:
+                      | T
+                      | {
+                          label?: T;
+                          value?: T;
+                          id?: T;
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        pageCardGridSection?:
+          | T
+          | {
+              tone?: T;
+              label?: T;
+              title?: T;
+              subtitle?: T;
+              items?:
+                | T
+                | {
+                    iconText?: T;
+                    title?: T;
+                    desc?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        pageContactMethodsSection?:
+          | T
+          | {
+              label?: T;
+              title?: T;
+              subtitle?: T;
+              topPadding?: T;
+              methods?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    url?: T;
+                    id?: T;
+                  };
+              cardTitle?: T;
+              cardDescription?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   metaDesc?: T;
   enableBgHeading?: T;
@@ -588,6 +954,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   desc?: T;
   tags?: T;
   img?: T;
+  cardStyle?: T;
   links?:
     | T
     | {
@@ -598,9 +965,30 @@ export interface ProjectsSelect<T extends boolean = true> {
   contents?:
     | T
     | {
+        projectOverviewSection?:
+          | T
+          | {
+              label?: T;
+              title?: T;
+              subtitle?: T;
+              content?: T;
+              scopeTitle?: T;
+              scopeItems?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
         projectsCarousel?:
           | T
           | {
+              label?: T;
+              title?: T;
+              subtitle?: T;
               name?: T;
               items?:
                 | T
@@ -612,11 +1000,64 @@ export interface ProjectsSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        projectFeatureGridSection?:
+          | T
+          | {
+              label?: T;
+              title?: T;
+              subtitle?: T;
+              items?:
+                | T
+                | {
+                    iconText?: T;
+                    title?: T;
+                    desc?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
         projectContents?:
           | T
           | {
               name?: T;
               contents?: T;
+              id?: T;
+              blockName?: T;
+            };
+        projectTechStackSection?:
+          | T
+          | {
+              label?: T;
+              title?: T;
+              subtitle?: T;
+              items?:
+                | T
+                | {
+                    label?: T;
+                    id?: T;
+                  };
+              primaryButtonText?: T;
+              primaryButtonUrl?: T;
+              primaryButtonExternal?: T;
+              secondaryButtonText?: T;
+              secondaryButtonUrl?: T;
+              secondaryButtonExternal?: T;
+              id?: T;
+              blockName?: T;
+            };
+        projectCtaSection?:
+          | T
+          | {
+              label?: T;
+              title?: T;
+              subtitle?: T;
+              primaryButtonText?: T;
+              primaryButtonUrl?: T;
+              primaryButtonExternal?: T;
+              secondaryButtonText?: T;
+              secondaryButtonUrl?: T;
+              secondaryButtonExternal?: T;
               id?: T;
               blockName?: T;
             };
@@ -671,25 +1112,12 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface ProjectPageSetting {
   id: string;
-  topTitle?: string | null;
-  leftTitle?: string | null;
-  rightTitle?: string | null;
-  desc?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  label?: string | null;
+  title?: string | null;
+  subtitle?: string | null;
+  topPadding?: boolean | null;
   metaTitle?: string | null;
+  metaDesc?: string | null;
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -743,11 +1171,12 @@ export interface SiteSetting {
  * via the `definition` "project_page_settings_select".
  */
 export interface ProjectPageSettingsSelect<T extends boolean = true> {
-  topTitle?: T;
-  leftTitle?: T;
-  rightTitle?: T;
-  desc?: T;
+  label?: T;
+  title?: T;
+  subtitle?: T;
+  topPadding?: T;
   metaTitle?: T;
+  metaDesc?: T;
   _status?: T;
   updatedAt?: T;
   createdAt?: T;

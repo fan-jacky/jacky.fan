@@ -11,6 +11,7 @@ type PageDocument = {
   contents?: PageContentType[] | null
   enableBgHeading?: boolean | null
   pageTitle?: string | null
+  url?: string | null
 }
 
 type LivePreviewPageProps = {
@@ -36,7 +37,7 @@ export default function LivePreviewPage({
 
   return (
     <>
-      {getContents(data?.contents, { projectGridItems })}
+      {getContents(data?.contents, { pageUrl: data?.url ?? undefined, projectGridItems })}
       {showBgHeading && data?.enableBgHeading && data?.pageTitle ? (
         <BgHeading title={data.pageTitle} />
       ) : null}

@@ -1,10 +1,12 @@
 import './globals.css'
+import 'locomotive-scroll/locomotive-scroll.css'
 import type { Metadata } from 'next'
 import { outfit, patrick_hand, dosis, cabinSketch } from './fonts'
 
 import { AlertContextProvider } from '@/contexts/AlertContext'
 import { LoadingScreenProvider } from '@/contexts/LoadingContext'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
+import LocomotiveScrollWrapper from '@/components/animation/LocomotiveScrollWrapper'
 import { LocomotiveScrollPositionProvider } from '@/contexts/LocomotiveScrollPositionContext'
 import { LocomotiveScrollProvider } from '@/contexts/LocomotiveScrollContext'
 import { PageExitContextProvider } from '@/contexts/PageExitContext'
@@ -34,7 +36,9 @@ export default function RootLayout({
             <PageExitContextProvider>
               <LocomotiveScrollPositionProvider>
                 <LocomotiveScrollProvider>
-                  {children}
+                  <LocomotiveScrollWrapper>
+                    {children}
+                  </LocomotiveScrollWrapper>
                 </LocomotiveScrollProvider>
               </LocomotiveScrollPositionProvider>
             </PageExitContextProvider>
