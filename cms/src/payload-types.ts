@@ -305,6 +305,7 @@ export interface Page {
             items?:
               | {
                   name: string;
+                  icon?: (string | null) | Media;
                   id?: string | null;
                 }[]
               | null;
@@ -829,6 +830,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     name?: T;
+                    icon?: T;
                     id?: T;
                   };
               id?: T;

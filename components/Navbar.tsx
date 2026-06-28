@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 const fallbackNavItems = [
     { href: '/', label: 'Home' },
@@ -58,6 +59,9 @@ export default function Navbar({ siteSetting }: { siteSetting: any }) {
     const headerRef = useRef<HTMLElement | null>(null)
     const [isScrolled, setIsScrolled] = useState(false)
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => { setMounted(true) }, [])
 
     useEffect(() => {
         const syncNavbarHeight = () => {
@@ -84,6 +88,16 @@ export default function Navbar({ siteSetting }: { siteSetting: any }) {
 
         return () => window.removeEventListener('scroll', onScroll)
     }, [])
+
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.body.style.overflow = ''
+        }
+
+        return () => { document.body.style.overflow = '' }
+    }, [isMobileMenuOpen])
 
     const toggleTheme = () => {
         const nextTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
@@ -150,11 +164,11 @@ export default function Navbar({ siteSetting }: { siteSetting: any }) {
                         ) : null}
 
                         <button
-                            className="mobile-nav-toggle"
+                            className={`mobile-nav-toggle${isMobileMenuOpen ? ' mobile-nav-toggle--open' : ''}`}
                             type="button"
                             onClick={() => setIsMobileMenuOpen((open) => !open)}
                             aria-expanded={isMobileMenuOpen}
-                            aria-controls="mobile-site-nav"
+                            aria-controls="mobile-nav-overlay"
                             aria-label="Toggle navigation menu"
                         >
                             <span></span>
@@ -163,22 +177,38 @@ export default function Navbar({ siteSetting }: { siteSetting: any }) {
                         </button>
                     </nav>
                 </div>
-
-                <div className={`mobile-nav-panel${isMobileMenuOpen ? ' mobile-nav-panel-open' : ''}`} id="mobile-site-nav">
-                      {navItems.map((item: NavItem) => {
-                        const isActive = pathname === item.href
-
-                        return (
-                            <Link key={item.href} href={item.href} className={isActive ? 'active' : undefined} aria-current={isActive ? 'page' : undefined}>
-                                {item.label}
-                            </Link>
-                        )
-                    })}
-                    <Link href="/contact" className={pathname === '/contact' ? 'site-nav-cta active' : 'site-nav-cta'} aria-current={pathname === '/contact' ? 'page' : undefined}>
-                        Contact
-                    </Link>
-                </div>
             </header>
+
+            {mounted && createPortal(
+                <div className={`mobile-nav-overlay${isMobileMenuOpen ? ' mobile-nav-overlay--open' : ''}`} id="mobile-nav-overlay" aria-hidden={!isMobileMenuOpen}>
+                    <nav className="mobile-nav-overlay__nav" aria-label="Mobile navigation">
+                        {navItems.map((item: NavItem, index: number) => {
+                            const isActive = pathname === item.href
+
+                            return (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className={`mobile-nav-overlay__link${isActive ? ' mobile-nav-overlay__link--active' : ''}`}
+                                    style={{ animationDelay: `${0.1 + index * 0.08}s` }}
+                                    aria-current={isActive ? 'page' : undefined}
+                                >
+                                    {item.label}
+                                </Link>
+                            )
+                        })}
+                        <Link
+                            href="/contact"
+                            className={`mobile-nav-overlay__cta${pathname === '/contact' ? ' mobile-nav-overlay__cta--active' : ''}`}
+                            style={{ animationDelay: `${0.1 + navItems.length * 0.08}s` }}
+                            aria-current={pathname === '/contact' ? 'page' : undefined}
+                        >
+                            Contact
+                        </Link>
+                    </nav>
+                </div>,
+                document.body
+            )}
         </>
     )
 }

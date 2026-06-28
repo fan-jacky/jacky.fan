@@ -1,23 +1,21 @@
-import FloatingArrow from "../FloatingArrow";
+import Link from "next/link";
 
 export default function HeroSection({ title, desc, arrowText = "", arrowLink = "" }: { title: string, desc: string, arrowText: string, arrowLink: string }) {
-
     return (
-        <section
-            id="hero"
-            className="hero-panel"
-        >
-            <div className="hero-panel__container container">
-                <div className="hero-panel__content">
-                    <div className="hero-panel__inner">
-                        <h1 className="hero-panel__title">{title}</h1>
-                        <hr className="hero-panel__rule" />
-
-                        <p className="hero-panel__description">{desc}</p>
+        <section className="slide" style={{ paddingTop: "9rem" }}>
+            <div className="geo-circle sm" style={{ top: "15%", right: "6%" }}></div>
+            <div className="container">
+                <span className="slide__label reveal">{title}</span>
+                <h1 className="slide__headline reveal">{title}</h1>
+                <p className="slide__subtitle reveal" style={{ marginBottom: "2rem" }}>{desc}</p>
+                {arrowText && arrowLink ? (
+                    <div className="reveal">
+                        <Link href={arrowLink} className="btn btn-primary">
+                            {arrowText} <span>→</span>
+                        </Link>
                     </div>
-                </div>
+                ) : null}
             </div>
-            <FloatingArrow text={arrowText} link={arrowLink} />
         </section>
     );
 }

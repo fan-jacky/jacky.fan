@@ -250,6 +250,12 @@ export const pageTechStackSection: Block = {
           required: true,
           label: 'Name',
         },
+        {
+          name: 'icon',
+          type: 'upload',
+          relationTo: 'media',
+          label: 'Icon',
+        },
       ],
     },
   ],

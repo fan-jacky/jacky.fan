@@ -1,6 +1,7 @@
 import FadeInBottom from "@/components/animation/FadeInBottom";
 import { getRichTextBlocks } from "./getRichTextBlocks";
 import { Heading } from "@/components/visual";
+import { resolvePayloadMediaUrl } from "./api";
 import Link from "next/link";
 import { ActiveLink, SectionContainer } from "@/components/basic";
 import { ArrowSmallDownIcon } from "@heroicons/react/24/outline";
@@ -200,7 +201,7 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
 
             case "page.button":
             case "pageButton": {
-                if (options.pageUrl === "/" && (data[i - 1]?.__component ?? data[i - 1]?.blockType) === "pageHeroSection") {
+                if (options.pageUrl === "/" && (data[i - 1] as any)?.__component === "pageHeroSection") {
                     break;
                 }
 
@@ -255,18 +256,14 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
             case "page.contact-form":
             case "pageContactForm":
                 elements.push(
-                    <SectionContainer key={i}>
-                        <FadeInBottom>
-                            <p className="content-card__title">
-                                {block.title}
-                            </p>
-                            <div className="content-card">
-                                <div className="content-card__body">
-                                    <ContactForm />
-                                </div>
-                            </div>
-                        </FadeInBottom>
-                    </SectionContainer>
+                    <section className="slide" key={i}>
+                        <div className="container">
+                            <FadeInBottom>
+                                {block.title ? <h2 className="slide__headline">{block.title}</h2> : null}
+                                <ContactForm />
+                            </FadeInBottom>
+                        </div>
+                    </section>
                 );
                 break;
 
@@ -293,9 +290,9 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                                     <span className="slide__label">Frontend Developer · Hong Kong</span>
                                     <h1>{block.title}</h1>
                                     <p className="slide__subtitle" style={{ marginBottom: '2rem' }}>{block.desc}</p>
-                                    <div className="reveal visible cta-row">
+                                    <div className="reveal">
                                         <Link href={block.arrowLink} className="btn btn-primary">{block.arrowText} <span>→</span></Link>
-                                        {secondaryCta ? <Link href={secondaryCta.url} className="btn btn-outline">{secondaryCta.name}</Link> : null}
+                                        {secondaryCta ? <Link href={secondaryCta.url} className="btn btn-outline" style={{ marginLeft: '0.75rem' }}>{secondaryCta.name}</Link> : null}
                                     </div>
                                 </div>
                             </div>
@@ -362,7 +359,7 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
 
             case "page.tech-stack-section":
             case "pageTechStackSection": {
-                const items = (block.items ?? []).map((item: any) => item.name).filter(Boolean);
+                const items = (block.items ?? []).filter((item: any) => item.name);
 
                 elements.push(
                     <section className="slide slide--tinted" key={i}>
@@ -373,12 +370,21 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                             {block.subtitle ? <p className="slide__subtitle reveal" style={{ marginBottom: "2.5rem" }}>{block.subtitle}</p> : null}
                             <div className="tech-strip-wrap reveal">
                                 <div className="tech-strip">
-                                    {[...items, ...items].map((item: string, itemIndex: number) => (
-                                        <div className="tech-item" key={`${item}-${itemIndex}`}>
-                                            <div className="tech-item-icon"><span>{item.slice(0, 1)}</span></div>
-                                            <span className="tech-item-name">{item}</span>
-                                        </div>
-                                    ))}
+                                    {[...items, ...items].map((item: any, itemIndex: number) => {
+                                        const iconUrl = item.icon?.url ? resolvePayloadMediaUrl(item.icon.url) : '';
+                                        return (
+                                            <div className="tech-item" key={`${item.name}-${itemIndex}`}>
+                                                <div className="tech-item-icon">
+                                                    {iconUrl ? (
+                                                        <img src={iconUrl} alt={item.icon?.alt || item.name} width="24" height="24" />
+                                                    ) : (
+                                                        <span>{item.name?.slice(0, 1)}</span>
+                                                    )}
+                                                </div>
+                                                <span className="tech-item-name">{item.name}</span>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>

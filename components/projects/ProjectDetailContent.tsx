@@ -140,7 +140,7 @@ export default function ProjectDetailContent({ project }: { project: ProjectDocu
   const displayScope = (overviewSection?.scopeItems ?? []).filter((item): item is { label: string; value: string } => Boolean(item?.label && item?.value))
   const displayFeatures = (featureSection?.items ?? []).filter((item): item is { iconText?: string | null; title: string; desc: string } => Boolean(item?.title && item?.desc))
   const displayStack = (stackSection?.items ?? []).map((item) => item?.label).filter((item): item is string => Boolean(item))
-  const primaryLinks = links.filter((link) => link?.links).map((link) => ({ href: link.links as string, label: link.name ?? 'Open link' }))
+  const primaryLinks = links.filter((link) => link?.links).map((link) => ({ href: link.links as string, label: link.name ?? 'Open link', primary: false }))
 
   const stackButtons = [
     stackSection?.primaryButtonText && stackSection?.primaryButtonUrl
@@ -265,7 +265,7 @@ export default function ProjectDetailContent({ project }: { project: ProjectDocu
                 <div className="project-feature" key={`${feature.title}-${index}`}>
                   <div className="project-feature-icon"><span>{feature.iconText ?? index + 1}</span></div>
                   <h4>{feature.title}</h4>
-                  <p>{feature.description}</p>
+                  <p>{feature.desc}</p>
                 </div>
               ))}
             </div>

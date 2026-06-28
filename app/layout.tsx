@@ -1,7 +1,7 @@
 import './globals.scss'
 import 'locomotive-scroll/locomotive-scroll.css'
 import type { Metadata } from 'next'
-import { outfit, patrick_hand, dosis, cabinSketch } from './fonts'
+import { inter, patrick_hand, dosis, cabinSketch } from './fonts'
 
 import { AlertContextProvider } from '@/contexts/AlertContext'
 import { LoadingScreenProvider } from '@/contexts/LoadingContext'
@@ -30,7 +30,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${outfit.className} ${outfit.variable} ${patrick_hand.variable} ${dosis.variable} ${cabinSketch.variable} overflow-x-hidden`}>
+      <body className={`${inter.className} ${inter.variable} ${patrick_hand.variable} ${dosis.variable} ${cabinSketch.variable} overflow-x-hidden`}>
         <AlertContextProvider>
           <LoadingScreenProvider>
             <PageExitContextProvider>

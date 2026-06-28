@@ -1,9 +1,6 @@
-import { ArrowSmallDownIcon } from "@heroicons/react/24/outline";
-import Magnifier3D from "../Magnifier3D";
-import FadeInBottom from "../../animation/FadeInBottom";
-import Image from "next/image";
-import { SectionContainer, ActiveLink } from "@/components/basic";
 import Link from "next/link";
+import FadeInBottom from "../../animation/FadeInBottom";
+import { resolvePayloadMediaUrl } from "@/helpers/payloadcms/api";
 
 interface AboutMeSectionProps {
     topTitle: string;
@@ -19,52 +16,55 @@ interface AboutMeSectionProps {
 }
 
 export default function AboutMeSection(props: AboutMeSectionProps) {
-
     return (
-        <SectionContainer id="about" extraClassName="about-section">
-            <FadeInBottom>
-                <h2 className="heading-block about-section__heading">
-                    <span className="heading-block__eyebrow">
-                        <hr className="heading-block__rule" />
-                        {props.topTitle}
-                    </span>
-                    <span className="heading-block__accent">{props.leftTitle}</span> <span className="heading-block__text">{props.rightTitle}</span>
-                </h2>
-            </FadeInBottom>
+        <section id="about" className="slide" style={{ paddingTop: "9rem" }}>
+            <div className="geo-circle sm" style={{ top: "15%", right: "6%" }}></div>
+            <div className="container">
+                <FadeInBottom>
+                    <span className="slide__label">{props.topTitle}</span>
+                    <h1 className="slide__headline">{props.leftTitle} {props.rightTitle}</h1>
+                </FadeInBottom>
 
-            <FadeInBottom>
-                 <div className="about-section__body prose max-w-none">
-                    {props.contents}
-                 </div>
-            </FadeInBottom>
+                <FadeInBottom>
+                    <div className="about-bio">
+                        {props.contents}
+                    </div>
+                </FadeInBottom>
 
-            <FadeInBottom>
-                <div className="about-section__tech-list">
-                    {props.techs.map((tech, index) => {
-                        const iconUrl = typeof tech.icon === "string" ? tech.icon : tech.icon?.url;
-                        return (
-                            <div key={index} className="about-section__tech-item">
-                                {iconUrl && (
-                                    <Image src={iconUrl} alt={tech.title} className="about-section__tech-icon" width={64} height={64} />
-                                )}
-                                <p className="about-section__tech-title">
-                                    {tech.title}
-                                </p>
+                {props.techs && props.techs.length > 0 ? (
+                    <FadeInBottom>
+                        <div className="tech-strip-wrap" style={{ marginTop: "2.5rem" }}>
+                            <div className="tech-strip">
+                                {[...props.techs, ...props.techs].map((tech, index) => {
+                                    const iconUrl = tech.icon?.url ? resolvePayloadMediaUrl(tech.icon.url) : '';
+                                    return (
+                                        <div key={index} className="tech-item">
+                                            <div className="tech-item-icon">
+                                                {iconUrl ? (
+                                                    <img src={iconUrl} alt={tech.icon?.alt || tech.title} width="24" height="24" />
+                                                ) : (
+                                                    <span>{tech.title.slice(0, 1)}</span>
+                                                )}
+                                            </div>
+                                            <span className="tech-item-name">{tech.title}</span>
+                                        </div>
+                                    );
+                                })}
                             </div>
-                        );
-                    })}
+                        </div>
+                    </FadeInBottom>
+                ) : null}
 
-                </div>
-            </FadeInBottom>
-
-            <FadeInBottom>
-                <ActiveLink href={props.btnLinks} className="btn btn-primary about-section__cta">
-                    {props.btnText}
-                    <ArrowSmallDownIcon className="about-section__cta-icon" />
-                </ActiveLink>
-            </FadeInBottom>
-
-            <Magnifier3D />
-        </SectionContainer>
+                {props.btnText && props.btnLinks ? (
+                    <FadeInBottom>
+                        <div style={{ marginTop: "2rem" }}>
+                            <Link href={props.btnLinks} className="btn btn-primary">
+                                {props.btnText} <span>→</span>
+                            </Link>
+                        </div>
+                    </FadeInBottom>
+                ) : null}
+            </div>
+        </section>
     );
 }

@@ -32,7 +32,7 @@
   --radius: 12px;
   --radius-sm: 8px;
   --radius-lg: 16px;
-  --font-sans: var(--font-outfit), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
@@ -224,123 +224,6 @@ h3 {
     color: var(--text-primary);
     font-size: clamp(1.25rem, 2vw, 1.5rem);
     text-align: center;
-  }
-}
-
-.hero-panel {
-  position: relative;
-  z-index: 10;
-  min-height: 100vh;
-  padding: 5rem 0;
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-
-  &__container {
-    position: relative;
-    display: flex;
-    min-height: 100vh;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &__content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-  }
-
-  &__inner {
-    max-width: 52rem;
-  }
-
-  &__title {
-    margin-bottom: 1rem;
-    padding-right: 0.5rem;
-    color: var(--accent);
-    font-family: var(--font-dosis, var(--font-sans));
-    font-size: clamp(3rem, 7vw, 4.5rem);
-    font-weight: 600;
-    line-height: 1.15;
-    text-align: center;
-  }
-
-  &__rule {
-    display: block;
-    width: 100%;
-    margin: 0;
-    border: 0;
-    border-top: 1.5px solid var(--text-primary);
-  }
-
-  &__description {
-    margin-top: 1rem;
-    color: var(--text-body);
-    font-size: clamp(1rem, 2vw, 1.25rem);
-    text-align: center;
-    text-shadow: 0 1px 2px rgba(31, 29, 26, 0.08);
-  }
-}
-
-.about-section {
-  min-height: 900px;
-  height: 100vh;
-  padding: 1.5rem 0 4rem;
-
-  &__heading {
-    margin-top: 2rem;
-  }
-
-  &__body {
-    p {
-      margin-bottom: 1rem;
-      color: var(--text-body);
-      font-size: 1rem;
-      line-height: 2;
-    }
-
-    strong {
-      color: var(--accent);
-      font-weight: 400;
-    }
-  }
-
-  &__tech-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
-    width: fit-content;
-    margin-bottom: 2rem;
-    padding: 0 1rem 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: var(--radius-sm);
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(12px);
-  }
-
-  &__tech-item {
-    position: relative;
-    width: 4rem;
-    margin: 0.5rem 0;
-  }
-
-  &__tech-icon {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: contain;
-  }
-
-  &__tech-title {
-    color: var(--text-primary);
-    text-align: center;
-    text-shadow: 0 1px 2px rgba(31, 29, 26, 0.08);
-  }
-
-  &__cta-icon {
-    width: 1.5rem;
-    height: 1.5rem;
-    transform: rotate(-90deg);
   }
 }
 
@@ -558,8 +441,7 @@ h3 {
   gap: 2rem;
 }
 
-.site-nav a,
-.mobile-nav-panel a {
+.site-nav a {
   position: relative;
   padding: 0.25rem 0;
   font-size: 0.9375rem;
@@ -643,10 +525,26 @@ h3 {
 .hero-content {
   position: relative;
   z-index: 2;
+  display: block;
   max-width: 620px;
+  padding: 0;
+  gap: normal;
+  justify-content: normal;
+  align-items: normal;
 
   h1 {
     margin-bottom: 1rem;
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    white-space: normal;
+  }
+
+  .slide__subtitle {
+    max-width: 560px;
+    font-size: 1.125rem;
+    line-height: 1.6;
   }
 }
 
@@ -1550,6 +1448,18 @@ h3 {
   }
 }
 
+@keyframes mobileNavFadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .mobile-nav-toggle {
   display: none;
   flex-direction: column;
@@ -1574,24 +1484,98 @@ h3 {
     height: 1.5px;
     border-radius: 999px;
     background: currentColor;
+    transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
+  }
+
+  &--open {
+    span:nth-child(1) {
+      transform: translateY(4.5px) rotate(45deg);
+    }
+
+    span:nth-child(2) {
+      opacity: 0;
+    }
+
+    span:nth-child(3) {
+      transform: translateY(-4.5px) rotate(-45deg);
+    }
   }
 }
 
-.mobile-nav-panel {
-  display: none;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 0 2rem 1.5rem;
-  border-top: 1px solid var(--border);
-  background: rgba(250, 249, 245, 0.97);
+.mobile-nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  background: rgba(250, 249, 245, 0.98);
+  backdrop-filter: blur(20px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s var(--ease), visibility 0.35s var(--ease);
 
-  &-open {
+  &--open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &__nav {
     display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0 2rem;
   }
 
-  .site-nav-cta {
-    width: fit-content;
+  &__link {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    opacity: 0;
+    font-family: var(--font-sans);
+    letter-spacing: -0.02em;
+    transition: color 0.2s var(--ease);
+
+    &:hover,
+    &--active {
+      color: var(--text-primary);
+    }
   }
+
+  &--open &__link {
+    animation: mobileNavFadeSlideIn 0.4s var(--ease) forwards;
+  }
+
+  &--open &__cta {
+    animation: mobileNavFadeSlideIn 0.4s var(--ease) forwards;
+  }
+
+  &__cta {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 2rem;
+    border-radius: 999px;
+    background: var(--text-primary);
+    color: var(--text-inverse);
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    opacity: 0;
+    width: fit-content;
+    transition: background 0.2s var(--ease), transform 0.2s var(--ease);
+
+    &:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    &--active {
+      background: var(--accent);
+    }
+  }
+}
+
+[data-theme='dark'] .mobile-nav-overlay {
+  background: rgba(20, 18, 16, 0.98);
 }
 
 .cta-row {
@@ -2190,16 +2174,6 @@ h3 {
     }
   }
 
-  .about-section {
-    height: auto;
-    min-height: auto;
-
-    &__tech-list {
-      justify-content: flex-start;
-      width: 100%;
-    }
-  }
-
   .container {
     padding: 0 1.25rem;
   }
@@ -2266,10 +2240,6 @@ h3 {
   .bg-heading {
     display: flex;
   }
-}
-
-[data-theme='dark'] .mobile-nav-panel {
-  background: rgba(20, 18, 16, 0.97);
 }
 
 [data-theme='dark'] .slide--dark .slide__label {

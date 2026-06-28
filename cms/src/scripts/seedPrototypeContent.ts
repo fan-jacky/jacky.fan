@@ -4,6 +4,8 @@ import { getPayload } from 'payload'
 
 import configPromise from '../payload.config.ts'
 
+import { seedTechIcons } from './seedTechIcons'
+
 type RichTextNode = {
   type: string
   [key: string]: unknown
@@ -783,6 +785,13 @@ export async function seedPrototypeContent() {
   })
 
   payload.logger.info('Prototype content seeded into Payload CMS.')
+
+  // Seed tech icons for the "What I Use" section
+  try {
+    await seedTechIcons()
+  } catch (err) {
+    payload.logger.warn(`Failed to seed tech icons: ${err instanceof Error ? err.message : String(err)}`)
+  }
 }
 
 async function main() {

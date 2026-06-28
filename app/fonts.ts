@@ -1,12 +1,11 @@
+import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 
-export const outfit = localFont({
-    src: [
-        { path: "./fonts/outfit-latin-400-normal.woff2", weight: "400" },
-        { path: "./fonts/outfit-latin-700-normal.woff2", weight: "700" },
-    ],
+export const inter = Inter({
+    subsets: ["latin"],
+    weight: ["400", "500", "600", "700", "800"],
     display: "swap",
-    variable: "--font-outfit",
+    variable: "--font-inter",
 });
 
 // Handwriting font
