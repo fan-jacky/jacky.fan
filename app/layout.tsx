@@ -1,4 +1,4 @@
-import './globals.css'
+import './globals.scss'
 import 'locomotive-scroll/locomotive-scroll.css'
 import type { Metadata } from 'next'
 import { outfit, patrick_hand, dosis, cabinSketch } from './fonts'

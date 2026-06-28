@@ -162,30 +162,30 @@ export default function ProjectDetailContent({ project }: { project: ProjectDocu
 
   return (
     <>
-      <section className="slide project-detail-hero">
+      <section className="slide project-detail project-detail--hero">
         <div className="geo-circle sm" style={{ top: '10%', right: '8%' }}></div>
         <div className="container">
-          <Link href="/projects" className="project-detail-back">
-            <ArrowLeftIcon className="h-4 w-4" />
+          <Link href="/projects" className="project-detail__back-link">
+            <ArrowLeftIcon className="project-detail__back-icon" />
             Back to Projects
           </Link>
-          <div className="project-detail-tags">
-            {tags.map((tag, index) => <span key={`${tag}-${index}`} className="project-detail-tag">{tag}</span>)}
+          <div className="project-detail__tags">
+            {tags.map((tag, index) => <span key={`${tag}-${index}`} className="project-detail__tag">{tag}</span>)}
           </div>
-          <h2 className="slide-headline reveal" style={{ marginBottom: '0.5rem' }}>{title}</h2>
-          <p className="project-detail-subtitle reveal">{desc}</p>
-          <div className="project-detail-mockup reveal">
+          <h2 className="slide__headline reveal" style={{ marginBottom: '0.5rem' }}>{title}</h2>
+          <p className="project-detail__subtitle reveal">{desc}</p>
+          <div className="project-detail__mockup reveal">
             {imageUrl ? (
-              <div className="screenshot-frame-body">
+              <div className="browser-frame__body">
                 <Image src={imageUrl} alt={title ?? 'Project image'} fill unoptimized className="object-cover object-top" />
               </div>
             ) : (
-              <div className="detail-mockup-content">
-                <div className="dm-hero"><div className="dm-h1"></div></div>
-                <div className="dm-grid">
-                  <div className="dm-col"><div className="dm-img"></div><div className="dm-line"></div></div>
-                  <div className="dm-col"><div className="dm-img"></div><div className="dm-line"></div></div>
-                  <div className="dm-col"><div className="dm-img"></div><div className="dm-line"></div></div>
+              <div className="project-detail__mockup-content">
+                <div className="project-detail__mockup-hero"><div className="project-detail__mockup-title-line"></div></div>
+                <div className="project-detail__mockup-grid">
+                  <div className="project-detail__mockup-column"><div className="project-detail__mockup-image"></div><div className="project-detail__mockup-line"></div></div>
+                  <div className="project-detail__mockup-column"><div className="project-detail__mockup-image"></div><div className="project-detail__mockup-line"></div></div>
+                  <div className="project-detail__mockup-column"><div className="project-detail__mockup-image"></div><div className="project-detail__mockup-line"></div></div>
                 </div>
               </div>
             )}
@@ -193,12 +193,12 @@ export default function ProjectDetailContent({ project }: { project: ProjectDocu
         </div>
       </section>
 
-      <section className="slide slide-tinted">
+      <section className="slide slide--tinted">
         <div className="geo-dots" style={{ top: 0, right: 0, width: '280px', height: '100%' }}></div>
         <div className="container">
-          <span className="slide-label reveal">{overviewSection?.label ?? 'Overview'}</span>
-          <h2 className="slide-headline reveal">{overviewSection?.title ?? 'Why this project?'}</h2>
-          <p className="slide-subtitle reveal" style={{ marginBottom: '3rem' }}>{overviewSection?.subtitle ?? 'The context, constraints, and value behind the work.'}</p>
+          <span className="slide__label reveal">{overviewSection?.label ?? 'Overview'}</span>
+          <h2 className="slide__headline reveal">{overviewSection?.title ?? 'Why this project?'}</h2>
+          <p className="slide__subtitle reveal" style={{ marginBottom: '3rem' }}>{overviewSection?.subtitle ?? 'The context, constraints, and value behind the work.'}</p>
           <div className="about-grid reveal">
             <div className="about-bio">
               {overviewContent.length > 0
@@ -223,28 +223,28 @@ export default function ProjectDetailContent({ project }: { project: ProjectDocu
         <section className="slide">
           <div className="geo-circle md" style={{ bottom: '-30px', right: '-40px' }}></div>
           <div className="container">
-            <span className="slide-label reveal">{contents.find((block): block is ProjectCarouselBlock => block?.blockType === 'projectsCarousel')?.label ?? 'Screenshots'}</span>
-            <h2 className="slide-headline reveal">{contents.find((block): block is ProjectCarouselBlock => block?.blockType === 'projectsCarousel')?.title ?? 'A look inside'}</h2>
-            <p className="slide-subtitle reveal" style={{ marginBottom: '2.5rem' }}>{contents.find((block): block is ProjectCarouselBlock => block?.blockType === 'projectsCarousel')?.subtitle ?? 'Key screens and visuals from the implementation.'}</p>
-            <div className="screenshot-gallery reveal-stagger">
+            <span className="slide__label reveal">{contents.find((block): block is ProjectCarouselBlock => block?.blockType === 'projectsCarousel')?.label ?? 'Screenshots'}</span>
+            <h2 className="slide__headline reveal">{contents.find((block): block is ProjectCarouselBlock => block?.blockType === 'projectsCarousel')?.title ?? 'A look inside'}</h2>
+            <p className="slide__subtitle reveal" style={{ marginBottom: '2.5rem' }}>{contents.find((block): block is ProjectCarouselBlock => block?.blockType === 'projectsCarousel')?.subtitle ?? 'Key screens and visuals from the implementation.'}</p>
+            <div className="browser-frame-gallery reveal-stagger">
               {galleryItems.map((item, index) => {
                 const mediaUrl = resolvePayloadMediaUrl(typeof item?.media === 'string' ? item.media : item?.media?.url ?? '')
 
                 return (
-                  <div className="screenshot-frame" key={index}>
-                    <div className="screenshot-frame-body">
+                  <div className="browser-frame" key={index}>
+                    <div className="browser-frame__body">
                       {mediaUrl ? (
                         <Image src={mediaUrl} alt={item?.desc ?? 'Project screenshot'} fill unoptimized className="object-cover object-top" />
                       ) : (
-                        <div className="screenshot-placeholder">
-                          <div className="ph-grid">
-                            <div className="ph-col"><div className="ph-img"></div><div className="ph-line"></div></div>
-                            <div className="ph-col"><div className="ph-img"></div><div className="ph-line"></div></div>
+                        <div className="browser-frame__placeholder">
+                          <div className="browser-frame__placeholder-grid">
+                            <div className="browser-frame__placeholder-column"><div className="browser-frame__placeholder-image"></div><div className="browser-frame__placeholder-line"></div></div>
+                            <div className="browser-frame__placeholder-column"><div className="browser-frame__placeholder-image"></div><div className="browser-frame__placeholder-line"></div></div>
                           </div>
                         </div>
                       )}
                     </div>
-                    <div className="screenshot-caption">{item?.desc ?? 'Project media'}</div>
+                    <div className="browser-frame__caption">{item?.desc ?? 'Project media'}</div>
                   </div>
                 )
               })}
@@ -254,12 +254,12 @@ export default function ProjectDetailContent({ project }: { project: ProjectDocu
       )}
 
       {displayFeatures.length > 0 && (
-        <section className="slide slide-tinted">
+        <section className="slide slide--tinted">
           <div className="geo-dots" style={{ top: 0, right: 0, width: '240px', height: '100%' }}></div>
           <div className="container">
-            <span className="slide-label reveal">{featureSection?.label ?? 'Key Features'}</span>
-            <h2 className="slide-headline reveal">{featureSection?.title ?? 'What makes it shine'}</h2>
-            <p className="slide-subtitle reveal" style={{ marginBottom: '3rem' }}>{featureSection?.subtitle ?? 'The parts of the implementation worth calling out.'}</p>
+            <span className="slide__label reveal">{featureSection?.label ?? 'Key Features'}</span>
+            <h2 className="slide__headline reveal">{featureSection?.title ?? 'What makes it shine'}</h2>
+            <p className="slide__subtitle reveal" style={{ marginBottom: '3rem' }}>{featureSection?.subtitle ?? 'The parts of the implementation worth calling out.'}</p>
             <div className="project-features reveal-stagger">
               {displayFeatures.map((feature, index) => (
                 <div className="project-feature" key={`${feature.title}-${index}`}>
@@ -276,8 +276,8 @@ export default function ProjectDetailContent({ project }: { project: ProjectDocu
       {richSections.length > 0 && (
         <SectionContainer extraClassName="py-12 md:py-16" topSpacing={false}>
           <div className="container">
-            <span className="slide-label reveal">Build Notes</span>
-            <h2 className="slide-headline reveal">Implementation details</h2>
+            <span className="slide__label reveal">Build Notes</span>
+            <h2 className="slide__headline reveal">Implementation details</h2>
             <div className="about-bio reveal" style={{ maxWidth: '760px' }}>
               {richSections.map((section, index) => (
                 <div key={`${section.name}-${index}`} style={{ marginBottom: '2rem' }}>
@@ -296,11 +296,11 @@ export default function ProjectDetailContent({ project }: { project: ProjectDocu
         <section className="slide">
           <div className="geo-circle md" style={{ top: 0, left: '-40px' }}></div>
           <div className="container">
-            <span className="slide-label reveal">{stackSection?.label ?? 'Tech Stack'}</span>
-            <h2 className="slide-headline reveal">{stackSection?.title ?? 'Built with'}</h2>
-            <p className="slide-subtitle reveal" style={{ marginBottom: '2.5rem' }}>{stackSection?.subtitle ?? 'The tools chosen for performance, DX, and maintainability.'}</p>
-            <div className="tech-detail-grid reveal-stagger">
-              {displayStack.map((item) => <div className="tech-detail-item" key={item}><span>{item}</span></div>)}
+            <span className="slide__label reveal">{stackSection?.label ?? 'Tech Stack'}</span>
+            <h2 className="slide__headline reveal">{stackSection?.title ?? 'Built with'}</h2>
+            <p className="slide__subtitle reveal" style={{ marginBottom: '2.5rem' }}>{stackSection?.subtitle ?? 'The tools chosen for performance, DX, and maintainability.'}</p>
+            <div className="tech-stack-grid reveal-stagger">
+              {displayStack.map((item) => <div className="tech-stack-grid__item" key={item}><span>{item}</span></div>)}
             </div>
             {(stackButtons.length > 0 || primaryLinks.length > 0) && (
               <div className="reveal" style={{ marginTop: '3rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
@@ -316,13 +316,13 @@ export default function ProjectDetailContent({ project }: { project: ProjectDocu
       )}
 
       {ctaSection && (
-        <section className="slide slide-dark">
+        <section className="slide slide--dark">
           <div className="geo-circle lg" style={{ borderColor: 'rgba(245,243,239,0.06)', top: '-80px', right: '-80px' }}></div>
           <div className="geo-accent" style={{ top: 'auto', bottom: '-100px', left: '-80px' }}></div>
           <div className="container">
-            <span className="slide-label reveal" style={{ color: 'rgba(245,243,239,0.5)' }}>{ctaSection.label}</span>
-            <h2 className="slide-headline reveal">{ctaSection.title}</h2>
-            <p className="slide-subtitle reveal" style={{ marginBottom: '2rem' }}>{ctaSection.subtitle}</p>
+            <span className="slide__label reveal" style={{ color: 'rgba(245,243,239,0.5)' }}>{ctaSection.label}</span>
+            <h2 className="slide__headline reveal">{ctaSection.title}</h2>
+            <p className="slide__subtitle reveal" style={{ marginBottom: '2rem' }}>{ctaSection.subtitle}</p>
             <div className="reveal" style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               {ctaButtons.map((link, index) => (
                 <Link key={`${link.href}-${index}`} href={link.href} target={link.external ? '_blank' : undefined} rel={link.external ? 'noopener noreferrer' : undefined} className={link.primary ? 'btn btn-primary' : 'btn btn-outline'}>

@@ -10,17 +10,17 @@ export default function Heading({
     colorReverse?: boolean
 }) {
     return (
-        <h2 className="font-bold text-3xl md:text-5xl mb-8 md:mb-16">
+        <h2 className="heading-block">
             {topTitle &&
-                <span className="text-sm md:text-lg flex font-light drop-shadow-sm">
-                    <hr className="w-8 md:w-16 inline-block my-auto mr-2 border-base-content" />
+                <span className="heading-block__eyebrow">
+                    <hr className="heading-block__rule" />
                     {topTitle}
                 </span>
             }
             {colorReverse ? 
-                <>{leftTitle} <span className="text-primary drop-shadow">{rightTitle}</span></>
+                <><span className="heading-block__text">{leftTitle}</span> <span className="heading-block__accent">{rightTitle}</span></>
             :
-                <><span className="text-primary drop-shadow">{leftTitle}</span> {rightTitle}</>
+                <><span className="heading-block__accent">{leftTitle}</span> <span className="heading-block__text">{rightTitle}</span></>
             }
         </h2>
     );

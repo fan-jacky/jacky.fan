@@ -21,33 +21,33 @@ interface AboutMeSectionProps {
 export default function AboutMeSection(props: AboutMeSectionProps) {
 
     return (
-        <SectionContainer id="about" extraClassName="min-h-[900px] h-screen md:mt-8 py-6 md:py-16">
+        <SectionContainer id="about" extraClassName="about-section">
             <FadeInBottom>
-                <h2 className="font-bold text-3xl md:text-5xl mb-8 md:mb-16">
-                    <span className="text-sm md:text-lg flex font-light drop-shadow-sm">
-                        <hr className="w-8 md:w-16 inline-block my-auto mr-2 border-base-content" />
+                <h2 className="heading-block about-section__heading">
+                    <span className="heading-block__eyebrow">
+                        <hr className="heading-block__rule" />
                         {props.topTitle}
                     </span>
-                    <span className="text-primary drop-shadow">{props.leftTitle}</span> {props.rightTitle}
+                    <span className="heading-block__accent">{props.leftTitle}</span> <span className="heading-block__text">{props.rightTitle}</span>
                 </h2>
             </FadeInBottom>
 
             <FadeInBottom>
-                 <div className="prose max-w-none prose-p:text-base-content prose-p:text-md prose-p:md:text-xl prose-p:mb-4 prose-p:md:mb-8 prose-p:leading-8 prose-strong:text-primary prose-strong:font-normal">
+                 <div className="about-section__body prose max-w-none">
                     {props.contents}
                  </div>
             </FadeInBottom>
 
             <FadeInBottom>
-                <div className="rounded-md glass w-fit flex flex-row flex-wrap justify-center md:justify-start gap-4 mb-4 md:mb-8 pb-2 px-4">
+                <div className="about-section__tech-list">
                     {props.techs.map((tech, index) => {
                         const iconUrl = typeof tech.icon === "string" ? tech.icon : tech.icon?.url;
                         return (
-                            <div key={index} className="my-2 w-16 md:w-24 relative">
+                            <div key={index} className="about-section__tech-item">
                                 {iconUrl && (
-                                    <Image src={iconUrl} alt={tech.title} className="w-full aspect-square" width={64} height={64} />
+                                    <Image src={iconUrl} alt={tech.title} className="about-section__tech-icon" width={64} height={64} />
                                 )}
-                                <p className="text-center drop-shadow-sm">
+                                <p className="about-section__tech-title">
                                     {tech.title}
                                 </p>
                             </div>
@@ -58,9 +58,9 @@ export default function AboutMeSection(props: AboutMeSectionProps) {
             </FadeInBottom>
 
             <FadeInBottom>
-                <ActiveLink href={props.btnLinks} className="btn btn-neutral">
+                <ActiveLink href={props.btnLinks} className="btn btn-primary about-section__cta">
                     {props.btnText}
-                    <ArrowSmallDownIcon className="h-6 w-6 text-content -rotate-90" />
+                    <ArrowSmallDownIcon className="about-section__cta-icon" />
                 </ActiveLink>
             </FadeInBottom>
 

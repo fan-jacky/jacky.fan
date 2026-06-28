@@ -36,8 +36,8 @@ export default function SectionContainer({
     }
 
     return (
-        <section id={id} className={`relative overflow-x-clip ${extraClassName}`}>
-            <div className={`container mx-auto ${getSpacing()} ${getRightSpacing()}`}>
+        <section id={id} className={`section-shell ${extraClassName}`}>
+            <div className={`section-shell__container container ${getSpacing()} ${getRightSpacing()}`}>
                 {children}
             </div>
         </section>

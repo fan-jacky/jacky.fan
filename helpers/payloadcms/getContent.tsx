@@ -113,8 +113,8 @@ type GetContentsOptions = {
 };
 
 function getSectionToneClass(tone?: string) {
-    if (tone === "dark") return "slide slide-dark";
-    if (tone === "tinted") return "slide slide-tinted";
+    if (tone === "dark") return "slide slide--dark";
+    if (tone === "tinted") return "slide slide--tinted";
     return "slide";
 }
 
@@ -173,7 +173,7 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                 elements.push(
                     <SectionContainer key={i}>
                         <FadeInBottom>
-                            <div className={classes}>
+                            <div className={`rich-content ${classes}`}>
                                 {richText(block.content).map((c: any, idx: number) => getRichTextBlocks(c, {}, idx))}
                             </div>
                         </FadeInBottom>
@@ -215,7 +215,7 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                     elements.push(
                         <SectionContainer topSpacing={false} bottomSpacing={false} key={i}>
                             <FadeInBottom>
-                                <Link href={block.url} className="btn btn-neutral">
+                                <Link href={block.url} className="btn btn-primary">
                                     {buttonContent}
                                 </Link>
                             </FadeInBottom>
@@ -226,7 +226,7 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                 elements.push(
                     <SectionContainer key={i}>
                         <FadeInBottom>
-                            <ActiveLink href={block.url} className="btn btn-neutral">
+                            <ActiveLink href={block.url} className="btn btn-primary">
                                 {buttonContent}
                             </ActiveLink>
                         </FadeInBottom>
@@ -238,12 +238,12 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
             case "page.project-grid":
             case "pageProjectGrid":
                 elements.push(
-                    <section className="slide slide-tinted" key={i} style={block.topPadding ? { paddingTop: "9rem" } : undefined}>
+                    <section className="slide slide--tinted" key={i} style={block.topPadding ? { paddingTop: "9rem" } : undefined}>
                         <div className={block.topPadding ? "geo-circle sm" : "geo-circle md"} style={block.topPadding ? { top: '10%', right: '8%' } : undefined}></div>
                         <div className="container">
-                            {block.label ? <span className="slide-label reveal">{block.label}</span> : null}
-                            {block.title ? (block.topPadding ? <h1 className="slide-headline reveal">{block.title}</h1> : <h2 className="slide-headline reveal">{block.title}</h2>) : null}
-                            {block.subtitle ? <p className="slide-subtitle reveal" style={{ marginBottom: "3rem" }}>{block.subtitle}</p> : null}
+                            {block.label ? <span className="slide__label reveal">{block.label}</span> : null}
+                            {block.title ? (block.topPadding ? <h1 className="slide__headline reveal">{block.title}</h1> : <h2 className="slide__headline reveal">{block.title}</h2>) : null}
+                            {block.subtitle ? <p className="slide__subtitle reveal" style={{ marginBottom: "3rem" }}>{block.subtitle}</p> : null}
                             {options.pageUrl === "/"
                                 ? <HomeFeaturedProjects projects={options.projectGridItems} />
                                 : <ProjectGrid projects={options.projectGridItems} />}
@@ -257,11 +257,11 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                 elements.push(
                     <SectionContainer key={i}>
                         <FadeInBottom>
-                            <p className="font-bold text-xl md:text-3xl mt-8 md:mt-16 mb-4 md:mb-8">
+                            <p className="content-card__title">
                                 {block.title}
                             </p>
-                            <div className="card w-full bg-base-300 shadow-xl">
-                                <div className="card-body">
+                            <div className="content-card">
+                                <div className="content-card__body">
                                     <ContactForm />
                                 </div>
                             </div>
@@ -290,9 +290,9 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                             </div>
                             <div className="container">
                                 <div className="hero-content">
-                                    <span className="slide-label">Frontend Developer · Hong Kong</span>
+                                    <span className="slide__label">Frontend Developer · Hong Kong</span>
                                     <h1>{block.title}</h1>
-                                    <p className="slide-subtitle" style={{ marginBottom: '2rem' }}>{block.desc}</p>
+                                    <p className="slide__subtitle" style={{ marginBottom: '2rem' }}>{block.desc}</p>
                                     <div className="reveal visible cta-row">
                                         <Link href={block.arrowLink} className="btn btn-primary">{block.arrowText} <span>→</span></Link>
                                         {secondaryCta ? <Link href={secondaryCta.url} className="btn btn-outline">{secondaryCta.name}</Link> : null}
@@ -344,9 +344,9 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                     <section className="slide" key={i}>
                         <div className="geo-circle sm"></div>
                         <div className="container">
-                            {block.label ? <span className="slide-label reveal">{block.label}</span> : null}
-                            {block.title ? <h2 className="slide-headline reveal">{block.title}</h2> : null}
-                            {block.subtitle ? <p className="slide-subtitle reveal" style={{ marginBottom: "3rem" }}>{block.subtitle}</p> : null}
+                            {block.label ? <span className="slide__label reveal">{block.label}</span> : null}
+                            {block.title ? <h2 className="slide__headline reveal">{block.title}</h2> : null}
+                            {block.subtitle ? <p className="slide__subtitle reveal" style={{ marginBottom: "3rem" }}>{block.subtitle}</p> : null}
                             <div className="stats-grid reveal-stagger">
                                 {(block.items ?? []).map((item: any, itemIndex: number) => (
                                     <div key={`${item.label}-${itemIndex}`}>
@@ -365,12 +365,12 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                 const items = (block.items ?? []).map((item: any) => item.name).filter(Boolean);
 
                 elements.push(
-                    <section className="slide slide-tinted" key={i}>
+                    <section className="slide slide--tinted" key={i}>
                         <div className="geo-dots" style={{ top: 0, right: 0, width: "300px", height: "100%" }}></div>
                         <div className="container">
-                            {block.label ? <span className="slide-label reveal">{block.label}</span> : null}
-                            {block.title ? <h2 className="slide-headline reveal">{block.title}</h2> : null}
-                            {block.subtitle ? <p className="slide-subtitle reveal" style={{ marginBottom: "2.5rem" }}>{block.subtitle}</p> : null}
+                            {block.label ? <span className="slide__label reveal">{block.label}</span> : null}
+                            {block.title ? <h2 className="slide__headline reveal">{block.title}</h2> : null}
+                            {block.subtitle ? <p className="slide__subtitle reveal" style={{ marginBottom: "2.5rem" }}>{block.subtitle}</p> : null}
                             <div className="tech-strip-wrap reveal">
                                 <div className="tech-strip">
                                     {[...items, ...items].map((item: string, itemIndex: number) => (
@@ -389,22 +389,27 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
 
             case "page.cta-section":
             case "pageCtaSection": {
-                const sectionClassName = getSectionToneClass(block.tone);
+                const sectionClassName = [
+                    getSectionToneClass(block.tone),
+                    "slide--cta",
+                    block.centered ? "slide--cta-centered" : null,
+                ].filter(Boolean).join(" ");
                 const isDark = block.tone === "dark";
                 const textAlign = block.centered ? { textAlign: "center" as const } : undefined;
-                const actionStyle = block.centered
-                    ? { display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" as const }
-                    : { display: "flex", gap: "0.75rem", flexWrap: "wrap" as const };
+                const subtitleStyle = block.centered
+                    ? { margin: "0 auto 2rem" }
+                    : { marginBottom: "2rem" };
+                const actionsClassName = block.centered ? "reveal cta-row cta-row--centered" : "reveal cta-row";
 
                 elements.push(
                     <section className={sectionClassName} key={i} style={textAlign}>
                         {isDark ? <div className="geo-circle lg" style={{ borderColor: "rgba(245,243,239,0.06)", top: "-80px", right: "-80px" }}></div> : null}
                         {isDark ? <div className="geo-accent" style={{ top: "auto", bottom: "-100px", right: "-80px" }}></div> : null}
                         <div className="container">
-                            {block.label ? <span className="slide-label reveal" style={isDark ? { color: "rgba(245,243,239,0.5)" } : undefined}>{block.label}</span> : null}
-                            {block.title ? <h2 className="slide-headline reveal">{block.title}</h2> : null}
-                            {block.subtitle ? <p className="slide-subtitle reveal" style={{ marginBottom: "2rem" }}>{block.subtitle}</p> : null}
-                            <div className="reveal" style={actionStyle}>
+                            {block.label ? <span className="slide__label reveal" style={isDark ? { color: "rgba(245,243,239,0.5)" } : undefined}>{block.label}</span> : null}
+                            {block.title ? <h2 className="slide__headline reveal">{block.title}</h2> : null}
+                            {block.subtitle ? <p className="slide__subtitle reveal" style={subtitleStyle}>{block.subtitle}</p> : null}
+                            <div className={actionsClassName}>
                                 {renderButtonLink(block.primaryButtonText, block.primaryButtonUrl, block.primaryButtonExternal, "btn btn-primary")}
                                 {renderButtonLink(block.secondaryButtonText, block.secondaryButtonUrl, block.secondaryButtonExternal, "btn btn-outline")}
                             </div>
@@ -420,9 +425,9 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                     <section className="slide" key={i} style={block.topPadding ? { paddingTop: "9rem" } : undefined}>
                         <div className="geo-circle sm" style={{ top: "15%", right: "6%" }}></div>
                         <div className="container">
-                            {block.label ? <span className="slide-label reveal">{block.label}</span> : null}
-                            {block.title ? <h1 className="slide-headline reveal">{block.title}</h1> : null}
-                            {block.subtitle ? <p className="slide-subtitle reveal" style={{ marginBottom: "3rem" }}>{block.subtitle}</p> : null}
+                            {block.label ? <span className="slide__label reveal">{block.label}</span> : null}
+                            {block.title ? <h1 className="slide__headline reveal">{block.title}</h1> : null}
+                            {block.subtitle ? <p className="slide__subtitle reveal" style={{ marginBottom: "3rem" }}>{block.subtitle}</p> : null}
                             <div className="about-grid">
                                 <div className="about-bio reveal">
                                     {richText(block.body).map((c: any, idx: number) => getRichTextBlocks(c, {}, idx))}
@@ -461,12 +466,12 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
             case "page.skill-bars-section":
             case "pageSkillBarsSection":
                 elements.push(
-                    <section className="slide slide-tinted" key={i}>
+                    <section className="slide slide--tinted" key={i}>
                         <div className="geo-dots" style={{ top: 0, right: 0, width: "240px", height: "100%" }}></div>
                         <div className="container">
-                            {block.label ? <span className="slide-label reveal">{block.label}</span> : null}
-                            {block.title ? <h2 className="slide-headline reveal">{block.title}</h2> : null}
-                            {block.subtitle ? <p className="slide-subtitle reveal" style={{ marginBottom: "2.5rem" }}>{block.subtitle}</p> : null}
+                            {block.label ? <span className="slide__label reveal">{block.label}</span> : null}
+                            {block.title ? <h2 className="slide__headline reveal">{block.title}</h2> : null}
+                            {block.subtitle ? <p className="slide__subtitle reveal" style={{ marginBottom: "2.5rem" }}>{block.subtitle}</p> : null}
                             <div className="skills-grid reveal">
                                 {(block.groups ?? []).map((group: any, groupIndex: number) => (
                                     <div className="skill-bar-group" key={groupIndex}>
@@ -501,9 +506,9 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                         {isDark ? <div className="geo-circle lg" style={{ borderColor: "rgba(245,243,239,0.06)", top: "-80px", right: "-80px" }}></div> : null}
                         {isDark ? <div className="geo-accent" style={{ bottom: "-100px", right: "-80px" }}></div> : <div className="geo-dots" style={{ top: 0, left: 0, width: "200px", height: "100%" }}></div>}
                         <div className="container">
-                            {block.label ? <span className="slide-label reveal" style={isDark ? { color: "rgba(245,243,239,0.6)" } : undefined}>{block.label}</span> : null}
-                            {block.title ? <h2 className="slide-headline reveal">{block.title}</h2> : null}
-                            {block.subtitle ? <p className="slide-subtitle reveal" style={{ marginBottom: "3rem" }}>{block.subtitle}</p> : null}
+                            {block.label ? <span className="slide__label reveal" style={isDark ? { color: "rgba(245,243,239,0.6)" } : undefined}>{block.label}</span> : null}
+                            {block.title ? <h2 className="slide__headline reveal">{block.title}</h2> : null}
+                            {block.subtitle ? <p className="slide__subtitle reveal" style={{ marginBottom: "3rem" }}>{block.subtitle}</p> : null}
                             <div className={gridClassName}>
                                 {(block.items ?? []).map((item: any, itemIndex: number) => (
                                     <div className={cardClassName} key={`${item.title}-${itemIndex}`}>
@@ -528,9 +533,9 @@ function getContents(data: PageContentType[] | null | undefined, options: GetCon
                         <div className="geo-circle lg" style={{ top: "-100px", right: "-100px" }}></div>
                         <div className="geo-circle sm" style={{ bottom: "10%", left: "8%" }}></div>
                         <div className="container">
-                            {block.label ? <span className="slide-label reveal">{block.label}</span> : null}
-                            {block.title ? <h1 className="slide-headline reveal">{block.title}</h1> : null}
-                            {block.subtitle ? <p className="slide-subtitle reveal" style={{ marginBottom: "3rem" }}>{block.subtitle}</p> : null}
+                            {block.label ? <span className="slide__label reveal">{block.label}</span> : null}
+                            {block.title ? <h1 className="slide__headline reveal">{block.title}</h1> : null}
+                            {block.subtitle ? <p className="slide__subtitle reveal" style={{ marginBottom: "3rem" }}>{block.subtitle}</p> : null}
                             <div className="contact-grid">
                                 <div className="reveal">
                                     <div className="contact-methods">

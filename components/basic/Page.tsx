@@ -24,9 +24,9 @@ export default async function Page({ children, reserveNavbarHeight = true }: { c
     const siteSetting = await getData();
 
     return (
-        <main className="relative">
+        <main className="page-shell">
             <Navbar siteSetting={siteSetting} />
-                <div className={`portfolio-main min-h-screen text-md md:text-xl ${reserveNavbarHeight ? "page" : ""}`}>
+                <div className={`page-shell__content portfolio-main ${reserveNavbarHeight ? "page" : ""}`}>
                     {children}
                 </div>
                 <Footer siteSetting={siteSetting} />

@@ -70,47 +70,41 @@ export default function ContactForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="contact-form">
 
-            <div className="form-control w-full md:max-w-xs mb-4">
-                <label htmlFor="contactName" className="label">
-                    <span className="label-text text-md md:text-xl">What is your name?</span>
+            <div className="contact-form__field contact-form__field--compact">
+                <label htmlFor="contactName" className="contact-form__label">
+                    <span className="contact-form__label-text">What is your name?</span>
                 </label>
-                <input id="contactName" type="text" placeholder="Type your name here" className="input input-bordered w-full md:max-w-xs" ref={inputName} />
+                <input id="contactName" type="text" placeholder="Type your name here" className="contact-form__input" ref={inputName} />
                 {showRequired.name &&
-                    <label className="label">
-                        <span className="label-text-alt text-error">This field is required.</span>
-                    </label>
+                    <p className="contact-form__error">This field is required.</p>
                 }
             </div>
 
-            <div className="form-control w-full md:max-w-xs mb-4">
-                <label htmlFor="contactEmail" className="label">
-                    <span className="label-text text-md md:text-xl">What is your Email?</span>
+            <div className="contact-form__field contact-form__field--compact">
+                <label htmlFor="contactEmail" className="contact-form__label">
+                    <span className="contact-form__label-text">What is your Email?</span>
                 </label>
-                <input id="contactEmail" type="email" placeholder="Type your email here" className="input input-bordered w-full md:max-w-xs" ref={inputEmail} />
+                <input id="contactEmail" type="email" placeholder="Type your email here" className="contact-form__input" ref={inputEmail} />
                 {showRequired.email &&
-                    <label className="label">
-                        <span className="label-text-alt text-error">This field is required.</span>
-                    </label>
+                    <p className="contact-form__error">This field is required.</p>
                 }
             </div>
 
-            <div className="form-control w-full mb-4">
-                <label htmlFor="contactMessage" className="label">
-                    <span className="label-text text-md md:text-xl">What is your message?</span>
+            <div className="contact-form__field">
+                <label htmlFor="contactMessage" className="contact-form__label">
+                    <span className="contact-form__label-text">What is your message?</span>
                 </label>
-                <textarea id="contactMessage" className="textarea textarea-bordered h-24" placeholder="Type your message here" ref={inputMessage} name="body"></textarea>
+                <textarea id="contactMessage" className="contact-form__textarea" placeholder="Type your message here" ref={inputMessage} name="body"></textarea>
                 {showRequired.message &&
-                    <label className="label">
-                        <span className="label-text-alt text-error">This field is required.</span>
-                    </label>
+                    <p className="contact-form__error">This field is required.</p>
                 }
             </div>
 
-            <button type="submit" className="btn btn-neutral" disabled={isLoading}>
+            <button type="submit" className="btn btn-primary contact-form__submit" disabled={isLoading}>
                 {isLoading ? 'Sending...' : 'Submit'}
-                <PaperAirplaneIcon className="h-6 w-6 text-content" />
+                <PaperAirplaneIcon className="contact-form__submit-icon" />
             </button>
 
         </form>

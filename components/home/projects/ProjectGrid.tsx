@@ -30,13 +30,13 @@ const PROJECTS_PAGE_PRIORITY: Record<string, number> = {
 function ProjectMockup({ kind }: { kind: 'blog' | 'portfolio' | 'terminal' | 'code' }) {
     if (kind === 'terminal') {
         return (
-            <div className="project-card-image mockup-terminal">
-                <div className="mockup-terminal-lines">
-                    <div className="cmd"><span className="prompt">$</span> docker compose up -d</div>
-                    <div className="cmd"><span className="out">[+] Running 3/3</span></div>
-                    <div className="cmd"><span className="out">Server healthy</span></div>
-                    <div className="cmd"><span className="prompt">$</span> docker stats <span className="hl">--no-stream</span></div>
-                    <div className="cmd"><span className="out">mc-server 0.12% 1.2GiB</span></div>
+            <div className="project-card__image project-mockup project-mockup--terminal">
+                <div className="project-mockup__terminal-lines">
+                    <div className="project-mockup__terminal-command"><span className="project-mockup__terminal-prompt">$</span> docker compose up -d</div>
+                    <div className="project-mockup__terminal-command"><span className="project-mockup__terminal-output">[+] Running 3/3</span></div>
+                    <div className="project-mockup__terminal-command"><span className="project-mockup__terminal-output">Server healthy</span></div>
+                    <div className="project-mockup__terminal-command"><span className="project-mockup__terminal-prompt">$</span> docker stats <span className="project-mockup__terminal-highlight">--no-stream</span></div>
+                    <div className="project-mockup__terminal-command"><span className="project-mockup__terminal-output">mc-server 0.12% 1.2GiB</span></div>
                 </div>
             </div>
         );
@@ -44,13 +44,13 @@ function ProjectMockup({ kind }: { kind: 'blog' | 'portfolio' | 'terminal' | 'co
 
     if (kind === 'portfolio' || kind === 'code') {
         return (
-            <div className="project-card-image mockup-browser">
-                <div className="mockup-portfolio-hero">
-                    <div className="hero-mock"><div className="h1-line" style={kind === 'code' ? { width: '25%' } : undefined}></div></div>
-                    <div className="grid-mock">
-                        <div className="col"><div className="img-bar"></div><div className="t-bar"></div></div>
-                        <div className="col"><div className="img-bar"></div><div className="t-bar"></div></div>
-                        <div className="col"><div className="img-bar"></div><div className="t-bar"></div></div>
+            <div className="project-card__image project-mockup project-mockup--browser">
+                <div className="project-mockup__portfolio-hero">
+                    <div className="project-mockup__hero-panel"><div className="project-mockup__title-line" style={kind === 'code' ? { width: '25%' } : undefined}></div></div>
+                    <div className="project-mockup__grid">
+                        <div className="project-mockup__grid-column"><div className="project-mockup__image-bar"></div><div className="project-mockup__text-bar"></div></div>
+                        <div className="project-mockup__grid-column"><div className="project-mockup__image-bar"></div><div className="project-mockup__text-bar"></div></div>
+                        <div className="project-mockup__grid-column"><div className="project-mockup__image-bar"></div><div className="project-mockup__text-bar"></div></div>
                     </div>
                 </div>
             </div>
@@ -58,14 +58,14 @@ function ProjectMockup({ kind }: { kind: 'blog' | 'portfolio' | 'terminal' | 'co
     }
 
     return (
-        <div className="project-card-image mockup-browser">
-            <div className="mockup-blog-lines">
-                <div className="line wide"></div>
-                <div className="line sm"></div>
-                <div className="blog-grid">
-                    <div className="blog-card"><div className="thumb"></div><div className="title-line"></div></div>
-                    <div className="blog-card"><div className="thumb"></div><div className="title-line"></div></div>
-                    <div className="blog-card"><div className="thumb"></div><div className="title-line"></div></div>
+        <div className="project-card__image project-mockup project-mockup--browser">
+            <div className="project-mockup__blog-lines">
+                <div className="project-mockup__line project-mockup__line--wide"></div>
+                <div className="project-mockup__line project-mockup__line--small"></div>
+                <div className="project-mockup__blog-grid">
+                    <div className="project-mockup__blog-card"><div className="project-mockup__thumb"></div><div className="project-mockup__card-title-line"></div></div>
+                    <div className="project-mockup__blog-card"><div className="project-mockup__thumb"></div><div className="project-mockup__card-title-line"></div></div>
+                    <div className="project-mockup__blog-card"><div className="project-mockup__thumb"></div><div className="project-mockup__card-title-line"></div></div>
                 </div>
             </div>
         </div>
@@ -91,7 +91,7 @@ export default function ProjectGrid({ projects = [] }: { projects?: ProjectGridI
     });
 
     return (
-        <div className="projects-grid reveal-stagger">
+        <div className="project-list reveal-stagger">
             {orderedProjects.map((item) => {
                 if (!item.alias || !item.title || !item.desc) {
                     return null;
@@ -105,26 +105,26 @@ export default function ProjectGrid({ projects = [] }: { projects?: ProjectGridI
                 return (
                     <Link href={`/projects/${item.alias}`} className="project-card" key={item.alias}>
                         {imageUrl ? (
-                            <div className="project-card-image">
+                            <div className="project-card__image">
                                 <Image
                                     src={imageUrl}
                                     alt={item.title}
                                     fill
-                                    className="object-cover"
+                                    className="project-card__image-asset"
                                     sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                                 />
                             </div>
                         ) : (
                             <ProjectMockup kind={item.cardStyle ?? 'portfolio'} />
                         )}
-                        <div className="project-card-body">
-                            <div className="project-card-tags">
+                        <div className="project-card__body">
+                            <div className="project-card__tags">
                                 {(item.tags ?? []).slice(0, 3).map((tag) => (
-                                    <span key={tag} className="project-card-tag">{tag}</span>
+                                    <span key={tag} className="project-card__tag">{tag}</span>
                                 ))}
                             </div>
-                            <h3 className="project-card-title">{item.title}</h3>
-                            <p className="project-card-desc">{item.desc}</p>
+                            <h3 className="project-card__title">{item.title}</h3>
+                            <p className="project-card__description">{item.desc}</p>
                         </div>
                     </Link>
                 );
