@@ -9,18 +9,15 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .about-grid,
-  .contact-grid,
-  .skills-grid,
-  .browser-frame-gallery,
-  .tech-stack-grid {
-    grid-template-columns: 1fr;
-  }
-
   .hero-graphic {
     right: -120px;
     width: 360px;
     height: 360px;
+  }
+
+  .about-grid, .project-features {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 }
 
@@ -47,8 +44,8 @@
 
   .hero-slide {
     min-height: auto;
-    padding-top: 8rem;
-    padding-bottom: 7rem;
+    padding-top: 12rem;
+    padding-bottom: 12rem;
     align-items: flex-start;
   }
 
@@ -97,7 +94,12 @@
   .project-list,
   .passions-grid,
   .principles-grid,
-  .project-features {
+  .project-features,
+  .about-grid,
+  .contact-grid,
+  .skills-grid,
+  .browser-frame-gallery,
+  .tech-stack-grid {
     grid-template-columns: 1fr;
   }
 
