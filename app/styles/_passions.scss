@@ -1,0 +1,68 @@
+.passions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.passion-card {
+  padding: 2.5rem 2rem;
+  border: 1px solid rgba(245, 243, 239, 0.1);
+  border-radius: var(--radius-lg);
+  background: rgba(245, 243, 239, 0.04);
+  text-align: center;
+  transition: transform 0.25s var(--ease), border-color 0.25s var(--ease);
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: rgba(245, 243, 239, 0.18);
+  }
+}
+
+.passion-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  background: rgba(245, 243, 239, 0.06);
+  color: var(--accent);
+
+  svg {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+.passion-title {
+  margin-bottom: 0.75rem;
+  color: var(--text-inverse);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.passion-desc {
+  max-width: 420px;
+  margin: 0 auto;
+  color: rgba(245, 243, 239, 0.55);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+[data-theme='dark'] .passion-card {
+  background: rgba(245, 243, 239, 0.03);
+  border-color: rgba(245, 243, 239, 0.08);
+
+  &:hover {
+    border-color: rgba(245, 243, 239, 0.14);
+  }
+}
+
+[data-theme='dark'] .passion-icon {
+  background: rgba(245, 243, 239, 0.04);
+}
+
+[data-theme='dark'] .slide--dark .passion-desc {
+  color: rgba(31, 29, 26, 0.65);
+}

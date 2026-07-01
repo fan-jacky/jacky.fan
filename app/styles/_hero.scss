@@ -1,0 +1,145 @@
+.hero-slide {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+
+  .container {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+.hero-slide .hero-content {
+  position: relative;
+  z-index: 2;
+  display: block;
+  max-width: 620px;
+  padding: 0;
+  gap: normal;
+  justify-content: normal;
+  align-items: normal;
+
+  h1 {
+    margin-bottom: 1rem;
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    white-space: normal;
+  }
+
+  .slide__subtitle {
+    max-width: 560px;
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+}
+
+.hero-graphic {
+  position: absolute;
+  top: 50%;
+  right: -40px;
+  z-index: 1;
+  width: 500px;
+  height: 500px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+  animation: fadeIn 1s 0.5s var(--ease-out) forwards;
+
+  .outer,
+  .mid,
+  .inner,
+  .dot {
+    position: absolute;
+    border-radius: 50%;
+  }
+
+  .outer {
+    inset: 0;
+    border: 1.5px solid rgba(59, 92, 184, 0.08);
+  }
+
+  .mid {
+    inset: 60px;
+    border: 1px dashed rgba(59, 92, 184, 0.1);
+  }
+
+  .inner {
+    inset: 140px;
+    background: rgba(59, 92, 184, 0.04);
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    opacity: 0.2;
+
+    &:nth-child(4) {
+      top: 70px;
+      left: 50%;
+    }
+
+    &:nth-child(5) {
+      right: 60px;
+      bottom: 80px;
+    }
+
+    &:nth-child(6) {
+      top: 40%;
+      left: -4px;
+    }
+  }
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transform: translateX(-50%);
+  animation: fadeIn 1s 1.2s var(--ease-out) forwards;
+
+  &-line {
+    position: relative;
+    width: 1px;
+    height: 40px;
+    overflow: hidden;
+    background: var(--border);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      height: 12px;
+      background: var(--accent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+  }
+}
+
+[data-theme='dark'] .hero-graphic {
+  .outer {
+    border-color: rgba(139, 168, 224, 0.06);
+  }
+
+  .mid {
+    border-color: rgba(139, 168, 224, 0.08);
+  }
+
+  .inner {
+    background: rgba(139, 168, 224, 0.04);
+  }
+}

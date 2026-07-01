@@ -1,0 +1,143 @@
+.site-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 100;
+  border-bottom: 1px solid transparent;
+  backdrop-filter: blur(12px);
+  background: rgba(250, 249, 245, 0.82);
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+
+  &.scrolled {
+    border-bottom-color: var(--border);
+    background: rgba(250, 249, 245, 0.94);
+  }
+
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+}
+
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+
+  &:hover {
+    color: var(--text-primary);
+  }
+}
+
+.site-logo-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.site-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.site-nav a {
+  position: relative;
+  padding: 0.25rem 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-muted);
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: -2px;
+    left: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.25s var(--ease);
+  }
+
+  &:hover,
+  &.active {
+    color: var(--text-primary);
+  }
+
+  &:hover::after,
+  &.active::after {
+    transform: scaleX(1);
+  }
+}
+
+.site-nav-cta {
+  padding: 0.5rem 1.25rem !important;
+  border-radius: 999px;
+  background: var(--text-primary);
+  color: var(--text-inverse) !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  transition: background 0.2s var(--ease), transform 0.2s var(--ease);
+
+  &:hover {
+    background: var(--accent) !important;
+    transform: translateY(-1px);
+  }
+
+  &::after {
+    display: none !important;
+  }
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-left: 0.5rem;
+  transition: all 0.2s var(--ease);
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+  }
+}
+
+.icon-moon {
+  display: none;
+}
+
+[data-theme='dark'] .site-header {
+  background: rgba(20, 18, 16, 0.82);
+
+  &.scrolled {
+    background: rgba(20, 18, 16, 0.94);
+    border-bottom-color: var(--border);
+  }
+}

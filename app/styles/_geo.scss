@@ -1,0 +1,65 @@
+.geo-circle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+
+  &.lg {
+    width: 480px;
+    height: 480px;
+    top: -120px;
+    right: -120px;
+    border: 1.5px solid rgba(59, 92, 184, 0.08);
+  }
+
+  &.md {
+    width: 200px;
+    height: 200px;
+    bottom: -40px;
+    left: -60px;
+    border: 1px dashed rgba(59, 92, 184, 0.1);
+  }
+
+  &.sm {
+    width: 80px;
+    height: 80px;
+    top: 20%;
+    right: 15%;
+    background: rgba(59, 92, 184, 0.04);
+  }
+}
+
+.geo-dots {
+  position: absolute;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgba(59, 92, 184, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.geo-accent {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.05;
+  filter: blur(70px);
+  pointer-events: none;
+}
+
+[data-theme='dark'] .geo-circle {
+  &.lg {
+    border-color: rgba(139, 168, 224, 0.06);
+  }
+
+  &.md {
+    border-color: rgba(139, 168, 224, 0.08);
+  }
+
+  &.sm {
+    background: rgba(139, 168, 224, 0.04);
+  }
+}
+
+[data-theme='dark'] .geo-dots {
+  background-image: radial-gradient(circle, rgba(139, 168, 224, 0.08) 1px, transparent 1px);
+}

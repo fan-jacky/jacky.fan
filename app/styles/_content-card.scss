@@ -1,0 +1,23 @@
+.content-card {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-secondary);
+  box-shadow: 0 18px 40px rgba(31, 29, 26, 0.06);
+
+  &__title {
+    margin: 2rem 0 1rem;
+    color: var(--text-primary);
+    font-size: clamp(1.25rem, 3vw, 1.875rem);
+    font-weight: 700;
+  }
+
+  &__body {
+    padding: 1.5rem;
+  }
+}
+
+[data-theme='dark'] .content-card {
+  border-color: var(--border);
+  background: var(--bg-secondary);
+}

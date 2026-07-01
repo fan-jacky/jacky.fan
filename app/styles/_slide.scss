@@ -1,0 +1,84 @@
+.slide {
+  position: relative;
+  overflow: hidden;
+  padding: 7rem 0;
+
+  &--tinted {
+    background: var(--bg-tint);
+  }
+
+  &--dark {
+    background: var(--bg-dark);
+    color: var(--text-inverse);
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      color: var(--text-inverse);
+    }
+
+    .slide__subtitle {
+      color: rgba(245, 243, 239, 0.6);
+    }
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+  }
+
+  &__headline {
+    margin-bottom: 0.75rem;
+  }
+
+  &__subtitle {
+    max-width: 560px;
+    font-size: 1.125rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+
+  &--centered {
+    justify-content: center;
+  }
+}
+
+.slide--cta {
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.slide--cta-centered {
+  .container {
+    align-items: center;
+  }
+
+  .slide__headline,
+  .slide__subtitle {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+}
+
+[data-theme='dark'] .slide--dark .slide__label {
+  color: rgba(31, 29, 26, 0.7) !important;
+}
+
+[data-theme='dark'] .slide--dark .slide__subtitle {
+  color: rgba(31, 29, 26, 0.65);
+}
