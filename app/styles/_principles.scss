@@ -27,6 +27,11 @@
   border-radius: 50%;
   background: var(--accent-light);
   color: var(--accent);
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 [data-theme='dark'] .principle-card {
