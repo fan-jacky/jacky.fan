@@ -72,3 +72,12 @@
   background: var(--bg-secondary);
   border-color: var(--border);
 }
+
+[data-theme='dark'] .tech-item-icon {
+  border: 1px solid var(--border);
+  background: transparent;
+}
+
+[data-theme='dark'] .tech-strip .tech-item-icon img {
+  filter: invert(1) brightness(0.9);
+}

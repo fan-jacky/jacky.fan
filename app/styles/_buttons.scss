@@ -36,16 +36,6 @@
   }
 }
 
-.slide--dark .btn-outline {
-  color: var(--text-inverse);
-  border-color: rgba(245, 243, 239, 0.25);
-
-  &:hover {
-    border-color: var(--text-inverse);
-    color: var(--text-inverse);
-  }
-}
-
 [data-theme='dark'] .btn-primary {
   background: var(--bg-dark);
   color: var(--text-inverse);
@@ -63,5 +53,28 @@
   &:hover {
     border-color: var(--text-primary);
     color: var(--text-primary);
+  }
+}
+
+// .slide--dark overrides — must come AFTER [data-theme='dark'] rules
+// (same 0-2-0 specificity; later wins in cascade)
+.slide--dark .btn-outline {
+  color: var(--text-inverse);
+  border-color: rgba(245, 243, 239, 0.25);
+
+  &:hover {
+    border-color: var(--text-inverse);
+    color: var(--text-inverse);
+    background-color: transparent;
+  }
+}
+
+[data-theme='dark'] .slide--dark .btn-primary {
+  background: var(--text-inverse);
+  color: var(--text-primary);
+
+  &:hover {
+    background: var(--accent);
+    color: #1f1d1a;
   }
 }
