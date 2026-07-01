@@ -2,7 +2,7 @@ import { pathToFileURL } from 'url'
 
 import { getPayload } from 'payload'
 
-import configPromise from '../payload.config.ts'
+import configPromise from '../payload.config'
 
 import { seedTechIcons } from './seedTechIcons'
 
@@ -50,10 +50,10 @@ function richTextFromNodes(nodes: RichTextNode[]) {
   return {
     root: {
       children: nodes,
-      direction: 'ltr',
-      format: '',
+      direction: 'ltr' as const,
+      format: '' as const,
       indent: 0,
-      type: 'root',
+      type: 'root' as const,
       version: 1,
     },
   }
@@ -650,9 +650,10 @@ async function upsertPage(payload: Awaited<ReturnType<typeof getPayload>>, page:
     },
   })
 
-  const data = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data: any = {
     ...page,
-    _status: 'published' as const,
+    _status: 'published',
   }
 
   if (existing.docs.length > 1) {
@@ -696,9 +697,10 @@ async function upsertProject(payload: Awaited<ReturnType<typeof getPayload>>, pr
     },
   })
 
-  const data = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data: any = {
     ...project,
-    _status: 'published' as const,
+    _status: 'published',
   }
 
   if (existing.docs.length > 1) {

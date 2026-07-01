@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 
 import { seedPrototypeContent } from '../../../scripts/seedPrototypeContent'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST() {
   try {
     await seedPrototypeContent()

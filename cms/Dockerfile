@@ -5,6 +5,9 @@ FROM node:22.17.0-alpine AS base
 
 ENV PNPM_STORE_PATH=/app/.pnpm-store
 ENV CI=true
+# Build-time placeholders — real values injected at runtime via env_file
+ENV PAYLOAD_SECRET=build-placeholder-secret-change-in-production
+ENV DATABASE_URL=mongodb://localhost:27017/payload
 
 # Install dependencies only when needed
 FROM base AS deps
