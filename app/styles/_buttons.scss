@@ -17,6 +17,8 @@ body .btn {
   // height override — daisyUI sets height: 3rem; min-height: 3rem
   height: auto;
   min-height: auto;
+  // line-height override — daisyUI sets line-height: 1em
+  line-height: inherit;
 }
 
 body .btn-primary {
