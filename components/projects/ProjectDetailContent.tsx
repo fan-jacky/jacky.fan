@@ -226,12 +226,17 @@ export default function ProjectDetailContent({ project }: { project: ProjectDocu
             <div className="browser-frame-gallery reveal-stagger">
               {galleryItems.map((item, index) => {
                 const mediaUrl = resolvePayloadMediaUrl(typeof item?.media === 'string' ? item.media : item?.media?.url ?? '')
+                const isVideo = mediaUrl ? /\.(webm|mp4)(\?|$)/i.test(mediaUrl) : false
 
                 return (
                   <div className="browser-frame" key={index}>
                     <div className="browser-frame__body">
                       {mediaUrl ? (
-                        <Image src={mediaUrl} alt={item?.desc ?? 'Project screenshot'} fill unoptimized className="object-cover object-top" />
+                        isVideo ? (
+                          <video src={mediaUrl} autoPlay loop muted playsInline className="browser-frame__video" />
+                        ) : (
+                          <Image src={mediaUrl} alt={item?.desc ?? 'Project screenshot'} fill unoptimized className="object-cover object-top" />
+                        )
                       ) : (
                         <div className="browser-frame__placeholder">
                           <div className="browser-frame__placeholder-grid">
