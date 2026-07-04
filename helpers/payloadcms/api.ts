@@ -62,10 +62,18 @@ export function resolvePayloadMediaUrl(url: string, options?: { publicOrigin?: b
     if (url.startsWith("http://") || url.startsWith("https://")) {
       const mediaUrl = new URL(url);
 
+      // If a public base URL is configured, always rewrite the origin to it
       if (publicBaseUrl) {
         const publicOrigin = new URL(publicBaseUrl).origin;
+        if (mediaUrl.origin !== publicOrigin) {
+          return `${publicOrigin}${mediaUrl.pathname}${mediaUrl.search}${mediaUrl.hash}`;
+        }
+      }
 
-        if (mediaUrl.origin === publicOrigin && mediaUrl.origin !== preferredOrigin) {
+      // If the server base URL differs from preferred, rewrite
+      if (serverBaseUrl) {
+        const serverOrigin = new URL(serverBaseUrl).origin;
+        if (mediaUrl.origin === serverOrigin && mediaUrl.origin !== preferredOrigin) {
           return `${preferredOrigin}${mediaUrl.pathname}${mediaUrl.search}${mediaUrl.hash}`;
         }
       }
