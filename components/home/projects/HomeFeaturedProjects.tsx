@@ -1,4 +1,7 @@
+import Image from "next/image";
 import Link from 'next/link'
+
+import { resolvePayloadMediaUrl } from "@/helpers/payloadcms/api";
 
 import type { ProjectGridItem } from './ProjectGrid'
 
@@ -46,9 +49,26 @@ export default function HomeFeaturedProjects({ projects = [] }: { projects?: Pro
           return null
         }
 
+        const mediaPath = typeof project.img === 'string'
+          ? project.img
+          : project.img?.thumbnailURL ?? project.img?.url ?? '';
+        const imageUrl = resolvePayloadMediaUrl(mediaPath);
+
         return (
           <Link href={`/projects/${project.alias}`} className="project-card" key={project.alias}>
-            <HomeProjectMockup kind={project.cardStyle ?? 'portfolio'} />
+            {imageUrl ? (
+              <div className="project-card__image">
+                <Image
+                  src={imageUrl}
+                  alt={project.title}
+                  fill
+                  className="project-card__image-asset"
+                  sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                />
+              </div>
+            ) : (
+              <HomeProjectMockup kind={project.cardStyle ?? 'portfolio'} />
+            )}
             <div className="project-card__body">
               <div className="project-card__tags">
                 {(project.tags ?? []).slice(0, 3).map((tag) => <span key={tag} className="project-card__tag">{tag}</span>)}
