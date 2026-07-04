@@ -1,4 +1,6 @@
-.btn {
+// Use `body .btn` (0-1-1) to beat daisyUI's `.btn` (0-1-0) in the cascade
+// (daisyUI comes after our partials because @tailwind is at the bottom of globals.scss)
+body .btn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -12,36 +14,53 @@
   text-decoration: none;
   transition: all 0.25s var(--ease);
 
-  &-primary {
-    background: var(--text-primary);
-    color: var(--text-inverse);
+  // height override — daisyUI sets height: 3rem; min-height: 3rem
+  height: auto;
+  min-height: auto;
+}
 
-    &:hover {
-      background: var(--accent);
-      color: #fff;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(59, 92, 184, 0.25);
-    }
+body .btn-primary {
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  // override daisyUI's background-color injection from .btn
+  background-color: var(--text-primary);
+  // override daisyUI's border
+  border-color: transparent;
+  // override daisyUI's box-shadow
+  box-shadow: none;
+
+  &:hover {
+    background: var(--accent);
+    background-color: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(59, 92, 184, 0.25);
   }
+}
 
-  &-outline {
-    border: 1.5px solid var(--border);
-    background: transparent;
-    color: var(--text-primary);
+body .btn-outline {
+  border: 1.5px solid var(--border);
+  background: transparent;
+  background-color: transparent;
+  color: var(--text-primary);
+  // override daisyUI's box-shadow
+  box-shadow: none;
 
-    &:hover {
-      border-color: var(--text-primary);
-      transform: translateY(-2px);
-    }
+  &:hover {
+    border-color: var(--text-primary);
+    transform: translateY(-2px);
+    background-color: transparent;
   }
 }
 
 [data-theme='dark'] .btn-primary {
   background: var(--bg-dark);
+  background-color: var(--bg-dark);
   color: var(--text-inverse);
 
   &:hover {
     background: var(--accent);
+    background-color: var(--accent);
     color: #1f1d1a;
   }
 }
@@ -71,10 +90,12 @@
 
 [data-theme='dark'] .slide--dark .btn-primary {
   background: var(--text-inverse);
+  background-color: var(--text-inverse);
   color: var(--text-primary);
 
   &:hover {
     background: var(--accent);
+    background-color: var(--accent);
     color: #1f1d1a;
   }
 }
