@@ -804,7 +804,7 @@
 .browser-frame {
   position: relative;
   border-radius: var(--radius);
-  background: transparent;
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
   padding-top: 32px; // window chrome bar — matches project-detail__mockup
 
   &__body {
