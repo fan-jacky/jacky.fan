@@ -114,12 +114,14 @@ export async function seedTechIcons() {
   console.log('Updated home page tech stack icons')
 }
 
-seedTechIcons()
-  .then(() => {
-    console.log('Done')
-    process.exit(0)
-  })
-  .catch((err) => {
-    console.error(err)
-    process.exit(1)
-  })
+// Direct execution disabled — seed is called via the API route instead.
+// To seed manually, uncomment below or POST /api/seed-prototype
+// seedTechIcons()
+//   .then(() => {
+//     console.log('Done')
+//     process.exit(0)
+//   })
+//   .catch((err) => {
+//     console.error(err)
+//     process.exit(1)
+//   })

@@ -14,6 +14,8 @@ services:
       NEXT_PUBLIC_PAYLOAD_CMS_URL: ${NEXT_PUBLIC_PAYLOAD_CMS_URL:-http://localhost:${CMS_HOST_PORT:-3001}}
     depends_on:
       - cms
+    extra_hosts:
+      - "rpi5-1:host-gateway"
     restart: unless-stopped
 
   cms:
@@ -36,6 +38,8 @@ services:
         condition: service_healthy
     volumes:
       - cms_media:/app/media
+    extra_hosts:
+      - "rpi5-1:host-gateway"
     restart: unless-stopped
 
   mongo:
@@ -52,6 +56,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+    extra_hosts:
+      - "rpi5-1:host-gateway"
     restart: unless-stopped
 
 volumes:
