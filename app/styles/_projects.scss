@@ -697,10 +697,10 @@
   }
 
   &__mockup {
-    overflow: hidden;
-    aspect-ratio: 16 / 9;
+    position: relative;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
+    padding-top: 32px; // push image below window-chrome ::before decoration
   }
 
   &__mockup-content {
@@ -845,11 +845,6 @@
     font-size: 0.875rem;
     line-height: 1.6;
   }
-}
-
-// Push hero image below the 32px window-chrome ::before decoration
-.project-detail__mockup {
-  padding-top: 32px;
 }
 
 // Dark theme project overrides
