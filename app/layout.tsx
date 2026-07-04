@@ -20,6 +20,20 @@ export const metadata: Metadata = {
     siteName: 'Jacky FAN',
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: 'http://rpi5-1:3011/api/media/file/jackyfan-og.png',
+        width: 1200,
+        height: 630,
+        alt: 'Jacky FAN - Frontend Developer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Jacky FAN - Frontend Developer',
+    description: 'Hello I am Jacky FAN, a front end developer in Hong Kong who focus on building high-quality websites.',
+    images: ['http://rpi5-1:3011/api/media/file/jackyfan-og.png'],
   },
 }
 
