@@ -7,6 +7,29 @@ const nextConfig = {
   },
   reactStrictMode: true,
   turbopack: {},
+  // Proxy CMS API requests to the internal CMS container
+  async rewrites() {
+    // Use internal Docker network hostname (not public URL)
+    const cmsInternalUrl = 'http://cms:3000'
+    return [
+      {
+        source: '/api/:path*',
+        has: [
+          {
+            type: 'query',
+            key: '_cms_proxy',
+            value: '1',
+          },
+        ],
+        destination: `${cmsInternalUrl}/api/:path*`,
+      },
+      {
+        // Proxy media files through to CMS
+        source: '/api/media/:path*',
+        destination: `${cmsInternalUrl}/api/media/:path*`,
+      },
+    ]
+  },
   webpack: function (config) {
     config.module.rules.push({
       test: /\.md$/,
