@@ -80,16 +80,17 @@ body .btn.btn-outline:hover {
 }
 
 // .slide--dark overrides — must come AFTER [data-theme='dark'] rules
-// (same 0-2-0 specificity; later wins in cascade)
+// Use .btn.btn-outline (0-4-0 on hover) to definitively beat
+// body .btn.btn-outline:hover (0-2-2) and daisyUI (0-2-0)
 .slide--dark .btn-outline {
   color: var(--text-inverse);
   border-color: rgba(245, 243, 239, 0.25);
+}
 
-  &:hover {
-    border-color: var(--text-inverse);
-    color: var(--text-inverse);
-    background-color: transparent;
-  }
+.slide--dark .btn.btn-outline:hover {
+  border-color: var(--text-inverse);
+  color: var(--text-inverse);
+  background-color: transparent;
 }
 
 [data-theme='dark'] .slide--dark .btn-primary {
