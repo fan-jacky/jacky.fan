@@ -14,22 +14,30 @@ const fallbackNavItems = [
 type NavItem = {
     href: string
     label: string
+    external?: boolean
 }
 
-const extractPageUrl = (page: any): string | undefined => {
+const resolveMenuItemUrl = (item: any): { href?: string; external?: boolean } => {
+    // External URL takes priority
+    if (item?.externalUrl) {
+        return { href: item.externalUrl, external: true }
+    }
+
+    // Internal page relationship
+    const page = item?.page
     if (!page || typeof page === 'string') {
-        return undefined
+        return {}
     }
 
     if (page.url) {
-        return page.url
+        return { href: page.url, external: false }
     }
 
     if (page.slug) {
-        return `/${page.slug}`
+        return { href: `/${page.slug}`, external: false }
     }
 
-    return undefined
+    return {}
 }
 
 const resolveTheme = () => {
@@ -108,7 +116,10 @@ export default function Navbar({ siteSetting }: { siteSetting: any }) {
 
     const logoText = siteSetting?.siteLogoText ?? 'Jacky FAN'
     const navItems: NavItem[] = siteSetting?.menuItem
-        ?.map((item: any): Partial<NavItem> => ({ href: extractPageUrl(item?.page), label: item?.name }))
+        ?.map((item: any): Partial<NavItem> => {
+            const resolved = resolveMenuItemUrl(item)
+            return { href: resolved.href, label: item?.name, external: resolved.external }
+        })
         .filter((item: Partial<NavItem>): item is NavItem => Boolean(item.href && item.label)) ?? fallbackNavItems
     const showThemeToggle = siteSetting?.showNightModeToggle ?? true
 
@@ -127,7 +138,21 @@ export default function Navbar({ siteSetting }: { siteSetting: any }) {
                     <nav className="site-nav" aria-label="Primary navigation">
                         <div className="site-nav-links">
                               {navItems.map((item: NavItem) => {
-                                const isActive = pathname === item.href
+                                const isActive = !item.external && pathname === item.href
+
+                                if (item.external) {
+                                    return (
+                                        <a
+                                            key={item.href}
+                                            href={item.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                        >
+                                            {item.label}
+                                        </a>
+                                    )
+                                }
 
                                 return (
                                     <Link
@@ -194,7 +219,22 @@ export default function Navbar({ siteSetting }: { siteSetting: any }) {
                     </button>
                     <nav className="mobile-nav-overlay__nav" aria-label="Mobile navigation">
                         {navItems.map((item: NavItem, index: number) => {
-                            const isActive = pathname === item.href
+                            const isActive = !item.external && pathname === item.href
+
+                            if (item.external) {
+                                return (
+                                    <a
+                                        key={item.href}
+                                        href={item.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="mobile-nav-overlay__link"
+                                        style={{ animationDelay: `${0.1 + index * 0.08}s` }}
+                                    >
+                                        {item.label}
+                                    </a>
+                                )
+                            }
 
                             return (
                                 <Link

@@ -1121,6 +1121,7 @@ export interface SiteSetting {
     | {
         name: string;
         page?: (string | null) | Page;
+        externalUrl?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1165,6 +1166,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
     | {
         name?: T;
         page?: T;
+        externalUrl?: T;
         id?: T;
       };
   footerText?: T;

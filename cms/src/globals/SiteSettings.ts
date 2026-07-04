@@ -54,7 +54,19 @@ export const SiteSettings: GlobalConfig = {
           name: 'page',
           type: 'relationship',
           relationTo: 'pages',
-          label: 'Page',
+          label: 'Page (internal)',
+          admin: {
+            condition: (_, siblingData) => !siblingData?.externalUrl,
+          },
+        },
+        {
+          name: 'externalUrl',
+          type: 'text',
+          label: 'External URL',
+          admin: {
+            condition: (_, siblingData) => !siblingData?.page,
+            placeholder: 'https://example.com',
+          },
         },
       ],
     },
