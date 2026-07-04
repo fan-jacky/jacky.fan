@@ -375,7 +375,8 @@
 .project-detail__mockup,
 .browser-frame,
 .browser-frame__placeholder {
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  // transparent — screencaps carry their own editorial background
+  background: transparent;
 }
 
 .project-mockup--browser,
@@ -407,11 +408,7 @@
 }
 
 .browser-frame::before {
-  display: block;
-  width: 100%;
-  height: 24px;
-  background: linear-gradient(to bottom, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-  border-bottom: 1px solid var(--border);
+  display: none; // no window chrome — screencaps have their own editorial framing
 }
 
 .project-mockup--browser::after,
@@ -442,11 +439,7 @@
 }
 
 .browser-frame::after {
-  top: 7px;
-  left: 10px;
-  width: 7px;
-  height: 7px;
-  box-shadow: 12px 0 0 #f5bd4f, 24px 0 0 #61c454;
+  display: none; // no window dots
 }
 
 .project-mockup--terminal {
@@ -802,8 +795,10 @@
 
 .browser-frame {
   position: relative;
-  background: var(--bg-primary);
-  padding-top: 24px; // push body below the window-chrome ::before decoration
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: transparent;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
 
   &__body {
     position: relative;
@@ -824,6 +819,13 @@
     height: 100%;
     object-fit: cover;
     object-position: top;
+  }
+
+  &__caption {
+    padding: 0.75rem 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    line-height: 1.6;
   }
 
   &__placeholder {
@@ -847,11 +849,21 @@
     height: 100%;
   }
 
-  &__caption {
-    padding: 0.875rem 1rem 0;
-    color: var(--text-muted);
-    font-size: 0.875rem;
-    line-height: 1.6;
+  &__placeholder-line {
+    height: 6px;
+    margin-top: 0.5rem;
+    border-radius: 3px;
+    background: var(--border);
+
+    &--wide {
+      width: 45%;
+      background: var(--accent);
+      opacity: 0.25;
+    }
+
+    &--small {
+      width: 28%;
+    }
   }
 }
 
@@ -879,8 +891,7 @@
 [data-theme='dark'] .project-mockup__blog-card,
 [data-theme='dark'] .project-mockup__grid-column,
 [data-theme='dark'] .project-detail__mockup-column,
-[data-theme='dark'] .browser-frame__placeholder-column,
-[data-theme='dark'] .browser-frame {
+[data-theme='dark'] .browser-frame__placeholder-column {
   border-color: var(--border);
   background: var(--bg-secondary);
 }
