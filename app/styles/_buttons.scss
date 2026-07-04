@@ -1,5 +1,8 @@
 // Use `body .btn` (0-1-1) to beat daisyUI's `.btn` (0-1-0) in the cascade
 // (daisyUI comes after our partials because @tailwind is at the bottom of globals.scss)
+//
+// Hover rules use `body .btn.btn-*:hover` (0-2-2) to beat daisyUI's
+// `.btn:hover` and `.btn-outline:hover` (both 0-2-0).
 body .btn {
   display: inline-flex;
   align-items: center;
@@ -24,20 +27,18 @@ body .btn {
 body .btn-primary {
   background: var(--text-primary);
   color: var(--text-inverse);
-  // override daisyUI's background-color injection from .btn
   background-color: var(--text-primary);
-  // override daisyUI's border
   border-color: transparent;
-  // override daisyUI's box-shadow
   box-shadow: none;
+}
 
-  &:hover {
-    background: var(--accent);
-    background-color: var(--accent);
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(59, 92, 184, 0.25);
-  }
+// 0-2-2 beats daisyUI's .btn:hover (0-2-0) which injects a dark bg
+body .btn.btn-primary:hover {
+  background: var(--accent);
+  background-color: var(--accent);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(59, 92, 184, 0.25);
 }
 
 body .btn-outline {
@@ -45,14 +46,15 @@ body .btn-outline {
   background: transparent;
   background-color: transparent;
   color: var(--text-primary);
-  // override daisyUI's box-shadow
   box-shadow: none;
+}
 
-  &:hover {
-    border-color: var(--text-primary);
-    transform: translateY(-2px);
-    background-color: transparent;
-  }
+// 0-2-2 beats daisyUI's .btn-outline:hover (0-2-0) which fills bg + swaps color
+body .btn.btn-outline:hover {
+  border-color: var(--text-primary);
+  transform: translateY(-2px);
+  background-color: transparent;
+  color: var(--text-primary);
 }
 
 [data-theme='dark'] .btn-primary {
