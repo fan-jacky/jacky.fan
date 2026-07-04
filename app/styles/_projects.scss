@@ -410,7 +410,7 @@
 .browser-frame::before {
   display: block;
   width: 100%;
-  height: 24px;
+  height: 32px;
   background: linear-gradient(to bottom, var(--bg-primary) 0%, var(--bg-secondary) 100%);
   border-bottom: 1px solid var(--border);
 }
@@ -443,11 +443,11 @@
 }
 
 .browser-frame::after {
-  top: 7px;
-  left: 10px;
-  width: 7px;
-  height: 7px;
-  box-shadow: 12px 0 0 #f5bd4f, 24px 0 0 #61c454;
+  top: 10px;
+  left: 14px;
+  width: 10px;
+  height: 10px;
+  box-shadow: 16px 0 0 #f5bd4f, 32px 0 0 #61c454;
 }
 
 .project-mockup--terminal {
@@ -805,7 +805,7 @@
   position: relative;
   border-radius: var(--radius);
   background: transparent;
-  padding-top: 24px; // window chrome bar
+  padding-top: 32px; // window chrome bar — matches project-detail__mockup
 
   &__body {
     position: relative;
