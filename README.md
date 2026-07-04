@@ -18,7 +18,52 @@ You can access this website via https://jacky.fan
 
 ## Screenshots
 
--   TODO
+Project screenshot animations are generated with the bundled `scripts/generate-screencap.py` script.
+
+### generate-screencap.py
+
+Creates smooth-scrolling WebM screencaps for portfolio project pages. Composites a
+website screenshot onto the editorial background (gradient, dot grid, geometric
+circles) with rounded corners, drop shadow, cubic ease-in-out scroll, and fade
+in/out.
+
+**Requirements:** Python 3, Pillow, ffmpeg
+
+```bash
+pip install Pillow
+brew install ffmpeg
+```
+
+**Usage:**
+
+```bash
+# Single screenshot (auto-names output as <name>-scroll.webm)
+python3 scripts/generate-screencap.py screenshot.png
+
+# Custom output path
+python3 scripts/generate-screencap.py shot.png -o custom.webm
+
+# Batch — process every .png in a directory (skips existing *_scroll.webm)
+python3 scripts/generate-screencap.py --batch ~/Desktop/designo/
+
+# Tune parameters
+python3 scripts/generate-screencap.py shot.png --duration 4 --fps 24 --width 1080
+```
+
+**Options:**
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--output`, `-o` | `<input>-scroll.webm` | Output path |
+| `--batch DIR` | — | Process all PNGs in a directory |
+| `--width` | 1280 | Canvas width in px |
+| `--viewport-ratio` | 1.78 | Viewport aspect ratio (width/height) |
+| `--viewport-fill` | 0.844 | Viewport width as fraction of canvas |
+| `--duration` | 6.0 | Animation duration in seconds |
+| `--fps` | 30 | Frames per second |
+| `--fade` | 0.10 | Fade fraction of total duration |
+| `--crf` | 30 | VP9 quality (0–63, lower = better) |
+| `--bitrate` | 2M | VP9 target bitrate |
 
 ## Getting Started
 
