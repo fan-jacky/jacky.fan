@@ -408,7 +408,11 @@
 }
 
 .browser-frame::before {
-  display: none; // no window chrome — screencaps have their own editorial framing
+  display: block;
+  width: 100%;
+  height: 24px;
+  background: linear-gradient(to bottom, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  border-bottom: 1px solid var(--border);
 }
 
 .project-mockup--browser::after,
@@ -439,7 +443,11 @@
 }
 
 .browser-frame::after {
-  display: none; // no window dots
+  top: 7px;
+  left: 10px;
+  width: 7px;
+  height: 7px;
+  box-shadow: 12px 0 0 #f5bd4f, 24px 0 0 #61c454;
 }
 
 .project-mockup--terminal {
@@ -798,6 +806,7 @@
   overflow: hidden;
   border-radius: var(--radius);
   background: transparent;
+  padding-top: 24px; // window chrome bar
 
   &__body {
     position: relative;
