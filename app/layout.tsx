@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'http://rpi5-1:3011/api/media/file/jackyfan-og-v3.png',
+        url: 'http://rpi5-1:3011/api/media/file/jackyfan-og-v4.png',
         width: 1200,
         height: 630,
         alt: 'Jacky FAN - Frontend Developer',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Jacky FAN - Frontend Developer',
     description: 'Hello I am Jacky FAN, a front end developer in Hong Kong who focus on building high-quality websites.',
-    images: ['http://rpi5-1:3011/api/media/file/jackyfan-og-v3.png'],
+    images: ['http://rpi5-1:3011/api/media/file/jackyfan-og-v4.png'],
   },
 }
 
