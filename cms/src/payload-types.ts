@@ -92,11 +92,9 @@ export interface Config {
   };
   fallbackLocale: null;
   globals: {
-    project_page_settings: ProjectPageSetting;
     site_settings: SiteSetting;
   };
   globalsSelect: {
-    project_page_settings: ProjectPageSettingsSelect<false> | ProjectPageSettingsSelect<true>;
     site_settings: SiteSettingsSelect<false> | SiteSettingsSelect<true>;
   };
   locale: null;
@@ -1112,22 +1110,6 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "project_page_settings".
- */
-export interface ProjectPageSetting {
-  id: string;
-  label?: string | null;
-  title?: string | null;
-  subtitle?: string | null;
-  topPadding?: boolean | null;
-  metaTitle?: string | null;
-  metaDesc?: string | null;
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site_settings".
  */
 export interface SiteSetting {
@@ -1169,22 +1151,6 @@ export interface SiteSetting {
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "project_page_settings_select".
- */
-export interface ProjectPageSettingsSelect<T extends boolean = true> {
-  label?: T;
-  title?: T;
-  subtitle?: T;
-  topPadding?: T;
-  metaTitle?: T;
-  metaDesc?: T;
-  _status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

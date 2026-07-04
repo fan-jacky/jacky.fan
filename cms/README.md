@@ -5,7 +5,7 @@ Payload CMS replaces the previous Strapi instance while keeping the same content
 ## Data model (mirrors Strapi)
 - Pages: `pageTitle`, `url`, `contents` (rich blocks: headings, buttons, grids, contact form, 3D letter, hero, about-me), `metaDesc`, `enableBgHeading`.
 - Projects: `title`, `alias`, `date`, `desc`, `tags`, `img`, `links[]`, `contents` (project carousel + project content blocks).
-- Globals: `project_page_settings` (project hero label/title/subtitle + meta), `site_settings` (branding, menu items → Page relation, footer text, toggles, quick links).
+- Globals: `site_settings` (branding, menu items → Page relation, footer text, toggles, quick links).
 - Uploads: `media` collection, shared across blocks.
 
 ## Environment

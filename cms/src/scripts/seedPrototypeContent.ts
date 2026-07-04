@@ -771,21 +771,6 @@ export async function seedPrototypeContent() {
     overrideAccess: true,
   })
 
-  await payload.updateGlobal({
-    slug: 'project_page_settings',
-    data: {
-      label: 'My Work',
-      title: 'Projects',
-      subtitle: 'A showcase of what I\'ve built - websites, tools, and experiments.',
-      topPadding: true,
-      metaTitle: 'Projects - Jacky FAN',
-      metaDesc: 'Projects by Jacky FAN.',
-      _status: 'published',
-    },
-    draft: false,
-    overrideAccess: true,
-  })
-
   payload.logger.info('Prototype content seeded into Payload CMS.')
 
   // Seed tech icons for the "What I Use" section

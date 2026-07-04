@@ -9,7 +9,6 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Projects } from './collections/Projects'
-import { ProjectPageSettings } from './globals/ProjectPageSettings'
 import { SiteSettings } from './globals/SiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
@@ -123,7 +122,7 @@ export default buildConfig({
   csrf: getAllowedOrigins(),
   collections: [Users, Media, Pages, Projects],
   editor: lexicalEditor(),
-  globals: [ProjectPageSettings, SiteSettings],
+  globals: [SiteSettings],
   secret: getPayloadSecret(),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
