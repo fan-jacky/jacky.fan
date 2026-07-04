@@ -698,6 +698,7 @@
 
   &__mockup {
     position: relative;
+    overflow: hidden; // clip window-chrome pseudo-elements to rounded corners
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     padding-top: 32px; // push image below window-chrome ::before decoration
