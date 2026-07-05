@@ -85,6 +85,7 @@
     .btn {
       justify-content: center;
       width: 100%;
+      margin-left: 0 !important;
     }
   }
 
@@ -111,9 +112,13 @@
   .contact-grid,
   .skills-grid,
   .browser-frame-gallery,
-  .tech-stack-grid,
+  .tech-stack-grid {
+    grid-template-columns: 1fr;
+  }
+
   .stats-grid {
     grid-template-columns: 1fr;
+    gap: 4rem;
   }
 
   .site-footer .container {
