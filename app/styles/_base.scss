@@ -64,8 +64,9 @@ body h3 {
 
 .skip-link {
   position: absolute;
-  top: -100%;
-  left: 1rem;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -120%);
   z-index: 999;
   padding: 0.75rem 1.25rem;
   background: var(--accent);
@@ -73,9 +74,14 @@ body h3 {
   font-weight: 600;
   font-size: 0.9375rem;
   border-radius: var(--radius-sm);
+  outline: none;
 
-  &:focus {
+  &:focus,
+  &:focus-visible {
     top: 0.75rem;
+    transform: translate(-50%, 0);
     color: #fff;
+    outline: 2px solid #fff;
+    outline-offset: 2px;
   }
 }

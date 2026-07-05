@@ -112,6 +112,24 @@ PAYLOAD_SERVER_URL=https://cms.your-domain.tld
 
 `PAYLOAD_CMS_URL` can still point at the internal `cms` service URL for server-to-server traffic inside the compose network.
 
+## Backup
+
+Automated daily backups run on `rpi5-1` at 3am HKT via cron, covering both MongoDB data and uploaded media for jacky.fan and blog.jacky.fan.
+
+**What's backed up:**
+- MongoDB dump (all collections, gzipped archive)
+- CMS media / upload files
+
+**Where:**
+- NAS at `192.168.0.220:/srv/dev-disk-by-uuid-.../cloud-1/site-backup/{site}/`
+- Google Drive at `site-backups/{site}/`
+
+**Format:** `jacky.fan-2026-07-05-Sun-220220.zip` — readable timestamp with day-of-week, containing `mongo/dump.archive` and `media/...`
+
+**Retention:** 7 daily + weekly (Sunday) + monthly (1st). Older non-Sunday/non-1st backups are pruned automatically.
+
+**Script:** `/home/redfrogss/backup-sites.sh` on rpi5-1. Run manually with `bash /home/redfrogss/backup-sites.sh`.
+
 ## Learn More
 
 This project uses the following tech:

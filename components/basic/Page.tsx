@@ -26,7 +26,7 @@ export default async function Page({ children, reserveNavbarHeight = true }: { c
     return (
         <main className="page-shell">
             <Navbar siteSetting={siteSetting} />
-                <div className={`page-shell__content portfolio-main ${reserveNavbarHeight ? "page" : ""}`}>
+                <div id="main-content" className={`page-shell__content portfolio-main ${reserveNavbarHeight ? "page" : ""}`} tabIndex={-1}>
                     {children}
                 </div>
                 <Footer siteSetting={siteSetting} />
