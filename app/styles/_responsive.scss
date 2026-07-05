@@ -76,6 +76,18 @@
     }
   }
 
+  .hero-slide .hero-content .reveal {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+
+    .btn {
+      justify-content: center;
+      width: 100%;
+    }
+  }
+
   .site-nav-links {
     display: none;
   }
@@ -99,7 +111,8 @@
   .contact-grid,
   .skills-grid,
   .browser-frame-gallery,
-  .tech-stack-grid {
+  .tech-stack-grid,
+  .stats-grid {
     grid-template-columns: 1fr;
   }
 
