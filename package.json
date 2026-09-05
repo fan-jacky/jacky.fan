@@ -24,7 +24,7 @@
     "@fontsource/patrick-hand": "^5.2.8",
     "@heroicons/react": "^2.2.0",
     "@opennextjs/cloudflare": "^1.13.2",
-    "@payloadcms/live-preview-react": "3.72.0",
+    "@payloadcms/live-preview-react": "3.88.0",
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^9.5.0",
     "@tailwindcss/typography": "^0.5.16",
@@ -32,21 +32,21 @@
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
-    "axios": "^1.15.2",
+    "axios": "^1.20.0",
     "daisyui": "^4.12.24",
     "encoding": "^0.1.13",
     "eslint": "9.39.2",
-    "eslint-config-next": "16.2.6",
+    "eslint-config-next": "16.2.12",
     "framer-motion": "^10.18.0",
     "locomotive-scroll": "^5.0.1",
-    "next": "16.2.6",
+    "next": "16.2.12",
     "postcss": "8.5.10",
     "react": "18.3.1",
     "react-click-away-listener": "^2.4.0",
     "react-dom": "18.3.1",
     "react-google-recaptcha-v3": "^1.11.0",
     "react-markdown": "^9.1.0",
-    "sharp": "^0.34.2",
+    "sharp": "^0.35.4",
     "swiper": "^12.1.2",
     "tailwindcss": "3.3.3",
     "theme-change": "^2.5.0",
@@ -54,12 +54,9 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "@types/three": "^0.155.1",
+    "@types/three": "^0.182.0",
     "sass": "^1.101.0",
     "wrangler": "^4.18.0"
-  },
-  "resolutions": {
-    "jackspeak": "2.1.1"
   },
   "engines": {
     "yarn": "please-use-pnpm",

@@ -7,6 +7,11 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
   workerd: true
+  '@img/sharp': true
+  '@img/sharp-libvips-linux-arm64': true
+  '@img/sharp-libvips-linuxmusl-arm64': true
+  '@img/sharp-libvips-linux-x64': true
+  '@img/sharp-libvips-linuxmusl-x64': true
 overrides:
   jackspeak: 2.1.1
   axios@>=1.3.2 <=1.7.3: '>=1.7.4'
@@ -25,5 +30,54 @@ overrides:
   minimatch@>=9.0.0 <9.0.7: 9.0.7
   picomatch@>=2.0.0 <2.3.2: 2.3.2
   picomatch@>=4.0.0 <4.0.4: 4.0.4
-  postcss@<8.5.10: 8.5.10
+  postcss@<8.5.23: '>=8.5.23'
   yaml@>=2.0.0 <2.8.3: 2.8.3
+  undici@>=7.0.0 <7.29.0: '>=7.29.0'
+  ws@>=8.0.0 <8.21.0: '>=8.21.0'
+  form-data@>=4.0.0 <4.0.6: '>=4.0.6'
+  brace-expansion@>=1.1.0 <1.1.12: '>=1.1.12 <2'
+  brace-expansion@>=2.0.0 <2.1.2: '>=2.1.2'
+  brace-expansion@>=3.0.0 <5.0.7: '>=5.0.7'
+  brace-expansion@>=5.0.0 <5.0.7: '>=5.0.7'
+  sharp@<0.35.0: '>=0.35.0'
+  vite@>=7.0.0 <=7.3.4: '>=7.3.5'
+  immutable@<4.3.9: '>=4.3.9'
+  fast-uri@>=3.0.0 <=3.1.3: '>=3.1.4'
+  js-yaml@>=4.0.0 <4.3.0: '>=4.3.0'
+  nanoid@>=3.0.0 <3.3.16: '>=3.3.16'
+  postcss-selector-parser@>=6.1.0 <6.1.3: '>=6.1.3'
+  browserslist@<4.28.7: '>=4.28.7'
+  dompurify@<3.4.12: '>=3.4.12'
+  fflate@<0.6.11: '>=0.6.11'
+  qs@<6.16.0: '>=6.16.0'
+  body-parser@<2.3.0: '>=2.3.0'
+  '@humanfs/node@<0.16.8': '>=0.16.8'
+  '@babel/core@<7.29.6': '>=7.29.6'
+  esbuild@<0.28.1: '>=0.28.1'
+
+packageExtensions:
+  # payload imports `next` types without declaring it as a dependency/peer,
+  # which makes TypeScript resolve the root app's next (React 18) instance.
+  # Declaring it as a peer makes pnpm link the cms's next (React 19) instance.
+  payload@*:
+    peerDependencies:
+      next: '*'
+    peerDependenciesMeta:
+      next:
+        optional: true
+  # next's bundled styled-jsx types import `react`; without an @types/react peer
+  # link, TypeScript falls back to the root workspace's @types/react (React 18).
+  next@*:
+    peerDependencies:
+      '@types/react': '*'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+  # @payloadcms/next's RootLayout types import `react` directly; same fallback
+  # problem as above — give it an @types/react peer link too.
+  '@payloadcms/next@*':
+    peerDependencies:
+      '@types/react': '*'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true

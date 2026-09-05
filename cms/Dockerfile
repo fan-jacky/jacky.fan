@@ -64,6 +64,12 @@ RUN mkdir -p media && chown nextjs:nodejs media
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Next.js output file tracing can drop large native binaries (libvips .so) from
+# the standalone node_modules. Re-copy the sharp platform packages so image
+# processing works at runtime.
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.pnpm/@img+sharp-libvips-linuxmusl-arm64@1.3.3 /app/node_modules/.pnpm/@img+sharp-libvips-linuxmusl-arm64@1.3.3
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.pnpm/@img+sharp-libvips-linux-arm64@1.3.3 /app/node_modules/.pnpm/@img+sharp-libvips-linux-arm64@1.3.3
+
 USER nextjs
 
 EXPOSE 3000
