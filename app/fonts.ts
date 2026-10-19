@@ -1,11 +1,11 @@
-import { Inter } from "next/font/google";
+import { Noto_Sans } from "next/font/google";
 import localFont from "next/font/local";
 
-export const inter = Inter({
+export const notoSans = Noto_Sans({
     subsets: ["latin"],
     weight: ["400", "500", "600", "700", "800"],
     display: "swap",
-    variable: "--font-inter",
+    variable: "--font-noto-sans",
 });
 
 // Handwriting font
