@@ -82,6 +82,11 @@ cp .env.local.template .env.local
 
 # Start dev server
 yarn dev
+
+# Or run the whole dev stack at once: mongo (docker compose) + frontend dev
+# server + CMS dev server. Ctrl+C stops all three peacefully; mongo data
+# persists in the `mongo_data` volume.
+pnpm dev:full
 ```
 
 Build for Production:
