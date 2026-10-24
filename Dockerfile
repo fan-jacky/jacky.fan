@@ -1,50 +1,13 @@
 # syntax=docker/dockerfile:1.7-labs
 
-FROM node:24.22.1-alpine AS base
+# The static site is built on the host (`pnpm build`, requires PAYLOAD_CMS_URL
+# pointing at a reachable CMS) and this image only serves the output.
 
-ENV PNPM_HOME=/pnpm
-ENV PATH=$PNPM_HOME:$PATH
+FROM nginx:1.27-alpine
 
-FROM base AS deps
-RUN apk add --no-cache libc6-compat
-WORKDIR /app
-
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN corepack enable \
-  && corepack prepare pnpm@10.17.1 --activate \
-  && pnpm install --frozen-lockfile
-
-FROM base AS builder
-WORKDIR /app
-
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
-RUN corepack enable \
-  && corepack prepare pnpm@10.17.1 --activate \
-  && pnpm run build
-
-FROM base AS runner
-WORKDIR /app
-
-ENV NODE_ENV=production
-ENV PORT=3000
-ENV HOSTNAME=0.0.0.0
-
-RUN addgroup --system --gid 1001 nodejs \
-  && adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# Next.js output file tracing can drop large native binaries (libvips .so) from
-# the standalone node_modules. Re-copy the sharp platform packages so image
-# processing works at runtime.
-COPY --from=builder --parents --chown=nextjs:nodejs /app/node_modules/.pnpm/@img+sharp-libvips-linux*-*@1.3.4 /app/node_modules/.pnpm/
-
-USER nextjs
+COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
+COPY dist /usr/share/nginx/html
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["nginx", "-g", "daemon off;"]

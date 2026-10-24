@@ -1,0 +1,70 @@
+---
+import { getNavItems, type NavItem } from '../lib/nav';
+
+interface Props {
+  siteSetting: any;
+}
+
+const { siteSetting } = Astro.props;
+
+const pathname = Astro.url.pathname;
+const navItems = getNavItems(siteSetting);
+const showThemeToggle = siteSetting?.showNightModeToggle ?? true;
+
+const isActive = (item: NavItem) => !item.external && pathname === item.href;
+---
+
+<a href="#main-content" class="skip-link">Skip to content</a>
+<header class:list={['site-header']} id="siteHeader">
+  <div class="container">
+    <a href="/" class="site-logo">
+      <span class="site-logo-dot"></span>
+      {siteSetting?.siteLogoText ?? 'Jacky FAN'}
+    </a>
+
+    <nav class="site-nav" aria-label="Primary navigation">
+      <div class="site-nav-links">
+        {
+          navItems.map((item) =>
+            item.external ? (
+              <a href={item.href} target="_blank" rel="noopener noreferrer">
+                {item.label}
+              </a>
+            ) : (
+              <a href={item.href} class={isActive(item) ? 'active' : undefined} aria-current={isActive(item) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            ),
+          )
+        }
+        <a
+          href="/contact"
+          class:list={['site-nav-cta', pathname === '/contact' && 'active']}
+          aria-current={pathname === '/contact' ? 'page' : undefined}
+        >
+          Contact
+        </a>
+      </div>
+
+      {
+        showThemeToggle && (
+          <button class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+            <svg class="icon-sun" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="3" fill="currentColor" />
+              <path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M2.929 2.929l1.06 1.06m8.486 8.486l1.06 1.06M2.929 13.071l1.06-1.06m8.486-8.486l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+            </svg>
+            <svg class="icon-moon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M13.5 10.5a6 6 0 01-7.5-7.5A6 6 0 1013.5 10.5z" fill="currentColor" />
+            </svg>
+          </button>
+        )
+      }
+
+      <button class="mobile-nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav-overlay" aria-label="Toggle navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+  </div>
+</header>

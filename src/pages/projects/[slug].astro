@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { renderProjectDetail } from '../../lib/cms/project-detail';
+import { fetchAllProjects, defaultMeta } from '../../lib/cms/pages';
+import { notFoundContent, projectNotFoundContent } from '../../lib/cms/render';
+import { getStaticProject, staticProjects } from '../../lib/portfolio-data';
+import type { ProjectDocument } from '../../lib/cms/project-detail';
+
+export async function getStaticPaths() {
+  const projects = (await fetchAllProjects()) ?? null;
+
+  if (projects && projects.length > 0) {
+    return projects
+      .filter((project) => project.alias)
+      .map((project) => ({
+        params: { slug: project.alias as string },
+        props: { project, fromCms: true },
+      }));
+  }
+
+  // Fallback to bundled static projects when the CMS is not configured.
+  return staticProjects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project: null, fromCms: false, staticSlug: project.slug },
+  }));
+}
+
+const { project, fromCms, staticSlug } = Astro.props;
+
+let document: ProjectDocument | null = project ?? null;
+let html = '';
+
+if (fromCms && document) {
+  html = renderProjectDetail(document);
+} else if (!fromCms) {
+  const staticProject = staticSlug ? getStaticProject(staticSlug) : null;
+  if (staticProject) {
+    document = {
+      alias: staticProject.slug,
+      title: staticProject.title,
+      desc: staticProject.shortDescription,
+      tags: staticProject.tags,
+      links: staticProject.links.map((link) => ({ name: link.label, links: link.href })),
+    };
+    html = renderProjectDetail(document);
+  } else {
+    html = projectNotFoundContent('Project Not Found', '/projects', 'Back to Projects');
+    document = null;
+  }
+} else {
+  html = notFoundContent();
+  document = null;
+}
+
+const meta = document?.title
+  ? { title: `${document.title} - Jacky FAN`, description: document.desc ?? '' }
+  : defaultMeta();
+---
+
+<BaseLayout title={meta.title} description={meta.description} reserveNavbarHeight={false} lpType="project" lpUrl={`/projects/${Astro.params.slug}`} lpDepth={2} lpInitial={document}>
+  <Fragment set:html={html} />
+</BaseLayout>

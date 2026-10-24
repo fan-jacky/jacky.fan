@@ -9,6 +9,11 @@ if [ -f .env ]; then
     export $(cat .env | grep -v '^#' | xargs)
 fi
 
+# Build the static site on the host (needs a reachable Payload CMS while building)
+echo "Building static site with Astro..."
+pnpm install --frozen-lockfile
+pnpm run build
+
 # Stop existing containers
 echo "Stopping existing containers..."
 sudo docker compose down || true

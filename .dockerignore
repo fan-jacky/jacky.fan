@@ -9,12 +9,8 @@ npm-debug.log
 yarn-error.log
 pnpm-debug.log
 
-# Next.js build outputs
-.next
-.open-next
-out
-dist
-.cache
+# Astro build outputs (dist is intentionally NOT ignored — the web image copies it)
+.astro
 
 # Editor/OS
 .vscode

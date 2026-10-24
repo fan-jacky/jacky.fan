@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { notFoundContent } from '../lib/cms/render';
+
+const html = notFoundContent();
+const meta = { title: 'Jacky FAN', description: 'I build websites and eat computer bugs 😉' };
+---
+
+<BaseLayout title={meta.title} description={meta.description} reserveNavbarHeight={false}>
+  <Fragment set:html={html} />
+</BaseLayout>

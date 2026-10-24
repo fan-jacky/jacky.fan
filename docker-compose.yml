@@ -8,14 +8,6 @@ services:
         required: false
     ports:
       - "${HOST_PORT:-3000}:3000"
-    environment:
-      NODE_ENV: production
-      PAYLOAD_CMS_URL: http://cms:3000
-      NEXT_PUBLIC_PAYLOAD_CMS_URL: ${NEXT_PUBLIC_PAYLOAD_CMS_URL:-http://localhost:${CMS_HOST_PORT:-3001}}
-    depends_on:
-      - cms
-    extra_hosts:
-      - "rpi5-1:host-gateway"
     restart: unless-stopped
 
   cms:

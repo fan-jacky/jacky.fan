@@ -43,3 +43,6 @@ next-env.d.ts
 /.pnpm-store
 
 .github/copilot-instructions.md
+# astro
+.astro/
+dist/

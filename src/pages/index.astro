@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { renderCmsPage } from '../lib/cms/render';
+
+const { meta, html, page } = await renderCmsPage(
+  '/',
+  'Jacky FAN - Frontend Developer in Hong Kong',
+  'Crafting performant, accessible, and visually compelling web experiences.',
+  { reserveNavbarHeight: false },
+);
+---
+
+<BaseLayout title={meta.title} description={meta.description} reserveNavbarHeight={false} lpType="page" lpUrl="/" lpDepth={3} lpInitial={page}>
+  <Fragment set:html={html} />
+</BaseLayout>

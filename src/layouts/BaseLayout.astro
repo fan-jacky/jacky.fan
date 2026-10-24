@@ -1,0 +1,150 @@
+---
+import '@fontsource/noto-sans/400.css';
+import '@fontsource/noto-sans/500.css';
+import '@fontsource/noto-sans/600.css';
+import '@fontsource/noto-sans/700.css';
+import '@fontsource/noto-sans/800.css';
+import '../styles/globals.scss';
+import 'locomotive-scroll/locomotive-scroll.css';
+
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { fetchSiteSettings } from '../lib/cms/pages';
+import type { SiteSettings } from '../lib/cms/pages';
+import { getNavItems, isActive as isActiveItem, type NavItem } from '../lib/nav';
+
+export interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  /** Reserve space for the fixed navbar (adds the `page` class). */
+  reserveNavbarHeight?: boolean;
+  /** Live-preview wiring: document type, url/alias, payload depth, initial doc JSON. */
+  lpType?: 'page' | 'project';
+  lpUrl?: string;
+  lpDepth?: number;
+  lpInitial?: unknown;
+}
+
+const {
+  title,
+  description,
+  ogImage = 'http://rpi5-1:3011/api/media/file/jackyfan-og-v4.png',
+  reserveNavbarHeight = true,
+  lpType,
+  lpUrl,
+  lpDepth = 3,
+  lpInitial,
+} = Astro.props;
+
+const siteSetting = (await fetchSiteSettings()) as SiteSettings | null;
+
+const pathname = Astro.url.pathname;
+const navItems = getNavItems(siteSetting);
+const isActive = (item: NavItem) => isActiveItem(item, pathname);
+
+const gaId = import.meta.env.GA_ID ?? (typeof process !== 'undefined' ? process.env.GA_ID : undefined);
+
+const siteName = 'Jacky FAN';
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <meta property="og:type" content="website" />
+    <meta property="og:siteName" content={siteName} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    {gaId && <script is:inline src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>}
+    {
+      gaId && (
+        <script is:inline define:vars={{ gaId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', gaId);
+        </script>
+      )
+    }
+  </head>
+  <body class="overflow-x-hidden">
+    <main class="page-shell">
+      <Navbar siteSetting={siteSetting} />
+      <div
+        id="main-content"
+        class:list={['page-shell__content', 'portfolio-main', reserveNavbarHeight && 'page']}
+        tabindex="-1"
+        data-lp-type={lpType}
+        data-lp-url={lpUrl}
+        data-lp-depth={lpType ? String(lpDepth) : undefined}
+        data-lp-server={lpType ? (import.meta.env.PUBLIC_PAYLOAD_CMS_URL ?? import.meta.env.PAYLOAD_CMS_URL ?? 'http://localhost:3001') : undefined}
+      >
+        {lpInitial !== undefined && lpType && <script type="application/json" id="lp-initial" set:html={JSON.stringify(lpInitial).replace(/</g, '\\u003c')} />}
+        <slot />
+      </div>
+      <Footer siteSetting={siteSetting} />
+    </main>
+    <div class="mobile-nav-overlay" id="mobile-nav-overlay" aria-hidden="true">
+      <button class="mobile-nav-overlay__close" type="button" aria-label="Close navigation menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <nav class="mobile-nav-overlay__nav" aria-label="Mobile navigation">
+        {
+          navItems.map((item, index) =>
+            item.external ? (
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mobile-nav-overlay__link"
+                style={`animation-delay: ${(0.1 + index * 0.08).toFixed(2)}s`}
+              >
+                {item.label}
+              </a>
+            ) : (
+              <a
+                href={item.href}
+                class:list={['mobile-nav-overlay__link', isActive(item) && 'mobile-nav-overlay__link--active']}
+                style={`animation-delay: ${(0.1 + index * 0.08).toFixed(2)}s`}
+                aria-current={isActive(item) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            ),
+          )
+        }
+        <a
+          href="/contact"
+          class:list={['mobile-nav-overlay__cta', pathname === '/contact' && 'mobile-nav-overlay__cta--active']}
+          style={`animation-delay: ${(0.1 + navItems.length * 0.08).toFixed(2)}s`}
+          aria-current={pathname === '/contact' ? 'page' : undefined}
+        >
+          Contact
+        </a>
+      </nav>
+    </div>
+    <script>
+      import '../scripts/main';
+    </script>
+    <script>
+      import '../scripts/live-preview';
+    </script>
+  </body>
+</html>

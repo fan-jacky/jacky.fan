@@ -5,16 +5,16 @@ You can access this website via https://jacky.fan
 
 # [v2.Jacky.Fan](https://jacky.fan) - My Personal Website
 
-[v2.jacky.fan](https://github.com/redfrogsss/v2.jacky.fan) is a personal website built with [Next.js](https://nextjs.org/), [Tailwind CSS](https://tailwindcss.com/), and [Framer Motion](https://www.framer.com/motion/).
+[v2.jacky.fan](https://github.com/redfrogsss/v2.jacky.fan) is a personal website built with [Astro](https://astro.build/), [Tailwind CSS](https://tailwindcss.com/), and [Three.js](https://threejs.org/), generating fully static HTML from [Payload CMS](https://payloadcms.com/) content at build time.
 
 ## Features
 
 -   Light / Dark Mode
 -   Responsive Design
--   Contact Form
 -   Site Map
--   Integration with Payload CMS
+-   Integration with Payload CMS (content fetched at build time; live preview from the CMS admin)
 -   Project Listing / Details Page
+-   Zero-JS-by-default static output — vanilla JS only where interaction is needed
 
 ## Screenshots
 
@@ -75,13 +75,13 @@ git clone https://github.com/redfrogsss/v2.jacky.fan.git
 
 # Install dependencies
 cd v2.jacky.fan
-yarn
+pnpm install
 
-# copy .env.local.template to .env.local and modifiy the values
+# copy .env.local.template to .env.local and modify the values
 cp .env.local.template .env.local
 
 # Start dev server
-yarn dev
+pnpm dev
 
 # Or run the whole dev stack at once: mongo (docker compose) + frontend dev
 # server + CMS dev server. Ctrl+C stops all three peacefully; mongo data
@@ -93,21 +93,24 @@ Build for Production:
 
 ```bash
 # Create .env in the repo root with both site and CMS settings
-# Then build and start the production stack
-docker compose up -d --build
+# The static site is built on the host (the CMS must be reachable while
+# building), then served by the nginx `web` container
+script/deploy.sh
+# or manually:
+pnpm build && docker compose up -d --build
 ```
 
 The production compose stack now lives only in the repo root and starts three services:
 
-- `web` on `HOST_PORT` (default `3000`)
+- `web` on `HOST_PORT` (default `3000`) — serves the static `dist/` output
 - `cms` on `CMS_HOST_PORT` (default `3001`)
 - `mongo` as the CMS database
 
 At minimum, set `PAYLOAD_SECRET` in `.env`.
 
-The frontend cache revalidation endpoint uses `REVALIDATE_SECRET` when provided, and otherwise falls back to `PAYLOAD_SECRET`. In the current compose setup, setting `PAYLOAD_SECRET` in the repo-root `.env` is enough for CMS publish hooks to invalidate tagged frontend content.
+The frontend is fully static — there is no on-server cache revalidation; content changes require a rebuild (`script/deploy.sh`). Live preview from the CMS admin works against the published site via `@payloadcms/live-preview`.
 
-For deployments where you open the CMS from a real hostname, also set the CMS public URL so Payload does not fall back to `localhost` for admin auth / CSRF checks:
+For deployments where you open the CMS from a real hostname, also set the CMS public URL so Payload does not fall back to `localhost` for admin auth / CSRF checks, and so the frontend bakes the right media/live-preview origin into its HTML:
 
 ```bash
 NEXT_PUBLIC_PAYLOAD_CMS_URL=https://cms.your-domain.tld

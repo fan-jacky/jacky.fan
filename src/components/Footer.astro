@@ -1,0 +1,35 @@
+---
+const fallbackFooterLinks = [
+  { href: 'https://github.com/redfrogsss', label: 'GitHub' },
+  { href: 'https://www.linkedin.com/in/jacky-fan-dev/', label: 'LinkedIn' },
+  { href: 'https://blog.jacky.fan', label: 'Blog' },
+];
+
+interface Props {
+  siteSetting: any;
+}
+
+const { siteSetting } = Astro.props;
+
+const year = new Date().getFullYear();
+const footerLinks = siteSetting?.quickLinks?.length
+  ? siteSetting.quickLinks.map((link: any) => ({ href: link.url, label: link.name }))
+  : fallbackFooterLinks;
+const siteName = siteSetting?.sitename ?? 'Jacky FAN';
+const siteDesc = siteSetting?.siteDesc ?? 'Frontend Developer in Hong Kong';
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <span class="footer-info">&copy; 2023&ndash;{year} {siteName} &mdash; {siteDesc}</span>
+    <div class="footer-links">
+      {
+        footerLinks.map((link) => (
+          <a href={link.href} target="_blank" rel="noopener">
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</footer>

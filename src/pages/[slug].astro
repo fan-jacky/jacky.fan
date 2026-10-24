@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getContents, hasProjectGridBlock } from '../lib/cms/blocks';
+import { fetchAllPages, fetchProjectGridItems, RESERVED_PAGE_URLS } from '../lib/cms/pages';
+import { slugMeta } from '../lib/cms/render';
+import type { PageDocument } from '../lib/cms/types';
+import type { ProjectGridItem } from '../lib/cms/types';
+
+export async function getStaticPaths() {
+  const pages = (await fetchAllPages()) ?? [];
+
+  return pages
+    .filter((page): page is PageDocument & { url: string } => {
+      const url = page?.url;
+      return Boolean(url) && !RESERVED_PAGE_URLS.has(url) && url !== '/404';
+    })
+    .map((page) => ({
+      params: { slug: page.url.replace(/^\//, '') },
+      props: { page },
+    }));
+}
+
+interface Props {
+  page: PageDocument;
+}
+
+const { page } = Astro.props;
+
+const projectGridItems: ProjectGridItem[] = hasProjectGridBlock(page.contents)
+  ? await fetchProjectGridItems()
+  : [];
+
+const html = getContents(page.contents, { pageUrl: page.url ?? undefined, projectGridItems });
+const meta = slugMeta(page);
+---
+
+<BaseLayout title={meta.title} description={meta.description} lpType="page" lpUrl={page.url ?? `/${Astro.params.slug}`} lpDepth={3} lpInitial={page}>
+  <Fragment set:html={html} />
+</BaseLayout>

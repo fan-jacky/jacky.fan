@@ -1,0 +1,73 @@
+// ── Astro migration additions ───────────────────────
+// Font family variables (previously provided by next/font)
+:root {
+  --font-noto-sans: 'Noto Sans';
+  --font-patrick-hand: 'Patrick Hand';
+  --font-dosis: 'Dosis';
+  --font-cabin-sketch: 'Cabin Sketch';
+}
+
+// Local self-hosted fonts (files in /public/fonts)
+@font-face {
+  font-family: 'Patrick Hand';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/patrick-hand-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Dosis';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/dosis-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Dosis';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/dosis-latin-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Dosis';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/dosis-latin-700-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Cabin Sketch';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/cabin-sketch-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Cabin Sketch';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/cabin-sketch-latin-700-normal.woff2') format('woff2');
+}
+
+// FadeInBottom reveal wrapper (vanilla replacement for the React component)
+.fade-reveal {
+  opacity: 0;
+}
+
+// Gentle float loop (replaces the framer-motion y: [0, 15, 0] loop on 3D wrappers)
+@keyframes float-y {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(15px); }
+  100% { transform: translateY(0); }
+}
+
+.float-y {
+  animation: float-y 3s ease-in infinite;
+}
