@@ -1,6 +1,6 @@
-# syntax=docker.io/docker/dockerfile:1
+# syntax=docker/dockerfile:1.7-labs
 
-FROM node:22.17.0-alpine AS base
+FROM node:24.22.1-alpine AS base
 
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
@@ -41,8 +41,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Next.js output file tracing can drop large native binaries (libvips .so) from
 # the standalone node_modules. Re-copy the sharp platform packages so image
 # processing works at runtime.
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.pnpm/@img+sharp-libvips-linuxmusl-arm64@1.3.3 /app/node_modules/.pnpm/@img+sharp-libvips-linuxmusl-arm64@1.3.3
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.pnpm/@img+sharp-libvips-linux-arm64@1.3.3 /app/node_modules/.pnpm/@img+sharp-libvips-linux-arm64@1.3.3
+COPY --from=builder --parents --chown=nextjs:nodejs /app/node_modules/.pnpm/@img+sharp-libvips-linux*-*@1.3.4 /app/node_modules/.pnpm/
 
 USER nextjs
 
